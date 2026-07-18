@@ -1,0 +1,1777 @@
+/*
+ * OrbitWorks brand layer.
+ *
+ * Loaded last so it wins over theme.css without !important.
+ * --orbit / --orbit-paper are the brand colours; change them here and every
+ * accent below follows. scripts/build-logo.mjs snaps the logo PNGs to the same
+ * values.
+ */
+
+:root {
+  --orbit: #fe063b;
+  --orbit-paper: #fcfbfa;
+  --orbit-deep: #c40430;
+  --orbit-veil: rgba(254, 6, 59, 0.12);
+}
+
+/* ------------------------------------------------------------------ logo --
+ * The theme drew "kenza." as an inline SVG in three places and auto-inverted it
+ * with `mix-blend-mode: difference` on an off-white mark. That trick cannot
+ * carry the OrbitWorks logo — `difference` turns the crimson cyan — so the blend
+ * is switched off and a real light/dark pair is swapped in on the theme's own
+ * state hooks:
+ *
+ *   default        dark hero behind the logo   -> light lockup
+ *   .nav-black     light page                  -> dark lockup
+ *   html.mob-nav   scrolled off the hero       -> dark lockup
+ *
+ * Variants come from scripts/build-logo.mjs (cropped; tagline dropped at nav
+ * size where it would be ~3px tall and unreadable).
+ */
+
+/* Sized up from the theme's 11.6rem "kenza." mark — the OrbitWorks lockup is a
+ * mark plus two words, so it needs more room to stay legible. height must grow
+ * with width or background-size:contain just letterboxes it. */
+figure.logo {
+  background-image: url("/brand/orbitworks-light.png");
+  background-position: left center;
+  background-size: contain;
+  height: 3.4rem;
+  mix-blend-mode: normal;
+  top: 3.2rem;
+  width: 21rem;
+}
+
+/* ------------------------------------------------------------ navbar scrim --
+ * An opaque bar behind the fixed header so page content cannot show through it.
+ *
+ * Visibility:
+ *   hero page, at top   → hidden (nav is transparent over the video)
+ *   inner page          → shown (nav-black)
+ *   scrolled past hero   → shown (html.mob-nav, any page)
+ *   scrolling DOWN       → slides up with the logo/burger (html.scrolling)
+ *
+ * z-index 3: above page content (0), below the nav links / logo (95).
+ */
+.orbit-navbar-scrim {
+  background: var(--paper);
+  border-bottom: 0.1rem solid rgba(18, 20, 26, 0.08);
+  height: 9rem;
+  left: 0;
+  opacity: 0;
+  pointer-events: none;
+  position: fixed;
+  right: 0;
+  top: 0;
+  transform: translateZ(0);
+  transition: opacity 0.4s var(--ease), transform 0.5s var(--ease);
+  z-index: 3;
+}
+
+.nav-black .orbit-navbar-scrim,
+.mob-nav .orbit-navbar-scrim {
+  opacity: 1;
+}
+
+/* Leave with the header on scroll-down (this rule is later, so it wins). */
+.scrolling .orbit-navbar-scrim {
+  opacity: 0;
+  transform: translate3d(0, -100%, 0);
+}
+
+/* The full-screen drawer covers everything; no scrim needed behind it. */
+.nav-toggle:checked ~ .orbit-navbar-scrim {
+  opacity: 0;
+}
+
+@media screen and (max-width: 979px) {
+  .orbit-navbar-scrim {
+    height: 7rem;
+  }
+}
+
+/* The theme only slid the logo away on .service/.services/.portrait, because a
+ * blended logo stayed readable over any content. A flat PNG does not, so the
+ * hide-on-scroll-down runs on every page — see HeaderScroll. */
+figure.logo,
+.nav-toggle-label {
+  transform: translateZ(0);
+  transition: transform 2s cubic-bezier(0.86, 0, 0.07, 1);
+}
+
+.scrolling figure.logo,
+.scrolling .nav-toggle-label {
+  transform: translate3d(0, -14rem, 0);
+}
+
+/* Never hide the burger while the drawer is open. */
+.nav-toggle:checked ~ .nav-toggle-label,
+.nav-toggle:checked + .logo {
+  transform: translateZ(0) !important;
+}
+
+.nav-black figure.logo,
+.mob-nav figure.logo {
+  background-image: url("/brand/orbitworks-dark.png");
+}
+
+/* The drawer is near-black whatever the page. */
+.nav-toggle:checked + .logo,
+.mob-nav .nav-toggle:checked + .logo {
+  background-image: url("/brand/orbitworks-light.png");
+}
+
+/* The theme stamps "kenza." over the hero via :after — that is the logo you see
+ * at the top of the homepage. */
+.wp-block-kenza-video-loop-header:after {
+  background-image: url("/brand/orbitworks-light.png");
+  background-position: left center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  height: 3.6rem;
+  width: 23rem;
+}
+
+/* Footer sits on the dark invert panel.
+ *
+ * font-size:0 is load-bearing, not tidying. The theme hides this link's text
+ * with `color:transparent` alone, which was fine for "Kenza" inside a 6rem box
+ * — "OrbitWorks" is wider than the box and pushed every page 8px sideways on
+ * mobile while being completely invisible. The text stays in the DOM for
+ * screen readers; it just no longer takes up space.
+ */
+footer .inner .col .logo-mark {
+  background-image: url("/brand/orbitworks-light.png");
+  background-position: center;
+  background-size: contain;
+  font-size: 0;
+  line-height: 0;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 12rem;
+}
+
+@media screen and (max-width: 979px) {
+  figure.logo {
+    height: 2.6rem;
+    top: 2.6rem;
+    width: 16rem;
+  }
+  .wp-block-kenza-video-loop-header:after {
+    height: 2.6rem;
+    width: 16rem;
+  }
+  footer .inner .col .logo-mark {
+    width: 8rem;
+  }
+}
+
+@media screen and (max-width: 743px) {
+  footer .inner .col .logo-mark {
+    width: 6rem;
+  }
+}
+
+/* ---------------------------------------------------------------- navbar --
+ * The theme gives nav links no hover colour (only a letter-spacing nudge), so
+ * an underline that wipes in from the left is additive rather than a fight.
+ * The indicator is a pseudo-element to avoid touching layout.
+ *
+ * Both navs must be targeted. On hero pages the visible nav is the .fake-nav
+ * clone inside the hero, not nav.header — this is the theme's own pairing
+ * (`.fake-nav:not(.social), nav.header`). Styling only nav.header leaves the
+ * homepage with no accent at all.
+ */
+
+.fake-nav:not(.social) ul li > a,
+nav.header ul li > a {
+  position: relative;
+  transition: color 0.35s var(--ease);
+}
+
+.fake-nav:not(.social) ul li > a::after,
+nav.header ul li > a::after {
+  background: var(--orbit);
+  bottom: -0.7rem;
+  content: "";
+  height: 0.2rem;
+  left: 0;
+  position: absolute;
+  right: 0;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.45s var(--ease);
+}
+
+.fake-nav:not(.social) ul li > a:hover::after,
+.fake-nav:not(.social) ul li.selected > a::after,
+nav.header ul li > a:hover::after,
+nav.header ul li.selected > a::after {
+  transform: scaleX(1);
+}
+
+.fake-nav:not(.social) ul li.selected > a,
+nav.header ul li.selected > a {
+  color: var(--orbit);
+}
+
+/* The mobile drawer paints links white; keep the selected item crimson there
+ * too (the theme used #fa241c for this exact rule). */
+.nav-toggle:checked ~ nav.header > ul li.selected a {
+  color: var(--orbit);
+}
+
+/* The drawer is near-black — the underline would muddy it, so drop it. */
+.nav-toggle:checked ~ nav.header > ul li > a::after {
+  display: none;
+}
+
+/* ----------------------------------------------------- case slider progress --
+ * The progress fill is the one moving element in the block; crimson makes the
+ * "01/06" counter legible as progress rather than decoration.
+ */
+
+.wp-block-kenza-case-slider .bottomPanel .progress .page:after {
+  background-color: var(--orbit);
+}
+
+/* -------------------------------------------------------------------- CTAs --
+ * Cookie accept + newsletter submit: the two things we actually want clicked.
+ */
+
+.cookie-warning .cta {
+  background-color: var(--orbit);
+  border-color: var(--orbit);
+  transition: background-color 0.3s var(--ease);
+}
+
+.cookie-warning .cta:hover {
+  background-color: var(--orbit-deep);
+}
+
+footer form input[type="submit"] {
+  transition: color 0.3s var(--ease);
+}
+
+footer form input[type="submit"]:hover {
+  color: var(--orbit);
+  cursor: pointer;
+}
+
+/* The email field's focus state is the only feedback before submit. */
+footer form input[type="email"] {
+  transition: border-color 0.3s var(--ease), opacity 0.3s var(--ease);
+}
+
+footer form input[type="email"]:focus {
+  border-bottom-color: var(--orbit);
+  opacity: 1;
+  outline: none;
+}
+
+/* ----------------------------------------------------------- type scale --
+ * The theme's scale is built for one- or two-word titles ("Services", "Cases")
+ * — deco-l is 15rem and the hero h1 is 10rem at 1440. OrbitWorks' copy is full
+ * sentences, so at those sizes a heading eats the viewport.
+ *
+ * Dialled back fluidly. HEADING LEVELS ARE UNCHANGED — this is size only, so the
+ * document outline and SEO structure stay exactly as they were.
+ *
+ * These beat the theme on specificity (the `main` prefix), so they win over its
+ * per-breakpoint rules without !important.
+ */
+
+main h1.deco-l,
+main h2.deco-l,
+main h3.deco-l,
+main h4.deco-l {
+  font-size: clamp(4.2rem, 5.2vw, 7.4rem);
+  line-height: 1;
+  margin-bottom: 1.8rem;
+  margin-top: 10rem;
+}
+
+main h1 {
+  font-size: clamp(3.6rem, 4.6vw, 6.4rem);
+  line-height: 1.05;
+}
+
+/* Hero — theme selector is (0,4,0), so `main` is needed to take it. */
+main .wp-block-kenza-video-loop-header .poster .vcenter .wp-block-heading {
+  font-size: clamp(3rem, 4.2vw, 6rem);
+  line-height: 1.1;
+}
+
+/* The statement under each section title. */
+main h3.book.mobilexl {
+  font-size: clamp(2rem, 2.5vw, 3.4rem);
+  line-height: 1.28;
+}
+
+/* Intro paragraph. */
+main p.large,
+main p.large-intro {
+  font-size: clamp(1.8rem, 1.8vw, 2.4rem);
+  line-height: 1.5;
+}
+
+/* ------------------------------------------------------ section deco marks --
+ * .deco-l is the theme's big section title ("Services", "Cases", "Clients").
+ * It has no decoration of its own, so this adds a short crimson rule above each
+ * one — the lightest way to carry the brand into the sections without touching
+ * the type.
+ */
+
+main h1.deco-l:before,
+main h2.deco-l:before,
+main h3.deco-l:before {
+  background: var(--orbit);
+  content: "";
+  display: block;
+  height: 0.3rem;
+  margin-bottom: 2.4rem;
+  width: 6rem;
+}
+
+/* Keyboard focus, which the theme never styled. */
+:focus-visible {
+  outline: 2px solid var(--orbit);
+  outline-offset: 3px;
+}
+
+/* ============================================================ new blocks ==
+ * Blocks the Kenza theme has no equivalent for. Styled to sit inside its scale
+ * (1rem = 10px, easeOutQuint, 6.3rem gutter) rather than beside it.
+ */
+
+/* ------------------------------------------------------------- stats band */
+
+/* The block after the stats used to butt straight into them — the theme gives
+ * .column-constraint no bottom margin, and the image cluster that follows is
+ * position:sticky so it starts pulling up immediately. */
+.orbit-stats {
+  margin-bottom: 14rem;
+}
+
+.orbit-stats ul {
+  display: grid;
+  gap: 4rem 2rem;
+  grid-template-columns: repeat(4, 1fr);
+  list-style: none;
+  margin: 6rem 0 2rem;
+  padding: 0;
+}
+
+.orbit-stats li {
+  border-top: 0.1rem solid var(--orbit);
+  padding-top: 2rem;
+}
+
+.orbit-stat-value {
+  display: block;
+  font-size: 7rem;
+  font-weight: 200;
+  letter-spacing: -0.1rem;
+  line-height: 1;
+}
+
+.orbit-stat-label {
+  color: var(--slate);
+  display: block;
+  font-size: 1.5rem;
+  margin-top: 1.2rem;
+}
+
+@media screen and (max-width: 979px) {
+  .orbit-stats ul {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .orbit-stat-value {
+    font-size: 5rem;
+  }
+}
+
+@media screen and (max-width: 743px) {
+  .orbit-stat-value {
+    font-size: 4.2rem;
+  }
+}
+
+/* ---------------------------------------------------- capability showcase --
+ * A hover-driven split panel, not a grid: a sticky preview on the left that
+ * crossfades to the row the pointer is on, and an editorial list on the right
+ * whose active row expands. See PillarShowcase.
+ */
+
+.orbit-showcase {
+  align-items: start;
+  display: grid;
+  gap: 5rem;
+  grid-template-columns: 0.85fr 1.15fr;
+  margin: 6rem 0 0;
+}
+
+/* --- sticky preview --- */
+.orbit-showcase__preview {
+  aspect-ratio: 3 / 4;
+  background: var(--ink);
+  overflow: hidden;
+  position: sticky;
+  top: 12rem;
+}
+
+.orbit-showcase__media {
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  position: absolute;
+  transform: scale(1.04);
+  transition: opacity 0.7s var(--ease), transform 1.4s var(--ease);
+}
+
+.orbit-showcase__media.is-active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.orbit-showcase__media img {
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.orbit-showcase__index {
+  bottom: 2rem;
+  color: var(--orbit-paper);
+  font-size: 4.4rem;
+  font-weight: 200;
+  left: 2.4rem;
+  line-height: 1;
+  position: absolute;
+  z-index: 2;
+}
+
+.orbit-showcase__index i {
+  font-size: 1.6rem;
+  font-style: normal;
+  opacity: 0.7;
+}
+
+/* --- row list --- */
+.orbit-showcase__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.orbit-showcase__row {
+  border-top: 0.1rem solid var(--grey);
+  transition: border-color 0.4s var(--ease);
+}
+
+.orbit-showcase__row:last-child {
+  border-bottom: 0.1rem solid var(--grey);
+}
+
+.orbit-showcase__row.is-active {
+  border-top-color: var(--orbit);
+}
+
+.orbit-showcase__row a {
+  color: inherit;
+  column-gap: 2.4rem;
+  display: grid;
+  grid-template-columns: 4.5rem 1fr;
+  padding: 2.8rem 0;
+  text-decoration: none;
+}
+
+.orbit-showcase__no {
+  color: var(--grey);
+  font-size: 1.4rem;
+  font-weight: 500;
+  letter-spacing: 0.08rem;
+  padding-top: 0.9rem;
+  transition: color 0.4s var(--ease);
+}
+
+.orbit-showcase__row.is-active .orbit-showcase__no {
+  color: var(--orbit);
+}
+
+.orbit-showcase__title {
+  font-size: 3rem;
+  font-weight: 400;
+  line-height: 1.1;
+  transition: color 0.4s var(--ease), transform 0.5s var(--ease);
+}
+
+.orbit-showcase__row.is-active .orbit-showcase__title {
+  color: var(--orbit);
+}
+
+.orbit-showcase__thumb {
+  display: none;
+}
+
+/* Reveal via grid-template-rows 0fr → 1fr — animatable, no magic max-height. */
+.orbit-showcase__detail {
+  display: grid;
+  grid-column: 2;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.55s var(--ease);
+}
+
+.orbit-showcase__row.is-active .orbit-showcase__detail {
+  grid-template-rows: 1fr;
+}
+
+.orbit-showcase__detail-inner {
+  display: block;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.orbit-showcase__summary {
+  color: var(--slate);
+  display: block;
+  font-size: 1.7rem;
+  line-height: 1.55;
+  margin: 1.4rem 0 0;
+  max-width: 46ch;
+}
+
+.orbit-showcase__points {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem 1.4rem;
+  margin-top: 1.8rem;
+}
+
+.orbit-showcase__point {
+  border: 0.1rem solid var(--grey);
+  border-radius: 3rem;
+  color: var(--ink);
+  font-size: 1.3rem;
+  padding: 0.6rem 1.4rem;
+}
+
+.orbit-showcase__cue {
+  align-items: center;
+  color: var(--orbit);
+  display: flex;
+  font-size: 1.3rem;
+  font-weight: 500;
+  gap: 0.8rem;
+  letter-spacing: 0.09rem;
+  margin-top: 2rem;
+  text-transform: uppercase;
+}
+
+.orbit-showcase__cue:after {
+  background: var(--orbit);
+  content: "";
+  height: 0.1rem;
+  transition: width 0.4s var(--ease);
+  width: 2.4rem;
+}
+
+.orbit-showcase__row.is-active .orbit-showcase__cue:after {
+  width: 4rem;
+}
+
+@media screen and (max-width: 979px) {
+  .orbit-showcase__title {
+    font-size: 2.4rem;
+  }
+}
+
+/* Touch / narrow: no hover, so drop the sticky preview and let every row show
+ * its own thumb and detail. Each row becomes a stacked card. */
+@media screen and (max-width: 743px) {
+  .orbit-showcase {
+    display: block;
+    margin-top: 4rem;
+  }
+  .orbit-showcase__preview {
+    display: none;
+  }
+
+  /* flex column — the grid caused the number to overlap the title */
+  .orbit-showcase__row a {
+    display: flex;
+    flex-direction: column;
+    padding: 3rem 0;
+  }
+  .orbit-showcase__no {
+    order: 1;
+    padding-top: 0;
+  }
+  .orbit-showcase__thumb {
+    aspect-ratio: 16 / 10 !important;
+    display: block;
+    height: auto !important;
+    margin: 1.4rem 0 0.4rem;
+    object-fit: cover;
+    order: 2;
+    width: 100% !important;
+  }
+  .orbit-showcase__title {
+    color: var(--ink);
+    margin-top: 1rem;
+    order: 3;
+  }
+  .orbit-showcase__detail {
+    grid-template-rows: 1fr; /* always open — no hover trigger on touch */
+    order: 4;
+  }
+  .orbit-showcase__summary {
+    margin-top: 1.4rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbit-showcase__media,
+  .orbit-showcase__detail,
+  .orbit-showcase__title {
+    transition-duration: 0.01ms;
+  }
+}
+
+/* ------------------------------------------------------- capability cards --
+ * (legacy grid — kept for any page still using PillarGrid)
+ * The homepage's six pillars. Points stay hidden until hover/focus.
+ */
+
+.orbit-pillars {
+  display: grid;
+  gap: 5rem 3rem;
+  grid-template-columns: repeat(3, 1fr);
+  list-style: none;
+  margin: 6rem 0 0;
+  padding: 0;
+}
+
+.orbit-pillar__link {
+  color: inherit;
+  display: block;
+  text-decoration: none;
+}
+
+.orbit-pillar__media {
+  background: var(--ink);
+  margin: 0 0 2rem;
+  overflow: hidden;
+  position: relative;
+}
+
+.orbit-pillar__media img,
+.orbit-pillar__media video {
+  aspect-ratio: 4 / 3;
+  display: block;
+  object-fit: cover;
+  transition: transform 1.6s var(--ease), filter 0.8s var(--ease);
+  width: 100%;
+}
+
+/* The reveal panel. translate3d keeps it composited; the ink veil is what makes
+ * the white type legible over any photo. */
+.orbit-pillar__reveal {
+  align-items: flex-start;
+  background: linear-gradient(to top, rgba(10, 11, 14, 0.94), rgba(10, 11, 14, 0.82));
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  left: 0;
+  opacity: 0;
+  padding: 3rem 2.6rem;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transform: translate3d(0, 12%, 0);
+  transition: opacity 0.55s var(--ease), transform 0.7s var(--ease);
+}
+
+.orbit-pillar__reveal ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.orbit-pillar__reveal li {
+  border-top: 0.1rem solid rgba(252, 251, 250, 0.18);
+  color: var(--orbit-paper);
+  font-size: 1.5rem;
+  font-weight: 300;
+  opacity: 0;
+  padding: 1.1rem 0;
+  transform: translate3d(0, 0.8rem, 0);
+  transition: opacity 0.5s var(--ease), transform 0.5s var(--ease);
+}
+
+/* Stagger, matching the theme's own 40-100ms cadence. */
+.orbit-pillar__reveal li:nth-child(1) { transition-delay: 0.06s; }
+.orbit-pillar__reveal li:nth-child(2) { transition-delay: 0.12s; }
+.orbit-pillar__reveal li:nth-child(3) { transition-delay: 0.18s; }
+.orbit-pillar__reveal li:nth-child(4) { transition-delay: 0.24s; }
+.orbit-pillar__reveal li:nth-child(5) { transition-delay: 0.3s; }
+
+.orbit-pillar__cue {
+  align-items: center;
+  color: var(--orbit);
+  display: flex;
+  font-size: 1.3rem;
+  font-weight: 500;
+  gap: 0.8rem;
+  letter-spacing: 0.09rem;
+  margin-top: 2rem;
+  opacity: 0;
+  text-transform: uppercase;
+  transform: translate3d(0, 0.8rem, 0);
+  transition: opacity 0.5s var(--ease) 0.34s, transform 0.5s var(--ease) 0.34s;
+}
+
+.orbit-pillar__cue:after {
+  background: var(--orbit);
+  content: "";
+  height: 0.1rem;
+  transition: width 0.5s var(--ease) 0.4s;
+  width: 2.4rem;
+}
+
+/* :focus-within as well as :hover — a hover-only reveal is invisible to anyone
+ * tabbing, and the points would be unreachable. */
+.orbit-pillar:hover .orbit-pillar__reveal,
+.orbit-pillar:focus-within .orbit-pillar__reveal {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.orbit-pillar:hover .orbit-pillar__reveal li,
+.orbit-pillar:focus-within .orbit-pillar__reveal li,
+.orbit-pillar:hover .orbit-pillar__cue,
+.orbit-pillar:focus-within .orbit-pillar__cue {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.orbit-pillar:hover .orbit-pillar__media img,
+.orbit-pillar:focus-within .orbit-pillar__media img,
+.orbit-pillar:hover .orbit-pillar__media video,
+.orbit-pillar:focus-within .orbit-pillar__media video {
+  filter: saturate(0.85);
+  transform: scale(1.06);
+}
+
+.orbit-pillar h3 {
+  font-size: 2.4rem;
+  font-weight: 400;
+  margin: 0 0 1rem;
+  position: relative;
+  transition: color 0.4s var(--ease);
+}
+
+.orbit-pillar:hover h3,
+.orbit-pillar:focus-within h3 {
+  color: var(--orbit);
+}
+
+.orbit-pillar p {
+  color: var(--slate);
+  font-size: 1.6rem;
+  line-height: 1.55;
+  margin: 0;
+}
+
+@media screen and (max-width: 1133px) {
+  .orbit-pillars {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 743px) {
+  .orbit-pillars {
+    gap: 4rem 0;
+    grid-template-columns: 1fr;
+  }
+  /* No hover on touch — show the points rather than hide them behind a gesture
+   * that does not exist. */
+  .orbit-pillar__reveal {
+    background: none;
+    opacity: 1;
+    padding: 0;
+    position: static;
+    transform: none;
+  }
+  .orbit-pillar__reveal li {
+    border-top-color: var(--grey);
+    color: var(--ink);
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .orbit-pillar__reveal ul {
+    margin-top: 1.6rem;
+  }
+  .orbit-pillar__cue {
+    display: none;
+  }
+  .orbit-pillar__media {
+    margin-bottom: 1.6rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbit-pillar__reveal,
+  .orbit-pillar__reveal li,
+  .orbit-pillar__cue,
+  .orbit-pillar__media img,
+  .orbit-pillar__media video {
+    transition-duration: 0.01ms;
+  }
+}
+
+/* ------------------------------------------------------------ service grid */
+
+.orbit-services {
+  display: grid;
+  gap: 6rem 3rem;
+  grid-template-columns: repeat(3, 1fr);
+  list-style: none;
+  margin: 6rem 0 0;
+  padding: 0;
+}
+
+.orbit-service {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Cards with art get a picture; the tail of the /services list is type-only and
+ * keeps the old rule-above treatment so the grid still reads as one set. */
+.orbit-service figure {
+  margin: 0 0 2rem;
+  overflow: hidden;
+  position: relative;
+}
+
+/* video as well as img — a card's art may be a loop (see ServiceMedia). */
+.orbit-service figure img,
+.orbit-service figure video {
+  aspect-ratio: 4 / 3;
+  background: var(--mist);
+  display: block;
+  object-fit: cover;
+  transition: transform 1.4s var(--ease);
+  width: 100%;
+}
+
+.orbit-service:hover figure img,
+.orbit-service:hover figure video {
+  transform: scale(1.05);
+}
+
+/* Crimson wipe across the top of the art on hover. */
+.orbit-service figure:after {
+  background: var(--orbit);
+  content: "";
+  height: 0.3rem;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.6s var(--ease);
+}
+
+.orbit-service:hover figure:after {
+  transform: scaleX(1);
+}
+
+.orbit-service.is-plain {
+  border-top: 0.1rem solid var(--grey);
+  padding-top: 2.6rem;
+  transition: border-color 0.6s var(--ease);
+}
+
+.orbit-service.is-plain:hover {
+  border-top-color: var(--orbit);
+}
+
+.orbit-service h3 {
+  font-size: 2.4rem;
+  font-weight: 400;
+  margin: 0 0 1.2rem;
+}
+
+@media screen and (max-width: 1133px) {
+  .orbit-services {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.orbit-service p {
+  color: var(--slate);
+  font-size: 1.7rem;
+  line-height: 1.5;
+  margin: 0 0 2rem;
+}
+
+.orbit-service ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.orbit-service ul li {
+  color: var(--ink);
+  font-size: 1.5rem;
+  padding: 0.5rem 0 0.5rem 1.8rem;
+  position: relative;
+}
+
+.orbit-service ul li:before {
+  background: var(--orbit);
+  border-radius: 50%;
+  content: "";
+  height: 0.5rem;
+  left: 0;
+  position: absolute;
+  top: 1.35rem;
+  width: 0.5rem;
+}
+
+@media screen and (max-width: 743px) {
+  .orbit-services {
+    gap: 4.5rem 0;
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ----------------------------------------------------------- contact form --
+ * Self-contained. The theme's form CSS lives under `footer form` (dark panel,
+ * one email input), so none of it reaches a light content page — without this
+ * the fields render as raw browser defaults.
+ *
+ * Underlined fields rather than boxes, to sit with the theme's rules-and-type
+ * language.
+ */
+
+.orbit-form {
+  margin: 5rem 0 0;
+}
+
+.orbit-form form {
+  display: grid;
+  gap: 3.4rem 3rem;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.orbit-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.orbit-field--full {
+  grid-column: 1 / -1;
+}
+
+.orbit-field label {
+  color: var(--slate);
+  font-size: 1.3rem;
+  letter-spacing: 0.08rem;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+}
+
+.orbit-field input,
+.orbit-field select,
+.orbit-field textarea {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  border-bottom: 0.1rem solid var(--grey);
+  border-radius: 0;
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 1.9rem;
+  font-weight: 300;
+  padding: 1rem 0;
+  transition: border-color 0.4s var(--ease);
+  width: 100%;
+}
+
+.orbit-field textarea {
+  border: 0.1rem solid var(--grey);
+  line-height: 1.5;
+  padding: 1.6rem;
+  resize: vertical;
+}
+
+.orbit-field input::placeholder,
+.orbit-field textarea::placeholder {
+  color: var(--grey);
+}
+
+.orbit-field input:focus,
+.orbit-field select:focus,
+.orbit-field textarea:focus {
+  border-color: var(--orbit);
+  outline: none;
+}
+
+/* select loses its arrow to appearance:none — draw one back. */
+.orbit-field select {
+  background-image: linear-gradient(45deg, transparent 50%, var(--ink) 50%),
+    linear-gradient(135deg, var(--ink) 50%, transparent 50%);
+  background-position: calc(100% - 1.1rem) 2rem, calc(100% - 0.6rem) 2rem;
+  background-repeat: no-repeat;
+  background-size: 0.5rem 0.5rem, 0.5rem 0.5rem;
+  cursor: pointer;
+  padding-right: 2.5rem;
+}
+
+.orbit-form__foot {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  gap: 2.4rem;
+  margin-top: 1rem;
+}
+
+.orbit-submit {
+  background: var(--orbit);
+  border: 0;
+  color: var(--orbit-paper);
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 1.6rem;
+  font-weight: 500;
+  letter-spacing: 0.02rem;
+  padding: 1.8rem 4.5rem;
+  transition: background 0.4s var(--ease), transform 0.4s var(--ease);
+}
+
+.orbit-submit:hover:not(:disabled) {
+  background: var(--orbit-deep);
+}
+
+.orbit-submit:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.orbit-form__msg {
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+.orbit-form.is-error .orbit-form__msg {
+  color: var(--orbit);
+}
+
+.orbit-form.is-success .orbit-form__msg {
+  color: var(--ink);
+}
+
+/* Invalid only after a submit attempt — not while the user is still typing. */
+.orbit-form form:invalid .orbit-submit {
+  opacity: 1;
+}
+
+.orbit-form.is-error input:invalid,
+.orbit-form.is-error textarea:invalid {
+  border-color: var(--orbit);
+}
+
+@media screen and (max-width: 743px) {
+  .orbit-form form {
+    gap: 2.8rem 0;
+    grid-template-columns: 1fr;
+  }
+  .orbit-form__foot {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 1.6rem;
+  }
+  .orbit-submit {
+    width: 100%;
+  }
+}
+
+/* ------------------------------------------------------------------- team --
+ * Monograms, not photos — see TeamGrid for why.
+ */
+
+.orbit-team {
+  display: grid;
+  gap: 4rem 3rem;
+  grid-template-columns: repeat(5, 1fr);
+  list-style: none;
+  margin: 5rem 0 0;
+  padding: 0;
+}
+
+.orbit-team li {
+  display: flex;
+  flex-direction: column;
+}
+
+.orbit-monogram {
+  align-items: center;
+  aspect-ratio: 1;
+  background: var(--ink);
+  border-radius: 50%;
+  color: var(--orbit-paper);
+  display: flex;
+  font-size: 2.8rem;
+  font-weight: 300;
+  justify-content: center;
+  letter-spacing: 0.1rem;
+  margin-bottom: 1.8rem;
+  position: relative;
+  transition: background 0.6s var(--ease);
+  width: 100%;
+}
+
+.orbit-team li:hover .orbit-monogram {
+  background: var(--orbit);
+}
+
+.orbit-team strong {
+  font-size: 1.8rem;
+  font-weight: 400;
+}
+
+.orbit-role {
+  color: var(--slate);
+  font-size: 1.4rem;
+  margin-top: 0.4rem;
+}
+
+@media screen and (max-width: 979px) {
+  .orbit-team {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media screen and (max-width: 743px) {
+  .orbit-team {
+    gap: 3rem 2rem;
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .orbit-monogram {
+    font-size: 2.2rem;
+  }
+}
+
+/* -------------------------------------------------------------- quotes */
+
+.orbit-quote {
+  border-top: 0.1rem solid var(--grey);
+  margin: 0;
+  padding: 3rem 0 3.4rem;
+  position: relative;
+}
+
+.orbit-quote .quote-no {
+  color: var(--orbit);
+  display: block;
+  font-size: 2rem;
+  font-weight: 500;
+  line-height: 1;
+  margin-bottom: 1.6rem;
+}
+
+.orbit-quote p {
+  font-size: 2.6rem;
+  font-weight: 200;
+  line-height: 1.4;
+  margin: 0 0 2rem;
+  max-width: 90rem;
+}
+
+.orbit-quote footer {
+  align-items: baseline;
+  display: flex;
+  gap: 1.6rem;
+}
+
+.orbit-quote cite {
+  font-size: 1.6rem;
+  font-style: normal;
+  font-weight: 500;
+}
+
+.orbit-quote footer .label {
+  color: var(--slate);
+}
+
+@media screen and (max-width: 743px) {
+  .orbit-quote p {
+    font-size: 2rem;
+  }
+}
+
+/* -------------------------------------------------- text (wordmark) marquee */
+
+.orbit-text-marquee figure {
+  align-items: center;
+  display: inline-flex;
+  max-height: none;
+  padding-right: 8rem;
+}
+
+.orbit-text-marquee figure span {
+  color: var(--grey);
+  font-size: 2.4rem;
+  font-weight: 500;
+  letter-spacing: -0.02rem;
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------- card grid */
+
+.orbit-cards {
+  display: grid;
+  gap: 5rem 3rem;
+  grid-template-columns: repeat(2, 1fr);
+  list-style: none;
+  margin: 6rem 0 0;
+  padding: 0;
+}
+
+/* The card IS the <a>, so everything inside inherits link colour — without this
+ * the titles render browser-default blue. */
+.orbit-card {
+  color: inherit;
+  display: block;
+  text-decoration: none;
+}
+
+.orbit-card h2,
+.orbit-card h3 {
+  color: var(--ink);
+  transition: color 0.3s var(--ease);
+}
+
+.orbit-card:hover h2,
+.orbit-card:hover h3 {
+  color: var(--orbit);
+}
+
+.orbit-card figure {
+  margin: 0 0 1.8rem;
+  overflow: hidden;
+}
+
+.orbit-card img {
+  aspect-ratio: 16 / 9;
+  display: block;
+  object-fit: cover;
+  transition: transform 1.2s var(--ease);
+  width: 100%;
+}
+
+.orbit-card:hover img {
+  transform: scale(1.04);
+}
+
+.orbit-card .label {
+  color: var(--orbit);
+  display: block;
+  font-size: 1.3rem;
+  letter-spacing: 0.08rem;
+  margin-bottom: 0.8rem;
+  text-transform: uppercase;
+}
+
+.orbit-card h3 {
+  font-size: 2.4rem;
+  font-weight: 300;
+  margin: 0;
+}
+
+.orbit-card__excerpt {
+  color: var(--slate);
+  font-size: 1.6rem;
+  line-height: 1.5;
+  margin: 1rem 0 1.4rem;
+}
+
+/* Beats `.orbit-card .label` (same specificity, later wins) — the date should
+ * read as metadata, not as the crimson category tag. */
+.orbit-card time.label {
+  color: var(--grey);
+  display: block;
+  letter-spacing: 0.06rem;
+  text-transform: uppercase;
+}
+
+/* Lead post — image beside the type instead of above it. */
+.orbit-card--lead {
+  align-items: center;
+  border-top: 0.1rem solid var(--grey);
+  display: grid;
+  gap: 4rem;
+  grid-template-columns: 1.2fr 1fr;
+  margin-top: 6rem;
+  padding-top: 4rem;
+}
+
+.orbit-card--lead figure {
+  margin: 0;
+  overflow: hidden;
+}
+
+.orbit-card--lead img {
+  aspect-ratio: 16 / 10;
+}
+
+.orbit-card--lead h2 {
+  font-size: 4.4rem;
+  font-weight: 300;
+  line-height: 1.1;
+  margin: 0.8rem 0 1.6rem;
+}
+
+.orbit-card--lead p {
+  color: var(--slate);
+  font-size: 1.8rem;
+  line-height: 1.5;
+  margin: 0 0 1.8rem;
+}
+
+@media screen and (max-width: 979px) {
+  .orbit-card--lead {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .orbit-card--lead h2 {
+    font-size: 3.2rem;
+  }
+}
+
+@media screen and (max-width: 743px) {
+  .orbit-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ------------------------------------------------------------- blog post --
+ * A reading column. theme.css has no long-form treatment — its pages are all
+ * blocks — so measure, rhythm and subheads are set here.
+ */
+
+.orbit-post__meta {
+  color: var(--slate);
+  margin-bottom: 2rem;
+}
+
+.orbit-post__meta a {
+  color: var(--orbit);
+  text-decoration: none;
+}
+
+.orbit-post__title {
+  margin-bottom: 2.4rem;
+  max-width: 22ch;
+}
+
+.orbit-post__byline {
+  border-top: 0.1rem solid var(--grey);
+  color: var(--slate);
+  margin-top: 3rem;
+  padding-top: 2rem;
+}
+
+.orbit-post__hero {
+  margin: 2rem 0 6rem;
+  overflow: hidden;
+}
+
+.orbit-post__hero img {
+  aspect-ratio: 21 / 9;
+  display: block;
+  object-fit: cover;
+  width: 100%;
+}
+
+/* ~68ch is the readable measure; the theme's 12-col constraint is far wider. */
+.orbit-post__body {
+  max-width: 68ch;
+}
+
+.orbit-post__body p {
+  font-size: 2rem;
+  font-weight: 300;
+  line-height: 1.65;
+  margin: 0 0 2.6rem;
+}
+
+.orbit-post__body h2 {
+  font-size: 2.8rem;
+  font-weight: 400;
+  margin: 5rem 0 2rem;
+  position: relative;
+}
+
+.orbit-post__body h2:before {
+  background: var(--orbit);
+  content: "";
+  display: block;
+  height: 0.3rem;
+  margin-bottom: 1.8rem;
+  width: 4rem;
+}
+
+/* Opening paragraph carries the eye in. */
+.orbit-post__body > p:first-child {
+  font-size: 2.3rem;
+}
+
+@media screen and (max-width: 743px) {
+  .orbit-post__title {
+    max-width: none;
+  }
+  .orbit-post__body p {
+    font-size: 1.8rem;
+  }
+  .orbit-post__body > p:first-child {
+    font-size: 2rem;
+  }
+  .orbit-post__body h2 {
+    font-size: 2.2rem;
+  }
+}
+
+/* ------------------------------------------------------------------ links --
+ * The theme only ever styled its own arrow/CTA link classes, so a plain <a> in
+ * body copy falls back to browser blue-and-underline. These pages use ordinary
+ * links (service jump list, mailto, legal), so they need a house style.
+ * Scoped to main so nav/footer keep their own treatment.
+ */
+
+main .wp-block-list a,
+main .orbit-list a,
+main .wp-block-paragraph a,
+main .orbit-service a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.3s var(--ease);
+}
+
+main .wp-block-list a:hover,
+main .orbit-list a:hover,
+main .wp-block-paragraph a:hover,
+main .orbit-service a:hover {
+  color: var(--orbit);
+}
+
+/* Body-copy links keep an underline — removing it there costs affordance. */
+main .wp-block-paragraph a,
+main .orbit-list span a {
+  text-decoration: underline;
+  text-decoration-color: var(--orbit);
+  text-underline-offset: 0.4rem;
+}
+
+/* ---------------------------------------------------------------- buttons --
+ * The theme only has arrow-links, no filled CTA, so the hero/strip buttons are
+ * defined here.
+ */
+
+.orbit-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.6rem;
+  margin-top: 3.4rem;
+}
+
+.orbit-cta-row--center {
+  justify-content: center;
+}
+
+.orbit-btn {
+  background: var(--orbit);
+  border: 0.1rem solid var(--orbit);
+  color: var(--orbit-paper);
+  display: inline-block;
+  font-size: 1.6rem;
+  font-weight: 500;
+  padding: 1.7rem 3.4rem;
+  text-decoration: none;
+  transition: background 0.4s var(--ease), color 0.4s var(--ease),
+    border-color 0.4s var(--ease);
+}
+
+.orbit-btn:hover {
+  background: var(--orbit-deep);
+  border-color: var(--orbit-deep);
+  color: var(--orbit-paper);
+}
+
+.orbit-btn--ghost {
+  background: transparent;
+  border-color: var(--grey);
+  color: var(--ink);
+}
+
+.orbit-btn--ghost:hover {
+  background: transparent;
+  border-color: var(--orbit);
+  color: var(--orbit);
+}
+
+@media screen and (max-width: 743px) {
+  .orbit-cta-row {
+    flex-direction: column;
+  }
+  .orbit-btn {
+    text-align: center;
+  }
+}
+
+/* ------------------------------------------------------------ case results */
+
+.orbit-results {
+  display: grid;
+  gap: 0 3rem;
+  grid-template-columns: repeat(3, 1fr);
+  list-style: none;
+  margin: 5rem 0 0;
+  padding: 0;
+}
+
+.orbit-results li {
+  border-top: 0.2rem solid var(--orbit);
+  display: flex;
+  flex-direction: column;
+  padding: 2.4rem 0 0;
+}
+
+.orbit-results .label {
+  color: var(--slate);
+  font-size: 1.3rem;
+  letter-spacing: 0.08rem;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+}
+
+.orbit-results strong {
+  font-size: 2.1rem;
+  font-weight: 400;
+  margin-bottom: 1.4rem;
+}
+
+.orbit-results__figure {
+  color: var(--orbit);
+  font-size: 1.7rem;
+  font-weight: 500;
+}
+
+@media screen and (max-width: 979px) {
+  .orbit-results {
+    gap: 3rem;
+    grid-template-columns: 1fr;
+  }
+}
+
+/* -------------------------------------------------------------- approach --
+ * Numbered steps with a rule that runs between them.
+ */
+
+.orbit-steps {
+  counter-reset: step;
+  display: grid;
+  gap: 0 3rem;
+  grid-template-columns: repeat(4, 1fr);
+  list-style: none;
+  margin: 5rem 0 0;
+  padding: 0;
+}
+
+.orbit-steps li {
+  border-top: 0.1rem solid var(--grey);
+  display: flex;
+  flex-direction: column;
+  padding: 2.4rem 0 0;
+  position: relative;
+}
+
+.orbit-steps__no {
+  color: var(--orbit);
+  font-size: 1.4rem;
+  font-weight: 500;
+  letter-spacing: 0.1rem;
+  margin-bottom: 1.4rem;
+}
+
+.orbit-steps strong {
+  font-size: 2rem;
+  font-weight: 400;
+  margin-bottom: 1rem;
+}
+
+.orbit-steps__body {
+  color: var(--slate);
+  font-size: 1.5rem;
+  line-height: 1.5;
+}
+
+@media screen and (max-width: 979px) {
+  .orbit-steps {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3rem;
+  }
+}
+
+@media screen and (max-width: 743px) {
+  .orbit-steps {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ----------------------------------------------------------------- footer --
+ * The theme's footer was two columns of almost nothing; the SEO structure wants
+ * about text, quick links, services and contact. Restyled inside the theme's
+ * dark .invert panel rather than beside it.
+ */
+
+.orbit-footer__about {
+  color: var(--grey);
+  font-size: 1.5rem;
+  line-height: 1.6;
+  margin: 0 0 3rem;
+  max-width: 46ch;
+}
+
+.orbit-footer__links nav + .orbit-footer__contact {
+  margin-top: 3.4rem;
+}
+
+.orbit-footer__links h4,
+.orbit-footer__contact h4 {
+  color: var(--orbit-paper);
+  font-size: 1.4rem;
+  letter-spacing: 0.08rem;
+  margin: 0 0 1.6rem;
+  text-transform: uppercase;
+}
+
+.orbit-footer__links ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.orbit-footer__links li {
+  margin-bottom: 0.9rem;
+}
+
+.orbit-footer__links a,
+.orbit-footer__contact a {
+  color: var(--grey);
+  font-size: 1.5rem;
+  text-decoration: none;
+  transition: color 0.3s var(--ease);
+}
+
+.orbit-footer__links a:hover,
+.orbit-footer__contact a:hover {
+  color: var(--orbit);
+}
+
+.orbit-footer__contact p {
+  color: var(--grey);
+  font-size: 1.5rem;
+  line-height: 1.9;
+  margin: 0;
+}
+
+@media screen and (max-width: 979px) {
+  .orbit-footer__about {
+    max-width: none;
+  }
+}
+
+/* ------------------------------------------------------------- CTA strip */
+
+.orbit-cta-strip {
+  margin-bottom: 6rem;
+  margin-top: 12rem;
+  text-align: center;
+}
+
+.orbit-cta-strip h2 {
+  font-size: clamp(2.8rem, 3.4vw, 4.4rem);
+  font-weight: 200;
+  line-height: 1.15;
+  margin: 0 auto 1.6rem;
+  max-width: 20ch;
+}
+
+.orbit-cta-strip p {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 60ch;
+}
+
+@media screen and (max-width: 743px) {
+  .orbit-cta-strip h2 {
+    font-size: 3.2rem;
+  }
+}
+
+/* ------------------------------------------------------------- simple list */
+
+.orbit-list {
+  list-style: none;
+  margin: 5rem 0 0;
+  padding: 0;
+}
+
+.orbit-list li {
+  border-top: 0.1rem solid var(--grey);
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: 1fr 2fr;
+  padding: 2.6rem 0;
+}
+
+.orbit-list li strong {
+  font-size: 2.2rem;
+  font-weight: 400;
+}
+
+.orbit-list li span {
+  color: var(--slate);
+  font-size: 1.6rem;
+  line-height: 1.5;
+}
+
+/* Ticked variant for the "why us" proof points. */
+.orbit-list--check li strong {
+  padding-left: 3rem;
+  position: relative;
+}
+
+.orbit-list--check li strong:before {
+  color: var(--orbit);
+  content: "✔";
+  font-size: 1.6rem;
+  left: 0;
+  position: absolute;
+  top: 0.2rem;
+}
+
+@media screen and (max-width: 743px) {
+  .orbit-list li {
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
+  }
+}

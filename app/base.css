@@ -1,0 +1,85 @@
+/*
+ * Tokens + fallbacks layered under theme.css (the ported 4.3.4 theme).
+ *
+ * --font-sans is the real PP Mori, self-hosted via next/font/local — see
+ * lib/fonts.ts. theme.css's own @font-face blocks were stripped during the port
+ * so there is exactly one place that defines the family.
+ */
+
+:root {
+  --ink: #12141a;
+  --paper: #fff;
+  --accent: #fa241c;
+  --mist: #f2f4f6;
+  --grey: #b2b4ba;
+  --slate: #5a5e66;
+  --mint: #1fecce;
+
+  --ease: cubic-bezier(0.23, 1, 0.32, 1);
+  --dur: 3s;
+}
+
+/* theme.css assumes 1rem = 10px */
+html {
+  font-size: 62.5%;
+}
+
+/*
+ * Kills the classic-scrollbar horizontal bar.
+ *
+ * theme.css full-bleeds 18 different rules with `width:100vw` +
+ * `left:50%; translateX(-50%)` (.background-block, the marquee backdrops, the
+ * case cards). 100vw is the viewport INCLUDING the scrollbar, while the content
+ * box excludes it — so on any desktop with classic (non-overlay) scrollbars
+ * every one of those is ~15px wider than the page and you get a horizontal bar.
+ * It does not reproduce in headless Chromium, which uses overlay scrollbars.
+ *
+ * `clip` rather than `hidden`: hidden would make this a scroll container and
+ * break the theme's position:sticky blocks (the case slider and image cluster
+ * both pin). clip has no such side effect.
+ */
+html {
+  overflow-x: clip;
+}
+
+body {
+  overflow-x: clip;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* The engine strips .apending once hydrated; keep pre-hydration paint static. */
+.apending .aitem {
+  transition: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aitem,
+  .aitem.img {
+    transition: none !important;
+  }
+  .ahide {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/*
+ * Transformation-wheel plates (text1-5.svg, wheel1-4.svg) were excluded by the
+ * HTTrack filter. Neutral fill keeps layout intact until they are restored.
+ */
+.k-missing-plate {
+  background: var(--mist);
+  border-radius: 2px;
+}
