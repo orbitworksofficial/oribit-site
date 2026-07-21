@@ -1,9 +1,29 @@
 import localFont from "next/font/local";
+import { Outfit } from "next/font/google";
 
 /**
- * The real PP Mori, self-hosted. The theme's own @font-face blocks were stripped
- * when theme.css was ported; next/font owns the faces now and publishes the
- * family as --font-sans, which is what every rule in theme.css resolves to.
+ * Vivacity-inspired type (restyle layer — see app/vivacity.css).
+ *
+ * Outfit is the single family across the whole site: it publishes as
+ * --font-sans (what every rule in theme.css resolves to) and vivacity.css points
+ * --font-display at it too, so headings and body share one typeface — 'Outfit',
+ * sans-serif — with weight doing the work.
+ *
+ * To undo the restyle, revert this file (PP Mori below reclaims --font-sans) and
+ * app/vivacity.css.
+ */
+export const outfit = Outfit({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
+  variable: "--font-sans",
+  fallback: ["sans-serif"],
+});
+
+/**
+ * The real PP Mori, self-hosted. Kept available as --font-mori; nothing
+ * references it while the Vivacity restyle is active, so the browser never
+ * downloads the faces. Reverting fonts.ts restores it to --font-sans.
  *
  * Weight names map to the theme's numeric scale:
  *   Extralight 100 · Light 200 · Book 300 · Regular 400
@@ -28,6 +48,6 @@ export const ppMori = localFont({
     { path: "../public/theme/fonts/PPMori-BoldItalic.woff2", weight: "700", style: "italic" },
   ],
   display: "swap",
-  variable: "--font-sans",
+  variable: "--font-mori",
   fallback: ["sans-serif"],
 });

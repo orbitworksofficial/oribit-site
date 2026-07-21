@@ -16,11 +16,17 @@ import "./theme.css";
 import "./wp-blocks.css";
 import "./base.css";
 import "./orbit.css";
+import "./services-hub.css";
+// Vivacity-inspired restyle — loaded last so its tokens win. Revert this import
+// plus lib/fonts.ts to return to the previous theme.
+import "./vivacity.css";
 
-import { ppMori } from "@/lib/fonts";
+import { ppMori, outfit } from "@/lib/fonts";
 import { chromeFor } from "@/lib/routes";
 import TransitionEngine from "@/components/animation/TransitionEngine";
 import Nav from "@/components/layout/Nav";
+import ChromeSync from "@/components/layout/ChromeSync";
+import SiteLoader from "@/components/layout/SiteLoader";
 import ContactFooter from "@/components/layout/ContactFooter";
 import SiteFooter from "@/components/layout/SiteFooter";
 import CookieBanner from "@/components/layout/CookieBanner";
@@ -77,11 +83,17 @@ export default async function RootLayout({
   const { body } = chromeFor(pathname);
 
   return (
-    <html lang="en" className={ppMori.variable} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${outfit.variable} ${ppMori.variable}`}
+      suppressHydrationWarning
+    >
       <head>
         <script dangerouslySetInnerHTML={{ __html: BOOT }} />
       </head>
       <body className={body}>
+        <SiteLoader />
+        <ChromeSync />
         <a id="top" className="top-link" />
 
         <Nav pathname={pathname} />

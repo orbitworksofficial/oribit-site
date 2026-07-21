@@ -2,14 +2,15 @@ import Link from "next/link";
 
 import VideoLoopHeader from "@/components/blocks/VideoLoopHeader";
 import FrontPageImageCluster from "@/components/blocks/FrontPageImageCluster";
-import TextMarquee from "@/components/blocks/TextMarquee";
+import ClientGrid from "@/components/blocks/ClientGrid";
 import CaseSlider from "@/components/blocks/CaseSlider";
 import PreviewVideo from "@/components/blocks/PreviewVideo";
-import PillarShowcase from "@/components/blocks/PillarShowcase";
+import BucketShowcase from "@/components/blocks/BucketShowcase";
 import Stats from "@/components/blocks/Stats";
 import Testimonials from "@/components/blocks/Testimonials";
 import { MIRROR_PORTRAIT } from "@/lib/video";
-import { BRAND, CLIENTS, INDUSTRIES, SECTIONS, WHY, APPROACH, CASE_RESULTS } from "@/lib/content";
+import { BRAND, INDUSTRIES, SECTIONS, WHY, APPROACH, CASE_RESULTS } from "@/lib/content";
+import { SERVICES_HOMEPAGE } from "@/lib/services-data";
 import { HOME_CASE_CARDS } from "@/lib/home-content";
 
 /**
@@ -61,26 +62,28 @@ export default function Home() {
         <p className="has-text-align-left small tabletbodyxs shorten shorten-70 wp-block-paragraph">
           {SECTIONS.trustBody}
         </p>
+        <ClientGrid />
       </div>
-
-      <TextMarquee items={CLIENTS} />
 
       <Stats />
 
       <FrontPageImageCluster />
 
-      {/* 3. Core capabilities */}
+      {/* 3. Everything we do — service buckets (brief Section 07) */}
       <div
         className="wp-block-kenza-column-constraint column-constraint cols-12"
         data-transition="slideup"
         data-transition-include="through"
       >
-        <h2 className="wp-block-heading deco-l mobile">{SECTIONS.pillarsHeading}</h2>
-        <h3 className="wp-block-heading book mobilexl shorten">{SECTIONS.pillarsIntro}</h3>
-        <PillarShowcase />
-        <p className="k-center">
-          <Link href="/services" className="squarearrowonleft">
-            View All Services
+        <span className="orbit-eyebrow">{SERVICES_HOMEPAGE.label}</span>
+        <h2 className="orbit-section-head">{SERVICES_HOMEPAGE.heading}</h2>
+        <p className="has-text-align-left large large-intro shorten shorten-70 wp-block-paragraph">
+          {SERVICES_HOMEPAGE.sub}
+        </p>
+        <BucketShowcase />
+        <p className="orbit-cta-row orbit-cta-row--center">
+          <Link href="/services" className="orbit-btn">
+            {SERVICES_HOMEPAGE.cta}
           </Link>
         </p>
       </div>

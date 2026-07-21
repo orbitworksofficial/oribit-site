@@ -1,7 +1,9 @@
 import Link from "next/link";
 import NewsletterForm from "./NewsletterForm";
-import { NAV_ITEMS } from "./NavList";
-import { SOCIAL, BRAND, PILLARS } from "@/lib/content";
+import { NAV_ITEMS } from "@/lib/nav";
+import { SOCIAL, BRAND } from "@/lib/content";
+import { SERVICE_BUCKETS } from "@/lib/services-data";
+import { LEGAL_DOCS } from "@/lib/legal-data";
 
 /**
  * The engine looks this up as `footer[data-transition="slideup"]`.
@@ -22,9 +24,12 @@ export default function SiteFooter() {
         </section>
 
         <section className="col orbit-footer__links">
-          <nav>
+          {/* A <div>, not a <nav>: the theme's global `nav:not(.social)` rule
+           * forces every <nav> to position:fixed;top:0, which was stacking these
+           * footer columns at the top of the page. */}
+          <div className="orbit-footer__nav">
             <h4>Quick links</h4>
-            <ul>
+            <ul className="orbit-footer__quick">
               <li>
                 <Link href="/">Home</Link>
               </li>
@@ -34,20 +39,20 @@ export default function SiteFooter() {
                 </li>
               ))}
             </ul>
-          </nav>
+          </div>
         </section>
 
         <section className="col orbit-footer__links">
-          <nav>
+          <div className="orbit-footer__nav">
             <h4>Services</h4>
             <ul>
-              {PILLARS.map((p) => (
-                <li key={p.slug}>
-                  <Link href={`/services#${p.slug}`}>{p.title}</Link>
+              {SERVICE_BUCKETS.map((b) => (
+                <li key={b.slug}>
+                  <Link href={`/services#${b.slug}`}>{b.name}</Link>
                 </li>
               ))}
             </ul>
-          </nav>
+          </div>
 
           <div className="orbit-footer__contact">
             <h4>Contact</h4>
@@ -94,12 +99,14 @@ export default function SiteFooter() {
 
           <section className="col legal">
             <ul className="label small">
-              <li className="cl4 ">
-                <Link rel="nofollow privacy-policy" href="/legal">
-                  Legal
-                </Link>
-              </li>
-              <li className="cl5 back-to-top">
+              {LEGAL_DOCS.map((d, i) => (
+                <li key={d.slug} className={`cl${i + 4}`}>
+                  <Link rel="nofollow" href={`/${d.slug}`}>
+                    {d.navLabel}
+                  </Link>
+                </li>
+              ))}
+              <li className="back-to-top">
                 <a href="#top">Back to top</a>
               </li>
             </ul>

@@ -105,6 +105,27 @@ export const ROUTES: Record<string, RouteChrome> = {
     title: "Legal — OrbitWorks",
     description: "Privacy, cookies and company details for OrbitWorks.",
   },
+  "/privacy": {
+    body: `privacy-policy ${THEME} classic nav-black`,
+    nav: "black",
+    selected: null,
+    title: "Privacy Policy — OrbitWorks",
+    description: "How Orbit Works collects, uses, and protects your information.",
+  },
+  "/terms": {
+    body: `privacy-policy ${THEME} classic nav-black`,
+    nav: "black",
+    selected: null,
+    title: "Terms & Conditions — OrbitWorks",
+    description: "The agreement between you and Orbit Works LLC when using our services.",
+  },
+  "/refund-policy": {
+    body: `privacy-policy ${THEME} classic nav-black`,
+    nav: "black",
+    selected: null,
+    title: "Cancellation & Refund Policy — OrbitWorks",
+    description: "Clear terms for ending a service engagement with Orbit Works LLC.",
+  },
 };
 
 const FALLBACK: RouteChrome = {

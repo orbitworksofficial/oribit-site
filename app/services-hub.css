@@ -1,0 +1,472 @@
+/*
+ * Services Hub — homepage Section 07 bucket cards + the /services hub page.
+ * Built inside the theme's scale (1rem = 10px, --ease) and the Vivacity grading.
+ * Each bucket exposes --bucket-accent; components pass it in per section.
+ */
+
+/* ------------------------------------------------------- section header --
+ * Label / headline / sub, per the brief's Section 07 structure. Used on the
+ * homepage services section (a full sentence headline, so not the giant deco-l).
+ */
+.orbit-eyebrow {
+  color: var(--orbit);
+  display: block;
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: 0.12rem;
+  margin-bottom: 1.4rem;
+  text-transform: uppercase;
+}
+
+main .orbit-section-head {
+  font-family: var(--font-display);
+  font-size: clamp(2.6rem, 3.4vw, 4.2rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+  margin: 0 0 1.6rem;
+  max-width: 20ch;
+}
+
+/* ------------------------------------------------------------ bucket grid --
+ * Homepage: 2x2 dark navy cards that pop against the light page (matches the
+ * brief). Each deep-links to its bucket on the hub.
+ */
+.orbit-buckets {
+  display: grid;
+  gap: 2.4rem;
+  grid-template-columns: repeat(2, 1fr);
+  list-style: none;
+  margin: 5rem 0 0;
+  padding: 0;
+}
+
+.orbit-bucket {
+  --bucket-accent: var(--orbit);
+}
+
+.orbit-bucket__link {
+  background: #0e1230;
+  border: 0.1rem solid rgba(255, 255, 255, 0.06);
+  border-top: 0.3rem solid var(--bucket-accent);
+  color: var(--orbit-paper);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 3.2rem 3rem 3rem;
+  position: relative;
+  text-decoration: none;
+  transition: transform 0.5s var(--ease), border-color 0.5s var(--ease),
+    background 0.5s var(--ease);
+}
+
+.orbit-bucket__link:hover {
+  background: #12173a;
+  transform: translateY(-0.4rem);
+}
+
+.orbit-bucket__no {
+  color: var(--bucket-accent);
+  font-size: 1.4rem;
+  font-weight: 600;
+  letter-spacing: 0.1rem;
+}
+
+.orbit-bucket__name {
+  font-size: 2.3rem;
+  font-weight: 600;
+  margin: 1.4rem 0 1rem;
+}
+
+.orbit-bucket__tag {
+  color: rgba(200, 208, 222, 0.85);
+  font-size: 1.6rem;
+  line-height: 1.5;
+  margin: 0 0 2.2rem;
+}
+
+.orbit-bucket__label {
+  color: rgba(200, 208, 222, 0.55);
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 0.1rem;
+  text-transform: uppercase;
+}
+
+.orbit-bucket__list {
+  list-style: none;
+  margin: 1.4rem 0 0;
+  padding: 0;
+}
+
+.orbit-bucket__list li {
+  border-top: 0.1rem solid rgba(255, 255, 255, 0.08);
+  font-size: 1.5rem;
+  padding: 0.9rem 0 0.9rem 1.8rem;
+  position: relative;
+}
+
+.orbit-bucket__list li::before {
+  color: var(--bucket-accent);
+  content: "+";
+  font-weight: 600;
+  left: 0;
+  position: absolute;
+  top: 0.9rem;
+}
+
+.orbit-bucket__cue {
+  align-items: center;
+  color: var(--bucket-accent);
+  display: flex;
+  font-size: 1.3rem;
+  font-weight: 600;
+  gap: 0.8rem;
+  letter-spacing: 0.08rem;
+  margin-top: 2.4rem;
+  text-transform: uppercase;
+}
+
+.orbit-bucket__cue::after {
+  background: var(--bucket-accent);
+  content: "";
+  height: 0.1rem;
+  transition: width 0.4s var(--ease);
+  width: 2.4rem;
+}
+
+.orbit-bucket__link:hover .orbit-bucket__cue::after {
+  width: 4rem;
+}
+
+@media screen and (max-width: 743px) {
+  .orbit-buckets {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =============================================================== hub page == */
+
+/* Hub hero title — a full sentence, so cap it below the giant deco-l. Beats
+ * orbit.css's `main h1.deco-l` (equal specificity, later file). */
+main h1.orbit-hub-title {
+  font-size: clamp(3rem, 4.2vw, 5.4rem);
+  line-height: 1.06;
+  margin-bottom: 2rem;
+  max-width: 20ch;
+}
+
+/* --------------------------------------------------------- sticky nav --
+ * Sticks BELOW the theme's fixed header (≈9rem desktop / 7rem narrow), never
+ * over it — so its labels can't bleed through the main navbar. Solid bar (no
+ * backdrop blur, which was the source of the ghosted "AI Automation" text under
+ * the nav). z-index sits under the header chrome (scrim 3, nav 95) but above
+ * page content. A full-bleed underlay keeps the bar opaque edge to edge while
+ * the links stay aligned to the content column.
+ */
+.orbit-svcnav {
+  background: var(--paper);
+  border-bottom: 0.1rem solid var(--grey);
+  margin: 2rem 0 1rem;
+  position: sticky;
+  top: 9rem;
+  z-index: 2;
+}
+
+/* Opaque underlay wider than the content column, so nothing shows through at
+ * the edges as content scrolls beneath. */
+.orbit-svcnav::before {
+  background: var(--paper);
+  border-bottom: 0.1rem solid var(--grey);
+  bottom: 0;
+  content: "";
+  left: 50%;
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  width: 100vw;
+  z-index: -1;
+}
+
+.orbit-svcnav ul {
+  display: flex;
+  gap: 3.2rem;
+  list-style: none;
+  margin: 0;
+  overflow-x: auto;
+  padding: 1.6rem 0;
+  scrollbar-width: none;
+}
+
+@media screen and (max-width: 979px) {
+  .orbit-svcnav {
+    top: 7rem;
+  }
+}
+
+.orbit-svcnav ul::-webkit-scrollbar {
+  display: none;
+}
+
+.orbit-svcnav a {
+  color: var(--slate);
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 500;
+  padding-bottom: 0.4rem;
+  position: relative;
+  text-decoration: none;
+  transition: color 0.3s var(--ease);
+  white-space: nowrap;
+}
+
+.orbit-svcnav a::after {
+  background: var(--orbit);
+  bottom: -1.7rem;
+  content: "";
+  height: 0.2rem;
+  left: 0;
+  position: absolute;
+  right: 0;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.4s var(--ease);
+}
+
+.orbit-svcnav a:hover {
+  color: var(--ink);
+}
+
+.orbit-svcnav .is-active a {
+  color: var(--orbit);
+}
+
+.orbit-svcnav .is-active a::after {
+  transform: scaleX(1);
+}
+
+/* ------------------------------------------------------------ bucket band -- */
+.orbit-svcbucket {
+  --bucket-accent: var(--orbit);
+  margin-top: 6rem;
+  /* clears the fixed header (≈9rem) + the sticky sub-nav (≈5rem). */
+  scroll-margin-top: 15rem;
+}
+
+.orbit-svcbucket__head {
+  align-items: center;
+  background: var(--navy, #07091e);
+  border-left: 0.4rem solid var(--bucket-accent);
+  display: flex;
+  gap: 3rem;
+  justify-content: space-between;
+  padding: 3.4rem 3.6rem;
+}
+
+.orbit-svcbucket__eyebrow {
+  color: rgba(200, 208, 222, 0.6);
+  display: block;
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 0.12rem;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+}
+
+.orbit-svcbucket__name {
+  color: var(--orbit-paper);
+  font-size: clamp(2.4rem, 3vw, 3.4rem);
+  font-weight: 600;
+  margin: 0 0 0.8rem;
+}
+
+.orbit-svcbucket__tag {
+  color: rgba(200, 208, 222, 0.85);
+  font-size: 1.6rem;
+  line-height: 1.5;
+  margin: 0;
+  max-width: 60ch;
+}
+
+.orbit-svcbucket__count {
+  color: var(--bucket-accent);
+  flex-shrink: 0;
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 4vw, 4.6rem);
+  font-weight: 700;
+  line-height: 0.9;
+  text-align: right;
+}
+
+.orbit-svcbucket__count i {
+  display: block;
+  font-size: 1.6rem;
+  font-style: normal;
+  font-weight: 600;
+}
+
+/* ---------------------------------------------------------- service cards -- */
+.orbit-svccards {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.orbit-svccard {
+  border: 0.1rem solid var(--grey);
+  border-top: 0.3rem solid var(--bucket-accent);
+  display: grid;
+  gap: 4rem;
+  grid-template-columns: 1.55fr 1fr;
+  padding: 3.4rem 3.6rem;
+  scroll-margin-top: 10rem;
+  transition: box-shadow 0.5s var(--ease);
+}
+
+.orbit-svccard:hover {
+  box-shadow: 0 2rem 5rem rgba(11, 14, 40, 0.08);
+}
+
+.orbit-svccard__no {
+  color: var(--bucket-accent);
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.1rem;
+}
+
+.orbit-svccard__title {
+  font-size: 2.6rem;
+  font-weight: 600;
+  margin: 0.6rem 0 1.4rem;
+}
+
+.orbit-svccard__tagline {
+  color: var(--bucket-accent);
+  font-size: 1.8rem;
+  font-weight: 500;
+  margin: 0 0 1.6rem;
+}
+
+.orbit-svccard__desc {
+  color: var(--slate);
+  font-size: 1.6rem;
+  line-height: 1.6;
+  margin: 0 0 2.4rem;
+}
+
+.orbit-svccard__label {
+  color: var(--slate);
+  display: block;
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 0.1rem;
+  margin-bottom: 1.2rem;
+  text-transform: uppercase;
+}
+
+.orbit-svccard__subs {
+  columns: 2;
+  column-gap: 3rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.orbit-svccard__subs li {
+  break-inside: avoid;
+  color: var(--ink);
+  font-size: 1.5rem;
+  padding: 0.55rem 0 0.55rem 1.8rem;
+  position: relative;
+}
+
+.orbit-svccard__subs li::before {
+  color: var(--bucket-accent);
+  content: "+";
+  font-weight: 600;
+  left: 0;
+  position: absolute;
+  top: 0.55rem;
+}
+
+.orbit-svccard__aside {
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
+}
+
+.orbit-svccard__block p {
+  font-size: 1.6rem;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.orbit-svccard__block > p {
+  color: var(--slate);
+}
+
+.orbit-svccard__outcome {
+  background: color-mix(in srgb, var(--bucket-accent) 8%, transparent);
+  border-left: 0.3rem solid var(--bucket-accent);
+  padding: 2rem 2.2rem;
+}
+
+.orbit-svccard__outcome p {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+@media screen and (max-width: 979px) {
+  .orbit-svccard {
+    grid-template-columns: 1fr;
+    gap: 2.6rem;
+  }
+}
+
+@media screen and (max-width: 743px) {
+  .orbit-svcbucket__head {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 1.6rem;
+    padding: 2.6rem 2.2rem;
+  }
+  .orbit-svcbucket__count {
+    text-align: left;
+  }
+  .orbit-svccard {
+    padding: 2.6rem 2.2rem;
+  }
+  .orbit-svccard__subs {
+    columns: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbit-bucket__link,
+  .orbit-svcnav a::after {
+    transition: none;
+  }
+}
+
+/* --------------------------------------------- bucket showcase (homepage) --
+ * The theme's hover split-panel (styles in orbit.css), retinted per bucket via
+ * --bucket-accent set on the container and each row (see BucketShowcase).
+ */
+.orbit-showcase--bucket .orbit-showcase__row.is-active {
+  border-top-color: var(--bucket-accent);
+}
+
+.orbit-showcase--bucket .orbit-showcase__row.is-active .orbit-showcase__no,
+.orbit-showcase--bucket .orbit-showcase__row.is-active .orbit-showcase__title,
+.orbit-showcase--bucket .orbit-showcase__cue {
+  color: var(--bucket-accent);
+}
+
+.orbit-showcase--bucket .orbit-showcase__cue::after {
+  background: var(--bucket-accent);
+}
+
+.orbit-showcase--bucket .orbit-showcase__index {
+  color: var(--bucket-accent);
+}

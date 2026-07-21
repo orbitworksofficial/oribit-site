@@ -1,0 +1,257 @@
+/*
+ * Vivacity-inspired restyle.
+ * ---------------------------------------------------------------------------
+ * Colour grading and type pulled from vivacity-solutions.com: deep-navy dark
+ * panels, warm off-white paper, a crimson-pink accent (#f3124e), cool-grey
+ * body text, the Outfit type family (with Unbounded for display), and pill
+ * buttons.
+ *
+ * This is a self-contained layer. To go back to the previous OrbitWorks theme:
+ *   1. remove the `import "./vivacity.css"` in app/layout.tsx
+ *   2. revert lib/fonts.ts (PP Mori reclaims --font-sans)
+ * or just `git revert` the restyle commit.
+ *
+ * Loaded last, so these :root tokens win over base.css / orbit.css without
+ * !important, and every accent that reads var(--orbit)/var(--accent) follows.
+ */
+
+:root {
+  /* Accent — vivacity's crimson-pink. */
+  --orbit: #f3124e;
+  --orbit-deep: #c50e3f;
+  --orbit-veil: rgba(243, 18, 78, 0.12);
+  --accent: #f3124e;
+
+  /* Grading — navy-tinted ink, warm paper, cooler neutrals. */
+  --ink: #0b0e28;
+  --paper: #fdfcf7;
+  --mist: #eef0f6;
+  --grey: #aab0c0;
+  --slate: #565c70;
+
+  /* Dark-panel navies (hero / footer / loader share this family). */
+  --navy: #07091e;
+  --navy-2: #141830;
+
+  /* One family everywhere — 'Outfit', sans-serif. Display = the same face,
+   * heavier weight. */
+  --font-display: var(--font-sans);
+}
+
+/* --------------------------------------------------------- display type --
+ * The hero headline and big section titles run heavier and tighter, but in the
+ * same Outfit family as the body.
+ */
+main .wp-block-kenza-video-loop-header .poster .vcenter .wp-block-heading,
+main h1.deco-l,
+main h2.deco-l,
+main h3.deco-l,
+main h4.deco-l {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* Outfit is a touch wider than PP Mori; tighten the running headings a hair so
+ * the sentence-length copy keeps its rhythm. */
+main h3.book.mobilexl {
+  letter-spacing: -0.01em;
+}
+
+/* ------------------------------------------------------------- dark panels --
+ * Bring vivacity's navy into the inverted footer and the contact strip, which
+ * the theme paints near-black. Text on them already resolves to the warm
+ * off-white / cool grey set above.
+ */
+footer.invert {
+  background-color: var(--navy);
+}
+
+/* The theme's inner copyright bar is pure black; match it to the navy panel. */
+footer.invert .footer {
+  background-color: var(--navy);
+}
+
+/* ============================================================ footer ==
+ * Redesigned compact, professional, responsive footer. The theme forced 48rem
+ * of height with big gaps; this pins it to content and lays the columns on a
+ * clean grid that collapses gracefully.
+ */
+footer.invert {
+  margin-top: 0;
+  min-height: 0;
+}
+
+/* Column grid: brand+newsletter wide, then three link columns. */
+footer.invert > .inner {
+  align-items: start;
+  display: grid;
+  gap: 3rem 5rem;
+  grid-template-columns: 1.8fr 1fr 1fr 1fr;
+  padding-bottom: 3.6rem;
+  padding-top: 5rem;
+}
+
+footer.invert > .inner > .col {
+  display: block;
+}
+
+/* Brand column: tighter about text + newsletter. */
+.orbit-footer__about {
+  font-size: 1.45rem;
+  line-height: 1.6;
+  margin: 0 0 2rem;
+  max-width: 40ch;
+}
+
+/* Quick links in two columns so nine items don't drive the height. */
+.orbit-footer__quick {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 2rem;
+}
+
+.orbit-footer__links li {
+  margin-bottom: 0.5rem;
+}
+
+.orbit-footer__links a,
+.orbit-footer__contact a,
+.orbit-footer__contact p {
+  font-size: 1.45rem;
+}
+
+.orbit-footer__links h4,
+.orbit-footer__contact h4 {
+  margin-bottom: 1.2rem;
+}
+
+/* Slim bottom bar: copyright · legal links · back to top, on one row. */
+footer.invert .footer {
+  background-color: var(--navy);
+  padding-bottom: 2.8rem;
+  padding-top: 2.8rem;
+}
+
+footer.invert .footer > .inner {
+  align-items: center;
+  display: flex;
+  gap: 2rem;
+  justify-content: space-between;
+  padding-bottom: 0;
+  padding-top: 0;
+}
+
+footer.invert .footer .legal ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem 2rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+footer.invert .footer .legal li {
+  margin: 0;
+}
+
+/* ---- shorter contact band ---- */
+.contact-footer {
+  margin-top: 7rem;
+  min-height: 24rem;
+}
+
+.contact-footer h3 {
+  padding-bottom: 2rem;
+  padding-top: 5rem;
+}
+
+@media screen and (max-width: 979px) {
+  footer.invert > .inner {
+    gap: 4rem;
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media screen and (max-width: 560px) {
+  footer.invert > .inner {
+    grid-template-columns: 1fr;
+    gap: 3.4rem;
+  }
+  footer.invert .footer > .inner {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 1.4rem;
+  }
+}
+
+/* ---- contact band: dark video + readable copy (was dark-on-dark) ---- */
+.contact-footer {
+  background-color: var(--navy);
+  overflow: hidden;
+  position: relative;
+}
+
+/* The theme extends the band's old light colour below it via :after — retint so
+ * the seam into the footer stays dark. */
+.contact-footer::after {
+  background: var(--navy);
+}
+
+/* Looping orbit motif, covered by a navy scrim for legibility. */
+.contact-footer__bg {
+  inset: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: 0;
+}
+
+.contact-footer__bg video {
+  height: 100%;
+  left: 0;
+  object-fit: cover;
+  opacity: 0.55;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.contact-footer::before {
+  background: radial-gradient(
+    120% 120% at 50% 40%,
+    rgba(7, 9, 30, 0.62),
+    rgba(7, 9, 30, 0.9)
+  );
+  content: "";
+  inset: 0;
+  position: absolute;
+  z-index: 1;
+}
+
+.contact-footer__inner {
+  position: relative;
+  z-index: 2;
+}
+
+.contact-footer h3 {
+  color: var(--orbit-paper);
+}
+
+.contact-footer a {
+  color: var(--orbit);
+  transition: color 0.3s var(--ease);
+}
+
+.contact-footer a:hover {
+  color: var(--orbit-paper);
+}
+
+/* ------------------------------------------------------------------ pills --
+ * Vivacity's CTAs are full pills. Round the buttons and the two accent CTAs to
+ * match; keep everything else as-is.
+ */
+.orbit-btn,
+.orbit-submit,
+.cookie-warning .cta {
+  border-radius: 5rem;
+}

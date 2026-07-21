@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 
 import PageHeader from "@/components/blocks/PageHeader";
-import { BRAND, OFFICES, SERVICES } from "@/lib/content";
+import { BRAND, OFFICES } from "@/lib/content";
+import { SERVICE_TITLES } from "@/lib/services-data";
 import { chromeFor } from "@/lib/routes";
 import ContactForm from "@/components/layout/ContactForm";
 
@@ -42,7 +43,7 @@ export default function Contact() {
         className="wp-block-kenza-column-constraint column-constraint cols-12"
         data-transition="slideup"
       >
-        <ContactForm services={SERVICES.map((s) => s.title)} />
+        <ContactForm services={SERVICE_TITLES} />
       </div>
 
       <div

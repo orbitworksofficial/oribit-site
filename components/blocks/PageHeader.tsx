@@ -25,10 +25,11 @@ export default function PageHeader({
 }) {
   return (
     <div
-      className="wp-block-kenza-column-constraint column-constraint cols-12"
+      className="wp-block-kenza-column-constraint column-constraint cols-12 orbit-pagehero"
       data-transition="slideup"
       data-transition-include="through"
     >
+      <span className="orbit-eyebrow orbit-pagehero__eyebrow">OrbitWorks</span>
       <h1 className="wp-block-heading deco-l mobile">{title}</h1>
       {lead && <h3 className="wp-block-heading book mobilexl shorten">{lead}</h3>}
       {intro && (

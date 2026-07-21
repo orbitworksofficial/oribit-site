@@ -14,6 +14,129 @@
   --orbit-veil: rgba(254, 6, 59, 0.12);
 }
 
+/* ---------------------------------------------------------------- loader --
+ * First-paint overlay (see components/layout/SiteLoader). Present in the SSR
+ * HTML so it covers the page before hydration, then fades via .is-done. The
+ * orbiting dot is the loading effect; the lockup + tagline carry the brand.
+ * Deep navy field matches the hero and the dark footer panels.
+ */
+.orbit-loader {
+  align-items: center;
+  background: #07091e;
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  opacity: 1;
+  position: fixed;
+  transition: opacity 0.6s var(--ease), visibility 0.6s var(--ease);
+  visibility: visible;
+  z-index: 9999;
+}
+
+.orbit-loader.is-done {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.orbit-loader__inner {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 2.6rem;
+  padding: 2rem;
+  text-align: center;
+}
+
+/* Ring + orbiting dot. The ring spins; the dot rides its top edge, so it reads
+ * as a body in orbit — the brand metaphor, doing the loading. */
+.orbit-loader__orbit {
+  animation: orbit-loader-spin 1.15s linear infinite;
+  border: 0.2rem solid rgba(253, 252, 247, 0.14);
+  border-radius: 50%;
+  height: 6.4rem;
+  position: relative;
+  width: 6.4rem;
+}
+
+.orbit-loader__dot {
+  background: var(--orbit);
+  border-radius: 50%;
+  box-shadow: 0 0 1.6rem var(--orbit);
+  height: 0.9rem;
+  left: 50%;
+  position: absolute;
+  top: -0.55rem;
+  transform: translateX(-50%);
+  width: 0.9rem;
+}
+
+@keyframes orbit-loader-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.orbit-loader__logo {
+  height: 4rem;
+  width: auto;
+}
+
+.orbit-loader__tag {
+  color: rgba(200, 208, 222, 0.9);
+  font-size: 1.5rem;
+  font-weight: 400;
+  letter-spacing: 0.02rem;
+  margin: 0;
+}
+
+/* Visible-to-AT only. */
+.orbit-loader__sr {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+@media screen and (max-width: 743px) {
+  .orbit-loader__logo {
+    height: 3.2rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbit-loader__orbit {
+    animation: none;
+  }
+}
+
+/* ------------------------------------------------------------- hero video --
+ * The head loop reads pinkish out of the box; grade it toward the brand crimson
+ * so the hero and the logo sitting over it share one hue. Applied to the loop
+ * element the theme drops into the video-loop-header (.preview) plus its
+ * hi-res sibling.
+ */
+.wp-block-kenza-video-loop-header video.preview {
+  filter: brightness(0.9) contrast(1.08) saturate(1.12) hue-rotate(28deg);
+}
+
+/* ---------------------------------------------------------- footer reveal --
+ * The engine's slideup (.ahide = translate3d(0,10rem,0), 3s) left a transient
+ * white gap below the footer when you landed at the very bottom before it
+ * settled. The footer and the contact band don't need an entrance — pin them to
+ * their final position so there is never a gap. (Overrides the engine's inline
+ * transform/opacity via !important.)
+ */
+footer.invert,
+footer.invert.ahide,
+.contact-footer,
+.contact-footer.ahide {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
 /* ------------------------------------------------------------------ logo --
  * The theme drew "kenza." as an inline SVG in three places and auto-inverted it
  * with `mix-blend-mode: difference` on an off-white mark. That trick cannot
@@ -1171,67 +1294,268 @@ main h3.deco-l:before {
 
 /* -------------------------------------------------------------- quotes */
 
+/* Card grid. The section heading spans the row; each quote is a card. Cards are
+ * direct children of the constraint so they keep the theme's staggered reveal. */
+.orbit-quotes {
+  display: grid;
+  gap: 2.4rem;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.orbit-quotes > h2,
+.orbit-quotes > h3 {
+  grid-column: 1 / -1;
+}
+
+.orbit-quotes > h3 {
+  margin-bottom: 1rem;
+}
+
 .orbit-quote {
-  border-top: 0.1rem solid var(--grey);
+  background: var(--mist);
+  display: flex;
+  flex-direction: column;
   margin: 0;
-  padding: 3rem 0 3.4rem;
+  padding: 3rem 2.8rem 2.6rem;
   position: relative;
+  transition: background 0.4s var(--ease), transform 0.4s var(--ease);
+}
+
+.orbit-quote::before {
+  color: var(--orbit);
+  content: "\201C";
+  font-size: 6rem;
+  font-weight: 700;
+  left: 2.4rem;
+  line-height: 1;
+  position: absolute;
+  top: 1.4rem;
+}
+
+.orbit-quote:hover {
+  background: var(--paper);
+  box-shadow: 0 2rem 5rem rgba(11, 14, 40, 0.08);
+  transform: translateY(-0.3rem);
 }
 
 .orbit-quote .quote-no {
-  color: var(--orbit);
-  display: block;
-  font-size: 2rem;
-  font-weight: 500;
-  line-height: 1;
-  margin-bottom: 1.6rem;
+  align-self: flex-end;
+  color: var(--grey);
+  font-size: 1.4rem;
+  font-weight: 600;
+  letter-spacing: 0.08rem;
 }
 
 .orbit-quote p {
-  font-size: 2.6rem;
-  font-weight: 200;
-  line-height: 1.4;
-  margin: 0 0 2rem;
-  max-width: 90rem;
+  color: var(--ink);
+  font-size: 1.8rem;
+  font-weight: 400;
+  line-height: 1.5;
+  margin: 1.4rem 0 2.4rem;
 }
 
+/* background:none — the theme styles every <footer> element dark (meant for the
+ * site footer); reset it for the blockquote's citation footer. */
 .orbit-quote footer {
-  align-items: baseline;
+  align-items: center;
+  background: none;
+  border-top: 0.1rem solid var(--grey);
+  color: var(--ink);
   display: flex;
-  gap: 1.6rem;
+  gap: 1rem;
+  margin-top: auto;
+  min-height: 0;
+  padding: 1.8rem 0 0;
 }
 
 .orbit-quote cite {
   font-size: 1.6rem;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .orbit-quote footer .label {
   color: var(--slate);
 }
 
-@media screen and (max-width: 743px) {
+.orbit-quote footer .label::before {
+  color: var(--grey);
+  content: "·";
+  padding-right: 1rem;
+}
+
+@media screen and (max-width: 979px) {
+  .orbit-quotes {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
   .orbit-quote p {
-    font-size: 2rem;
+    font-size: 1.9rem;
+  }
+}
+
+/* -------------------------------------------------------------- clients --
+ * Homepage "who we work with" tiles (see ClientGrid): monogram + name + sector,
+ * with a per-tile accent bar that fills on hover.
+ */
+.orbit-clients {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: repeat(3, 1fr);
+  list-style: none;
+  margin: 5rem 0 0;
+  padding: 0;
+}
+
+.orbit-client {
+  align-items: center;
+  background: var(--mist);
+  border: 0.1rem solid transparent;
+  display: flex;
+  gap: 1.8rem;
+  overflow: hidden;
+  padding: 2.2rem 2.4rem;
+  position: relative;
+  transition: border-color 0.4s var(--ease), transform 0.4s var(--ease),
+    background 0.4s var(--ease);
+}
+
+.orbit-client::before {
+  background: var(--orbit);
+  content: "";
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.4s var(--ease);
+  width: 0.3rem;
+}
+
+.orbit-client:hover {
+  background: var(--paper);
+  border-color: var(--grey);
+  transform: translateY(-0.3rem);
+}
+
+.orbit-client:hover::before {
+  transform: scaleX(1);
+}
+
+.orbit-client__mono {
+  align-items: center;
+  aspect-ratio: 1;
+  background: var(--ink);
+  border-radius: 50%;
+  color: var(--orbit-paper);
+  display: flex;
+  flex-shrink: 0;
+  font-size: 1.7rem;
+  font-weight: 600;
+  justify-content: center;
+  letter-spacing: 0.04rem;
+  transition: background 0.4s var(--ease);
+  width: 5.2rem;
+}
+
+.orbit-client:hover .orbit-client__mono {
+  background: var(--orbit);
+}
+
+.orbit-client__body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.orbit-client__name {
+  font-size: 1.7rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.orbit-client__sector {
+  color: var(--slate);
+  font-size: 1.4rem;
+  margin-top: 0.3rem;
+}
+
+@media screen and (max-width: 979px) {
+  .orbit-clients {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 560px) {
+  .orbit-clients {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* -------------------------------------------------------- scroll reveal --
+ * The theme reveals [data-transition="slideup"] blocks by stripping .ahide.
+ * Give that reveal a gentle zoom so sections lift AND scale in as they enter —
+ * "something happens" on every scroll. Loaded after theme.css, so this wins by
+ * source order (no !important). Footer/contact band stay pinned (rule above).
+ * Also snappier than the theme's 3s so the motion actually reads.
+ */
+.ahide {
+  opacity: 0;
+  transform: translate3d(0, 6rem, 0) scale(0.965);
+}
+
+.aitem {
+  transition: opacity 1.1s var(--ease), transform 1.1s var(--ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ahide {
+    transform: none;
   }
 }
 
 /* -------------------------------------------------- text (wordmark) marquee */
 
+/* A clean "trusted by" strip: hairline-bordered band, names as spaced wordmarks
+ * separated by an accent dot, with the edges faded so the loop reads as
+ * continuous rather than clipped. */
+.orbit-text-marquee {
+  border-bottom: 0.1rem solid var(--grey);
+  border-top: 0.1rem solid var(--grey);
+  margin: 5rem 0;
+  padding: 2.8rem 0;
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 7%,
+    #000 93%,
+    transparent
+  );
+  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+}
+
 .orbit-text-marquee figure {
   align-items: center;
   display: inline-flex;
   max-height: none;
-  padding-right: 8rem;
+  padding-right: 0;
 }
 
 .orbit-text-marquee figure span {
-  color: var(--grey);
-  font-size: 2.4rem;
-  font-weight: 500;
-  letter-spacing: -0.02rem;
+  color: var(--slate);
+  font-size: 2rem;
+  font-weight: 600;
+  letter-spacing: 0.02rem;
   white-space: nowrap;
+}
+
+/* Accent dot between names — cheap, reads as a logo-wall separator. */
+.orbit-text-marquee figure span::after {
+  color: var(--orbit);
+  content: "•";
+  font-weight: 700;
+  padding: 0 3.4rem;
 }
 
 /* --------------------------------------------------------------- card grid */
@@ -1650,7 +1974,7 @@ main .orbit-list span a {
   max-width: 46ch;
 }
 
-.orbit-footer__links nav + .orbit-footer__contact {
+.orbit-footer__links .orbit-footer__nav + .orbit-footer__contact {
   margin-top: 3.4rem;
 }
 
@@ -1724,6 +2048,234 @@ main .orbit-list span a {
 @media screen and (max-width: 743px) {
   .orbit-cta-strip h2 {
     font-size: 3.2rem;
+  }
+}
+
+/* --------------------------------------------------------- page hero --
+ * Inner-page headers (PageHeader). The theme adds ~20rem top padding to clear
+ * the fixed nav and the deco title adds another 10rem, leaving a big empty gap.
+ * Pull the hero up and sit it on a soft full-bleed gradient band so it reads as
+ * a designed header rather than floating text.
+ */
+.orbit-pagehero {
+  margin-top: -7rem;
+  padding-bottom: 6.5rem;
+  padding-top: 12rem;
+  position: relative;
+}
+
+/* Full-bleed navy band with a crimson glow — a premium dark header that the
+ * light page content drops out of. Extends up under the nav scrim. */
+.orbit-pagehero::before {
+  background: radial-gradient(
+      75% 130% at 88% 0%,
+      rgba(243, 18, 78, 0.28),
+      transparent 55%
+    ),
+    linear-gradient(160deg, #0d1130 0%, #07091e 70%);
+  bottom: 0;
+  content: "";
+  left: 50%;
+  position: absolute;
+  top: -14rem;
+  transform: translateX(-50%);
+  width: 100vw;
+  z-index: -1;
+}
+
+/* Faint orbital ring, bottom-right, for depth (pure CSS, no asset). */
+.orbit-pagehero::after {
+  border: 0.1rem solid rgba(243, 18, 78, 0.16);
+  border-radius: 50%;
+  bottom: -18rem;
+  content: "";
+  height: 34rem;
+  pointer-events: none;
+  position: absolute;
+  right: -6rem;
+  width: 34rem;
+  z-index: -1;
+}
+
+.orbit-pagehero__eyebrow {
+  color: var(--orbit);
+  margin-bottom: 2rem;
+}
+
+/* White title on the navy band; kill the deco 10rem top margin. */
+main .orbit-pagehero h1.deco-l {
+  color: var(--orbit-paper);
+  margin-bottom: 2rem;
+  margin-top: 0;
+}
+
+.orbit-pagehero h3.book {
+  color: var(--orbit-paper);
+  margin-top: 0.6rem;
+  max-width: 34ch;
+}
+
+.orbit-pagehero p.large {
+  color: rgba(200, 208, 222, 0.82);
+  margin-top: 2rem;
+  max-width: 62ch;
+}
+
+@media screen and (max-width: 743px) {
+  .orbit-pagehero {
+    margin-top: -4rem;
+    padding-top: 9rem;
+  }
+  .orbit-pagehero::after {
+    display: none;
+  }
+}
+
+/* --------------------------------------------------------------- legal --
+ * Privacy / Terms / Refund documents (see LegalDoc). A dark title band over a
+ * readable single column, with numbered sections, callouts and a table.
+ */
+
+.orbit-legal__hero {
+  background: var(--navy, #07091e);
+  color: var(--orbit-paper);
+  margin: 0 0 5rem;
+  padding: 5rem 4rem;
+}
+
+.orbit-legal__title {
+  font-family: var(--font-display);
+  font-size: clamp(3.2rem, 4.2vw, 5rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  margin: 1.2rem 0 1.4rem;
+}
+
+.orbit-legal__subtitle {
+  color: rgba(200, 208, 222, 0.9);
+  font-size: 1.9rem;
+  line-height: 1.4;
+  margin: 0 0 1.6rem;
+  max-width: 60ch;
+}
+
+.orbit-legal__effective {
+  color: var(--orbit);
+  font-size: 1.4rem;
+  font-weight: 500;
+  letter-spacing: 0.04rem;
+  margin: 0;
+}
+
+.orbit-legal {
+  max-width: 82ch;
+}
+
+.orbit-legal__intro {
+  color: var(--slate);
+  font-size: 1.8rem;
+  line-height: 1.6;
+  margin: 0 0 2rem;
+}
+
+.orbit-legal__section {
+  border-top: 0.1rem solid var(--grey);
+  margin-top: 4rem;
+  padding-top: 3rem;
+}
+
+.orbit-legal__heading {
+  align-items: baseline;
+  display: flex;
+  font-size: 2.4rem;
+  font-weight: 600;
+  gap: 1.4rem;
+  margin: 0 0 1.8rem;
+}
+
+.orbit-legal__no {
+  color: var(--orbit);
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.08rem;
+}
+
+.orbit-legal__p {
+  color: var(--slate);
+  font-size: 1.65rem;
+  line-height: 1.65;
+  margin: 0 0 1.6rem;
+}
+
+.orbit-legal__sub {
+  color: var(--ink);
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin: 2.4rem 0 1rem;
+}
+
+.orbit-legal__list {
+  list-style: none;
+  margin: 0 0 1.8rem;
+  padding: 0;
+}
+
+.orbit-legal__list li {
+  color: var(--ink);
+  font-size: 1.6rem;
+  line-height: 1.55;
+  padding: 0.6rem 0 0.6rem 2.2rem;
+  position: relative;
+}
+
+.orbit-legal__list li::before {
+  color: var(--orbit);
+  content: "+";
+  font-weight: 700;
+  left: 0;
+  position: absolute;
+  top: 0.6rem;
+}
+
+.orbit-legal__callout {
+  background: var(--orbit-veil);
+  border-left: 0.3rem solid var(--orbit);
+  color: var(--ink);
+  font-size: 1.6rem;
+  line-height: 1.6;
+  margin: 0 0 1.8rem;
+  padding: 2rem 2.2rem;
+}
+
+.orbit-legal__tablewrap {
+  margin: 0 0 1.8rem;
+  overflow-x: auto;
+}
+
+.orbit-legal__table {
+  border-collapse: collapse;
+  font-size: 1.5rem;
+  width: 100%;
+}
+
+.orbit-legal__table th {
+  background: var(--navy, #07091e);
+  color: var(--orbit-paper);
+  font-weight: 600;
+  padding: 1.4rem 1.6rem;
+  text-align: left;
+}
+
+.orbit-legal__table td {
+  border-bottom: 0.1rem solid var(--grey);
+  color: var(--slate);
+  padding: 1.3rem 1.6rem;
+}
+
+@media screen and (max-width: 743px) {
+  .orbit-legal__hero {
+    padding: 3.4rem 2.2rem;
   }
 }
 
