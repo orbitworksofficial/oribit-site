@@ -89,6 +89,40 @@
   margin: 0;
 }
 
+/* Progress bar — fills as the hero loop and first-screen stills warm up. */
+.orbit-loader__bar {
+  background: rgba(253, 252, 247, 0.14);
+  border-radius: 0.2rem;
+  display: block;
+  height: 0.3rem;
+  margin-top: 0.6rem;
+  overflow: hidden;
+  width: 22rem;
+}
+
+.orbit-loader__bar i {
+  background: linear-gradient(90deg, var(--orbit), #ff6b95);
+  border-radius: 0.2rem;
+  display: block;
+  height: 100%;
+  transition: width 0.35s var(--ease);
+  width: 0;
+}
+
+.orbit-loader__pct {
+  color: rgba(200, 208, 222, 0.65);
+  font-size: 1.2rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.08rem;
+  margin-top: -0.8rem;
+}
+
+@media screen and (max-width: 743px) {
+  .orbit-loader__bar {
+    width: 16rem;
+  }
+}
+
 /* Visible-to-AT only. */
 .orbit-loader__sr {
   clip: rect(0 0 0 0);
