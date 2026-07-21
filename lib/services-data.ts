@@ -70,7 +70,7 @@ export const SERVICE_BUCKETS: ServiceBucket[] = [
     taglineHome: "Intelligent systems that automate the work your team is doing manually right now.",
     taglineHub: "Intelligent systems that automate the work your team is doing manually right now.",
     accent: "#f3124e",
-    image: "/media/2024/05/data.jpg",
+    image: "/media/2024/05/data.jpeg",
     included: [
       "AI Chatbot Agents",
       "Unified Revenue Dashboards",
@@ -142,7 +142,7 @@ export const SERVICE_BUCKETS: ServiceBucket[] = [
     taglineHub:
       "Full-funnel campaigns across every channel that brings qualified leads directly to you.",
     accent: "#0d6efd",
-    image: "/media/2024/05/marketing.jpg",
+    image: "/media/2024/05/marketing.jpeg",
     included: [
       "Google Ads and DemandGen",
       "Meta Ads",
@@ -201,7 +201,7 @@ export const SERVICE_BUCKETS: ServiceBucket[] = [
     taglineHub:
       "The technology infrastructure your business needs to operate, scale, and stay secure.",
     accent: "#17b98a",
-    image: "/media/2024/05/cloud.jpg",
+    image: "/media/2024/05/cloud.jpeg",
     included: [
       "Cloud Migrations",
       "Custom Website Development",
@@ -355,7 +355,7 @@ export const SERVICE_BUCKETS: ServiceBucket[] = [
     taglineHome: "On-demand tech talent delivered fast, without the cost and risk of full-time hiring.",
     taglineHub: "On-demand tech talent delivered fast, without the cost and risk of full-time hiring.",
     accent: "#f5a524",
-    image: "/media/2024/05/11.jpg",
+    image: "/media/2024/05/remote.jpeg",
     included: [
       "On-Demand IT Experts",
       "Dedicated Remote Teams",
