@@ -1,41 +1,60 @@
 /**
- * Heading block for the non-hero pages.
+ * Inner-page header. Two distinct looks so pages don't feel templated:
  *
- * Mirrors the theme's own section pattern (as used on the homepage):
- *   h*.deco-l      the big title — 15rem/6rem responsive, weight 600
- *   h3.book.shorten the statement under it
- *   p.large         optional supporting paragraph
+ *   variant="split"  — editorial split: text left, a thematic image in a framed
+ *                      right column (pass `flip` to put the image on the left).
+ *   variant="center" — centered title over a concentric-ring backdrop, no photo.
  *
- * deco-l is a *title* class, not an eyebrow — it renders at 150px. Passing a
- * sentence to `title` will fill the screen; keep it to a word or two and put the
- * sentence in `lead`.
- *
- * body:not(:has(.wp-block-kenza-video-loop-header, …)) already gets
- * padding-top:20rem from theme.css, so these pages clear the fixed nav.
+ * Defaults to "split" when an image is given, "center" otherwise. All light, to
+ * match the white theme, with crimson accents.
  */
 export default function PageHeader({
   title,
   lead,
   intro,
+  eyebrow = "OrbitWorks",
+  image,
+  variant,
+  flip = false,
 }: {
   /** Short — one or two words. Renders huge. */
   title: string;
   lead?: string;
   intro?: string;
+  eyebrow?: string;
+  image?: string;
+  variant?: "split" | "center";
+  /** Split only: put the image on the left. */
+  flip?: boolean;
 }) {
+  const mode = variant ?? (image ? "split" : "center");
+  const isSplit = mode === "split" && !!image;
+
   return (
     <div
-      className="wp-block-kenza-column-constraint column-constraint cols-12 orbit-pagehero"
+      className={`wp-block-kenza-column-constraint column-constraint cols-12 orbit-pagehero orbit-pagehero--${
+        isSplit ? "split" : "center"
+      }${isSplit && flip ? " orbit-pagehero--flip" : ""}`}
       data-transition="slideup"
-      data-transition-include="through"
     >
-      <span className="orbit-eyebrow orbit-pagehero__eyebrow">OrbitWorks</span>
-      <h1 className="wp-block-heading deco-l mobile">{title}</h1>
-      {lead && <h3 className="wp-block-heading book mobilexl shorten">{lead}</h3>}
-      {intro && (
-        <p className="has-text-align-left large large-intro mobilemedium shorten shorten-70 wp-block-paragraph">
-          {intro}
-        </p>
+      {!isSplit && <span className="orbit-pagehero__deco" aria-hidden="true" />}
+
+      <div className="orbit-pagehero__text">
+        <span className="orbit-eyebrow orbit-pagehero__eyebrow">{eyebrow}</span>
+        <h1 className="wp-block-heading deco-l mobile">{title}</h1>
+        {lead && <h3 className="wp-block-heading book mobilexl shorten">{lead}</h3>}
+        {intro && (
+          <p className="has-text-align-left large large-intro mobilemedium shorten shorten-70 wp-block-paragraph">
+            {intro}
+          </p>
+        )}
+      </div>
+
+      {isSplit && (
+        <div className="orbit-pagehero__media">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={image} alt="" loading="eager" />
+        </div>
       )}
     </div>
   );

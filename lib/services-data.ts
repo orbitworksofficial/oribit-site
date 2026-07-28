@@ -141,7 +141,7 @@ export const SERVICE_BUCKETS: ServiceBucket[] = [
     taglineHome: "Full-funnel marketing across every channel that brings qualified leads to you.",
     taglineHub:
       "Full-funnel campaigns across every channel that brings qualified leads directly to you.",
-    accent: "#0d6efd",
+    accent: "#f3124e",
     image: "/media/2024/05/marketing.jpeg",
     included: [
       "Google Ads and DemandGen",
@@ -200,7 +200,7 @@ export const SERVICE_BUCKETS: ServiceBucket[] = [
       "The technology infrastructure your business needs to operate securely and at scale.",
     taglineHub:
       "The technology infrastructure your business needs to operate, scale, and stay secure.",
-    accent: "#17b98a",
+    accent: "#f3124e",
     image: "/media/2024/05/cloud.jpeg",
     included: [
       "Cloud Migrations",
@@ -354,7 +354,7 @@ export const SERVICE_BUCKETS: ServiceBucket[] = [
     name: "Staff Augmentation",
     taglineHome: "On-demand tech talent delivered fast, without the cost and risk of full-time hiring.",
     taglineHub: "On-demand tech talent delivered fast, without the cost and risk of full-time hiring.",
-    accent: "#f5a524",
+    accent: "#f3124e",
     image: "/media/2024/05/remote.jpeg",
     included: [
       "On-Demand IT Experts",

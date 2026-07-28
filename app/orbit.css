@@ -146,6 +146,20 @@
   }
 }
 
+/* ----------------------------------------------------- off-theme accents --
+ * The theme ships a few elements in its old orange-red #fa241c: the cursor-
+ * following hover disc ("A call for the curious") and the arrow-link glyphs.
+ * Retint them to the brand crimson.
+ */
+.hoverCircle {
+  background: var(--orbit) !important;
+}
+
+.orangerightuparrowonleft,
+.squarearrowonleft {
+  color: var(--orbit);
+}
+
 /* ------------------------------------------------------------- hero video --
  * The head loop reads pinkish out of the box; grade it toward the brand crimson
  * so the hero and the logo sitting over it share one hue. Applied to the loop
@@ -501,6 +515,95 @@ main h3.deco-l:before {
  * Blocks the Kenza theme has no equivalent for. Styled to sit inside its scale
  * (1rem = 10px, easeOutQuint, 6.3rem gutter) rather than beside it.
  */
+
+/* ----------------------------------------------------------- intro row --
+ * Homepage lead: statement + CTAs on the left, a compact navy "what we do"
+ * panel on the right so the row is balanced instead of half-empty.
+ */
+.orbit-intro {
+  align-items: center;
+  display: grid;
+  gap: 5rem;
+  grid-template-columns: 1.25fr 0.75fr;
+}
+
+.orbit-intro__lead .large-intro {
+  margin-top: 0;
+}
+
+.orbit-intro__support {
+  color: var(--slate);
+  font-size: 1.7rem;
+  line-height: 1.55;
+  margin: 1.8rem 0 0;
+}
+
+/* Light card — sits on the white page, not a dark block. */
+.orbit-intro__panel {
+  background: var(--mist);
+  border: 0.1rem solid var(--grey);
+  padding: 3.2rem 3rem;
+}
+
+.orbit-intro__panel .orbit-eyebrow {
+  margin-bottom: 1.6rem;
+}
+
+.orbit-intro__panel ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.orbit-intro__panel a {
+  align-items: center;
+  border-top: 0.1rem solid var(--grey);
+  color: var(--ink);
+  display: flex;
+  gap: 1.4rem;
+  padding: 1.5rem 0;
+  text-decoration: none;
+  transition: color 0.3s var(--ease), padding-left 0.3s var(--ease);
+}
+
+.orbit-intro__panel li:first-child a {
+  border-top: 0;
+}
+
+.orbit-intro__panel a:hover {
+  color: var(--orbit);
+  padding-left: 0.6rem;
+}
+
+.orbit-intro__no {
+  color: var(--orbit);
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: 0.06rem;
+}
+
+.orbit-intro__name {
+  flex: 1;
+  font-size: 1.7rem;
+  font-weight: 500;
+}
+
+.orbit-intro__arrow {
+  color: var(--grey);
+  font-size: 1.6rem;
+  transition: color 0.3s var(--ease);
+}
+
+.orbit-intro__panel a:hover .orbit-intro__arrow {
+  color: var(--orbit);
+}
+
+@media screen and (max-width: 979px) {
+  .orbit-intro {
+    grid-template-columns: 1fr;
+    gap: 3.5rem;
+  }
+}
 
 /* ------------------------------------------------------------- stats band */
 
@@ -1372,12 +1475,16 @@ main h3.deco-l:before {
   transform: translateY(-0.3rem);
 }
 
-.orbit-quote .quote-no {
+/* Client logo sits top-right of the quote mark. */
+.orbit-quote > .orbit-clientlogo {
   align-self: flex-end;
-  color: var(--grey);
-  font-size: 1.4rem;
-  font-weight: 600;
-  letter-spacing: 0.08rem;
+  max-height: 4.2rem;
+  max-width: 13rem;
+}
+
+.orbit-quote > .orbit-clientlogo--mono {
+  font-size: 1.5rem;
+  width: 4.4rem;
 }
 
 .orbit-quote p {
@@ -1477,23 +1584,45 @@ main h3.deco-l:before {
   transform: scaleX(1);
 }
 
-.orbit-client__mono {
+/* Client logo (or monogram fallback) — see ClientLogo. */
+.orbit-clientlogo {
+  display: block;
+  flex-shrink: 0;
+  height: auto;
+  max-height: 4.4rem;
+  max-width: 15rem;
+  object-fit: contain;
+  object-position: left center;
+}
+
+.orbit-clientlogo--mono {
   align-items: center;
   aspect-ratio: 1;
   background: var(--ink);
   border-radius: 50%;
   color: var(--orbit-paper);
   display: flex;
-  flex-shrink: 0;
   font-size: 1.7rem;
   font-weight: 600;
   justify-content: center;
   letter-spacing: 0.04rem;
+  max-height: none;
   transition: background 0.4s var(--ease);
   width: 5.2rem;
 }
 
-.orbit-client:hover .orbit-client__mono {
+/* Client tile: constrain the logo box so rows stay even. */
+.orbit-client__logo {
+  max-height: 4rem;
+  max-width: 12rem;
+  width: auto;
+}
+
+.orbit-client__logo.orbit-clientlogo--mono {
+  width: 5.2rem;
+}
+
+.orbit-client:hover .orbit-clientlogo--mono {
   background: var(--orbit);
 }
 
@@ -2086,82 +2215,204 @@ main .orbit-list span a {
 }
 
 /* --------------------------------------------------------- page hero --
- * Inner-page headers (PageHeader). The theme adds ~20rem top padding to clear
- * the fixed nav and the deco title adds another 10rem, leaving a big empty gap.
- * Pull the hero up and sit it on a soft full-bleed gradient band so it reads as
- * a designed header rather than floating text.
+ * Inner-page headers (PageHeader). A light, editorial split hero that matches
+ * the white theme: text on the left (crimson eyebrow, ink title, lead, intro),
+ * a thematic image in a rounded frame on the right with a crimson accent block
+ * behind it. The theme adds ~20rem top padding to clear the fixed nav, so the
+ * hero is pulled up to remove the empty gap.
  */
 .orbit-pagehero {
-  margin-top: -7rem;
-  padding-bottom: 6.5rem;
-  padding-top: 12rem;
+  margin-top: -8rem;
+  padding-bottom: 3rem;
+  padding-top: 9rem;
   position: relative;
 }
 
-/* Full-bleed navy band with a crimson glow — a premium dark header that the
- * light page content drops out of. Extends up under the nav scrim. */
-.orbit-pagehero::before {
-  background: radial-gradient(
-      75% 130% at 88% 0%,
-      rgba(243, 18, 78, 0.28),
-      transparent 55%
-    ),
-    linear-gradient(160deg, #0d1130 0%, #07091e 70%);
-  bottom: 0;
+/* Faint brand-tinted wash in the top-right — warmth without a heavy dark block. */
+.orbit-pagehero--split::before {
+  background: radial-gradient(55% 80% at 92% 6%, var(--orbit-veil), transparent 62%);
   content: "";
+  inset: -10rem 0 auto;
+  height: 46rem;
   left: 50%;
+  pointer-events: none;
   position: absolute;
-  top: -14rem;
   transform: translateX(-50%);
   width: 100vw;
   z-index: -1;
 }
 
-/* Faint orbital ring, bottom-right, for depth (pure CSS, no asset). */
-.orbit-pagehero::after {
-  border: 0.1rem solid rgba(243, 18, 78, 0.16);
-  border-radius: 50%;
-  bottom: -18rem;
-  content: "";
-  height: 34rem;
+/* Split layout: text + framed image. Wider image column and a taller frame so
+ * the hero fills the viewport width instead of leaving dead space. */
+.orbit-pagehero--split {
+  align-items: center;
+  display: grid;
+  gap: 5.5rem;
+  grid-template-columns: 1fr 1fr;
+  min-height: 52rem;
+}
+
+/* Flip: image on the left. */
+.orbit-pagehero--flip {
+  grid-template-columns: 0.9fr 1.1fr;
+}
+
+.orbit-pagehero--flip .orbit-pagehero__text {
+  order: 2;
+}
+
+.orbit-pagehero--flip .orbit-pagehero__media {
+  order: 1;
+}
+
+.orbit-pagehero--flip::before {
+  background: radial-gradient(55% 80% at 8% 6%, var(--orbit-veil), transparent 62%);
+}
+
+.orbit-pagehero--flip .orbit-pagehero__media::before {
+  left: -1.6rem;
+  right: auto;
+}
+
+/* Centered variant: no photo, a concentric-ring backdrop instead. */
+.orbit-pagehero--center {
+  min-height: 46rem;
+  padding-bottom: 6rem;
+  padding-top: 11rem;
+  text-align: center;
+}
+
+.orbit-pagehero--center .orbit-pagehero__text {
+  margin: 0 auto;
+  max-width: 76rem;
+  position: relative;
+  z-index: 1;
+}
+
+.orbit-pagehero--center .orbit-eyebrow {
+  display: block;
+}
+
+main .orbit-pagehero--center h1.deco-l::before {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.orbit-pagehero--center h3.book,
+.orbit-pagehero--center p.large {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Concentric crimson rings, faded at the edges, behind the centered title. */
+.orbit-pagehero__deco {
+  background: repeating-radial-gradient(
+    circle at 50% 34%,
+    transparent 0 7.6rem,
+    rgba(243, 18, 78, 0.08) 7.6rem 7.8rem
+  );
+  height: 58rem;
+  left: 50%;
+  -webkit-mask: radial-gradient(circle at 50% 34%, #000 30%, transparent 68%);
+  mask: radial-gradient(circle at 50% 34%, #000 30%, transparent 68%);
   pointer-events: none;
   position: absolute;
-  right: -6rem;
-  width: 34rem;
-  z-index: -1;
+  top: -6rem;
+  transform: translateX(-50%);
+  width: 100vw;
+  z-index: 0;
 }
 
 .orbit-pagehero__eyebrow {
-  color: var(--orbit);
-  margin-bottom: 2rem;
+  margin-bottom: 1.6rem;
 }
 
-/* White title on the navy band; kill the deco 10rem top margin. */
+/* Ink title on the light hero; kill the deco 10rem top margin. */
 main .orbit-pagehero h1.deco-l {
-  color: var(--orbit-paper);
-  margin-bottom: 2rem;
+  margin-bottom: 1.8rem;
   margin-top: 0;
 }
 
 .orbit-pagehero h3.book {
-  color: var(--orbit-paper);
+  color: var(--ink);
+  font-size: clamp(1.9rem, 2.1vw, 2.6rem);
   margin-top: 0.6rem;
-  max-width: 34ch;
+  max-width: 30ch;
 }
 
 .orbit-pagehero p.large {
-  color: rgba(200, 208, 222, 0.82);
-  margin-top: 2rem;
-  max-width: 62ch;
+  color: var(--slate);
+  font-size: 1.7rem;
+  margin-top: 1.8rem;
+  max-width: 54ch;
+}
+
+/* Title scales down a touch in the split hero so long headlines stay tidy. */
+main .orbit-pagehero--split h1.deco-l {
+  font-size: clamp(3rem, 3.6vw, 4.6rem);
+}
+
+main .orbit-pagehero--center h1.deco-l {
+  font-size: clamp(3.2rem, 4vw, 5.2rem);
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 20ch;
+}
+
+/* Image frame with an offset crimson accent block behind it. */
+.orbit-pagehero__media {
+  aspect-ratio: 4 / 3;
+  border-radius: 1.6rem;
+  box-shadow: 0 3rem 7rem rgba(11, 14, 40, 0.16);
+  overflow: hidden;
+  position: relative;
+  z-index: 0;
+}
+
+.orbit-pagehero__media img {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.orbit-pagehero__media::after {
+  border: 0.1rem solid rgba(11, 14, 40, 0.06);
+  border-radius: 1.6rem;
+  content: "";
+  inset: 0;
+  position: absolute;
+}
+
+/* Offset crimson block behind the frame for depth. */
+.orbit-pagehero__media::before {
+  background: var(--orbit);
+  border-radius: 1.6rem;
+  bottom: -1.6rem;
+  content: "";
+  opacity: 0.12;
+  position: absolute;
+  right: -1.6rem;
+  top: 1.6rem;
+  width: 60%;
+  z-index: -1;
+}
+
+@media screen and (max-width: 979px) {
+  .orbit-pagehero--split {
+    gap: 3.5rem;
+    grid-template-columns: 1fr;
+  }
+  .orbit-pagehero__media {
+    aspect-ratio: 16 / 9;
+    max-height: 34rem;
+  }
 }
 
 @media screen and (max-width: 743px) {
   .orbit-pagehero {
-    margin-top: -4rem;
-    padding-top: 9rem;
-  }
-  .orbit-pagehero::after {
-    display: none;
+    margin-top: -5rem;
+    padding-top: 7rem;
   }
 }
 
@@ -2360,4 +2611,452 @@ main .orbit-pagehero h1.deco-l {
     grid-template-columns: 1fr;
     gap: 0.6rem;
   }
+}
+
+/* ---------------------------------------------------------- spotlights --
+ * Industry deep-dives: numbered cards in a two-up grid.
+ */
+.orbit-spotlights {
+  display: grid;
+  gap: 2.4rem;
+  grid-template-columns: repeat(2, 1fr);
+  list-style: none;
+  margin: 4rem 0 0;
+  padding: 0;
+}
+
+.orbit-spotlight {
+  background: var(--mist);
+  border-top: 0.3rem solid var(--orbit);
+  padding: 2.8rem 2.6rem;
+}
+
+.orbit-spotlight__no {
+  color: var(--orbit);
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 0.1rem;
+}
+
+.orbit-spotlight__name {
+  font-size: 2.1rem;
+  font-weight: 600;
+  margin: 0.8rem 0 1.2rem;
+}
+
+.orbit-spotlight__body {
+  color: var(--slate);
+  font-size: 1.5rem;
+  line-height: 1.6;
+  margin: 0 0 1.8rem;
+}
+
+.orbit-spotlight__points {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.orbit-spotlight__points li {
+  border-top: 0.1rem solid var(--grey);
+  color: var(--ink);
+  font-size: 1.45rem;
+  padding: 0.8rem 0 0.8rem 1.6rem;
+  position: relative;
+}
+
+.orbit-spotlight__points li::before {
+  color: var(--orbit);
+  content: "+";
+  font-weight: 600;
+  left: 0;
+  position: absolute;
+  top: 0.8rem;
+}
+
+@media screen and (max-width: 979px) {
+  .orbit-spotlights {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ------------------------------------------------------ editorial section --
+ * Two-column content section: eyebrow + heading pinned left, body copy and
+ * lists on the right. Single-column text left the right half of the page empty
+ * on the long content pages (About, Industries); this fills the measure.
+ */
+.orbit-sec {
+  align-items: start;
+  display: grid;
+  gap: 3rem 6rem;
+  grid-template-columns: 0.8fr 1.2fr;
+}
+
+/* Sticky so the heading tracks alongside its body copy as you scroll. */
+.orbit-sec__head {
+  position: sticky;
+  top: 13rem;
+}
+
+/* Opt-out for sections whose body is followed by a full-width row (e.g. the
+ * Trusted logo strip) — there the sticky heading travelled down over it. */
+.orbit-sec--flat .orbit-sec__head {
+  position: static;
+}
+
+.orbit-sec__head .orbit-section-head {
+  margin-bottom: 0;
+  max-width: 16ch;
+}
+
+/* Body copy fills its column — override the theme's shorten- widths. */
+.orbit-sec__body > p {
+  max-width: none;
+}
+
+.orbit-sec__body > p.large-intro {
+  color: var(--ink);
+  font-size: 2rem;
+  line-height: 1.5;
+  margin-top: 0;
+}
+
+.orbit-sec__body > .orbit-list,
+.orbit-sec__body > .orbit-spotlights {
+  margin-top: 3rem;
+}
+
+/* Inside the narrower column the two-up list would crowd — stack it. */
+.orbit-sec__body .orbit-list li {
+  grid-template-columns: 1fr;
+  gap: 0.6rem;
+}
+
+@media screen and (max-width: 979px) {
+  .orbit-sec {
+    gap: 2rem;
+    grid-template-columns: 1fr;
+  }
+  .orbit-sec__head {
+    position: static;
+  }
+  .orbit-sec__head .orbit-section-head {
+    max-width: none;
+  }
+}
+
+/* ================================================== page hero (editorial) ==
+ * Chip → oversized headline (left) + lead & CTAs (right) → proof strip, over a
+ * faded thematic photo. See PageHero.
+ */
+.orbit-hero {
+  margin-top: -8rem;
+  overflow: hidden;
+  padding-bottom: 5rem;
+  padding-top: 11rem;
+  position: relative;
+}
+
+/* Full-bleed warm panel + faded photo behind the type. */
+.orbit-hero::before {
+  background-color: var(--mist);
+  background-image: linear-gradient(
+      100deg,
+      var(--mist) 6%,
+      color-mix(in srgb, var(--mist) 88%, transparent) 42%,
+      color-mix(in srgb, var(--mist) 55%, transparent) 100%
+    ),
+    var(--hero-photo, none);
+  background-position: center, center 30%;
+  background-repeat: no-repeat;
+  background-size: cover, cover;
+  bottom: 0;
+  content: "";
+  left: 50%;
+  position: absolute;
+  top: -12rem;
+  transform: translateX(-50%);
+  width: 100vw;
+  z-index: -2;
+}
+
+/* Soften the photo so headline contrast never drops. */
+.orbit-hero::after {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--paper) 68%, transparent),
+    color-mix(in srgb, var(--paper) 92%, transparent)
+  );
+  bottom: 0;
+  content: "";
+  left: 50%;
+  position: absolute;
+  top: -12rem;
+  transform: translateX(-50%);
+  width: 100vw;
+  z-index: -1;
+}
+
+/* --- chip --- */
+.orbit-hero__chip {
+  align-items: center;
+  background: color-mix(in srgb, var(--paper) 85%, transparent);
+  border: 0.1rem solid var(--grey);
+  border-radius: 5rem;
+  color: var(--ink);
+  display: inline-flex;
+  font-size: 1.35rem;
+  font-weight: 500;
+  gap: 0.8rem;
+  letter-spacing: 0.02rem;
+  margin-bottom: 3rem;
+  padding: 0.85rem 1.8rem;
+}
+
+.orbit-hero__chip svg {
+  color: var(--orbit);
+}
+
+/* --- headline + aside --- */
+.orbit-hero__grid {
+  align-items: end;
+  display: grid;
+  gap: 4rem 6rem;
+  grid-template-columns: 1.35fr 0.65fr;
+}
+
+.orbit-hero__title {
+  color: var(--ink);
+  font-size: clamp(3.6rem, 5.6vw, 7.2rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 0.98;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.orbit-hero__aside {
+  padding-bottom: 0.6rem;
+}
+
+.orbit-hero__lead {
+  color: var(--ink);
+  font-size: 1.7rem;
+  line-height: 1.55;
+  margin: 0 0 2.4rem;
+  max-width: 42ch;
+}
+
+.orbit-hero__ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+}
+
+/* .orbit-hero prefix raises specificity over the theme's `main ... a` colour
+ * rules, which were tinting the button labels crimson. */
+.orbit-hero .orbit-hero__cta {
+  align-items: center;
+  background: var(--ink);
+  border: 0.1rem solid var(--ink);
+  border-radius: 5rem;
+  color: var(--orbit-paper);
+  display: inline-flex;
+  font-size: 1.5rem;
+  font-weight: 600;
+  gap: 1.2rem;
+  padding: 1.1rem 1.1rem 1.1rem 2.2rem;
+  text-decoration: none;
+  transition: background 0.35s var(--ease), border-color 0.35s var(--ease);
+}
+
+.orbit-hero .orbit-hero__cta:hover {
+  background: var(--orbit);
+  border-color: var(--orbit);
+  color: var(--orbit-paper);
+}
+
+/* Accent arrow disc, as in the reference. */
+.orbit-hero__arrow {
+  align-items: center;
+  background: var(--orbit);
+  border-radius: 50%;
+  color: var(--orbit-paper);
+  display: inline-flex;
+  font-size: 1.5rem;
+  height: 3.2rem;
+  justify-content: center;
+  transition: background 0.35s var(--ease), color 0.35s var(--ease),
+    transform 0.35s var(--ease);
+  width: 3.2rem;
+}
+
+.orbit-hero__cta:hover .orbit-hero__arrow {
+  background: var(--orbit-paper);
+  color: var(--orbit);
+  transform: translateX(0.2rem);
+}
+
+.orbit-hero .orbit-hero__cta--ghost {
+  background: color-mix(in srgb, var(--paper) 80%, transparent);
+  border-color: var(--grey);
+  color: var(--ink);
+  padding: 1.1rem 2.2rem;
+}
+
+.orbit-hero .orbit-hero__cta--ghost:hover {
+  background: var(--paper);
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+/* --- proof strip --- */
+.orbit-hero__proof {
+  background: color-mix(in srgb, var(--paper) 82%, transparent);
+  border: 0.1rem solid var(--grey);
+  border-radius: 5rem;
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 1rem 2.8rem;
+  list-style: none;
+  margin: 4.5rem 0 0;
+  padding: 1.2rem 2.6rem;
+}
+
+.orbit-hero__proof li {
+  align-items: center;
+  color: var(--slate);
+  display: flex;
+  font-size: 1.4rem;
+  gap: 0.7rem;
+}
+
+.orbit-hero__proof li::before {
+  color: var(--orbit);
+  content: "✓";
+  font-weight: 700;
+}
+
+@media screen and (max-width: 979px) {
+  .orbit-hero__grid {
+    align-items: start;
+    gap: 2.6rem;
+    grid-template-columns: 1fr;
+  }
+  .orbit-hero__lead {
+    max-width: none;
+  }
+}
+
+@media screen and (max-width: 743px) {
+  .orbit-hero {
+    margin-top: -5rem;
+    padding-top: 8rem;
+  }
+  .orbit-hero__proof {
+    border-radius: 1.6rem;
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+  .orbit-hero__cta {
+    justify-content: space-between;
+    width: 100%;
+  }
+}
+
+/* ------------------------------------------------------- client marquee --
+ * Right-to-left scrolling logo strip. The track holds the list twice and moves
+ * -50%, so the loop is seamless. Fixed-size item boxes keep mixed logo shapes
+ * on one even row. Hovering anywhere on the strip pauses it.
+ */
+.orbit-marquee {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  margin: 4rem 0 0;
+  overflow: hidden;
+  padding: 0.5rem 0;
+  width: 100%;
+}
+
+.orbit-marquee__track {
+  animation: orbit-marquee 38s linear infinite;
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+
+.orbit-marquee:hover .orbit-marquee__track,
+.orbit-marquee:focus-within .orbit-marquee__track {
+  animation-play-state: paused;
+}
+
+@keyframes orbit-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+/* Uniform cell — every logo gets the same footprint regardless of its shape. */
+.orbit-marquee__item {
+  align-items: center;
+  display: flex;
+  flex: 0 0 auto;
+  height: 9rem;
+  justify-content: center;
+  padding: 0 2rem;
+  width: 22rem;
+}
+
+/* Fixed height + auto width: logos with different aspect ratios still read as
+ * one even row (max-height alone let wide marks tower over square ones). */
+.orbit-marquee__logo {
+  filter: grayscale(1);
+  height: 4.6rem;
+  max-width: 100%;
+  object-fit: contain;
+  object-position: center;
+  opacity: 0.72;
+  transition: filter 0.35s var(--ease), opacity 0.35s var(--ease);
+  width: auto;
+}
+
+.orbit-marquee__item:hover .orbit-marquee__logo {
+  filter: grayscale(0);
+  opacity: 1;
+}
+
+/* Monogram fallback keeps the same cell height. */
+.orbit-marquee__logo.orbit-clientlogo--mono {
+  filter: none;
+  height: 5.4rem;
+  opacity: 1;
+  width: 5.4rem;
+}
+
+@media screen and (max-width: 743px) {
+  .orbit-marquee__item {
+    height: 7.5rem;
+    padding: 0 1.4rem;
+    width: 16rem;
+  }
+  .orbit-marquee__logo {
+    height: 3.6rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbit-marquee__track {
+    animation: none;
+  }
+  .orbit-marquee {
+    overflow-x: auto;
+  }
+}
+
+/* Full-width row inside an .orbit-sec grid (e.g. the client logo strip). */
+.orbit-sec__full {
+  grid-column: 1 / -1;
 }

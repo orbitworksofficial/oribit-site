@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import VideoLoopHeader from "@/components/blocks/VideoLoopHeader";
 import FrontPageImageCluster from "@/components/blocks/FrontPageImageCluster";
-import ClientGrid from "@/components/blocks/ClientGrid";
+import ClientMarquee from "@/components/blocks/ClientMarquee";
 import CaseSlider from "@/components/blocks/CaseSlider";
 import PreviewVideo from "@/components/blocks/PreviewVideo";
 import BucketShowcase from "@/components/blocks/BucketShowcase";
@@ -10,7 +10,7 @@ import Stats from "@/components/blocks/Stats";
 import Testimonials from "@/components/blocks/Testimonials";
 import { MIRROR_PORTRAIT } from "@/lib/video";
 import { BRAND, INDUSTRIES, SECTIONS, WHY, APPROACH, CASE_RESULTS } from "@/lib/content";
-import { SERVICES_HOMEPAGE } from "@/lib/services-data";
+import { SERVICES_HOMEPAGE, SERVICE_BUCKETS } from "@/lib/services-data";
 import { HOME_CASE_CARDS } from "@/lib/home-content";
 
 /**
@@ -31,38 +31,53 @@ export default function Home() {
       <VideoLoopHeader headline={BRAND.headline} selected={null} />
 
       <div
-        className="wp-block-kenza-column-constraint column-constraint cols-12"
+        className="wp-block-kenza-column-constraint column-constraint cols-12 orbit-intro"
         data-transition="slideup"
-        data-transition-include="through"
       >
-        <p className="has-text-align-left large large-intro mobilemedium mobilemedium-intro shorten shorten-70 wp-block-paragraph">
-          {BRAND.intro}
-        </p>
-        <p className="has-text-align-left small tabletbodyxs wp-block-paragraph">
-          {BRAND.supporting}
-        </p>
-        <p className="orbit-cta-row">
-          <Link href="/contact" className="orbit-btn">
-            Book a Discovery Call
-          </Link>
-          <Link href="/services" className="orbit-btn orbit-btn--ghost">
-            Explore Our Services
-          </Link>
-        </p>
+        <div className="orbit-intro__lead">
+          <p className="large large-intro wp-block-paragraph">{BRAND.intro}</p>
+          <p className="orbit-intro__support wp-block-paragraph">{BRAND.supporting}</p>
+          <p className="orbit-cta-row">
+            <Link href="/contact" className="orbit-btn">
+              Book a Discovery Call
+            </Link>
+            <Link href="/services" className="orbit-btn orbit-btn--ghost">
+              Explore Our Services
+            </Link>
+          </p>
+        </div>
+
+        <aside className="orbit-intro__panel">
+          <span className="orbit-eyebrow">What we do</span>
+          <ul>
+            {SERVICE_BUCKETS.map((b, i) => (
+              <li key={b.slug}>
+                <Link href={`/services#${b.slug}`}>
+                  <span className="orbit-intro__no">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="orbit-intro__name">{b.name}</span>
+                  <span className="orbit-intro__arrow" aria-hidden="true">↗</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </aside>
       </div>
 
-      {/* 2. Trust */}
+      {/* 2. Trust — heading left, copy right, logo strip full width beneath. */}
       <div
-        className="wp-block-kenza-column-constraint column-constraint cols-12"
+        className="wp-block-kenza-column-constraint column-constraint cols-12 orbit-sec orbit-sec--flat"
         data-transition="slideup"
-        data-transition-include="through"
       >
-        <h2 className="wp-block-heading deco-l mobile">Trusted</h2>
-        <h3 className="wp-block-heading book mobilexl shorten">{SECTIONS.trustEyebrow}</h3>
-        <p className="has-text-align-left small tabletbodyxs shorten shorten-70 wp-block-paragraph">
-          {SECTIONS.trustBody}
-        </p>
-        <ClientGrid />
+        <div className="orbit-sec__head">
+          <h2 className="wp-block-heading deco-l mobile">Trusted</h2>
+        </div>
+        <div className="orbit-sec__body">
+          <h3 className="wp-block-heading book mobilexl">{SECTIONS.trustEyebrow}</h3>
+          <p className="small tabletbodyxs wp-block-paragraph">{SECTIONS.trustBody}</p>
+        </div>
+        <div className="orbit-sec__full">
+          <ClientMarquee />
+        </div>
       </div>
 
       <Stats />
@@ -156,7 +171,8 @@ export default function Home() {
         </ul>
       </div>
 
-      <Testimonials limit={3} />
+      {/* All six client quotes on the homepage; inner pages show a shorter set. */}
+      <Testimonials />
 
       {/* 7. Approach */}
       <div

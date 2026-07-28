@@ -10,45 +10,40 @@ export const BRAND = {
   name: "OrbitWorks",
   tagline: "Your business, in orbit.",
   /** \n becomes <br/>; FadeText splits the rest per character. */
-  headline: "Transforming Businesses with\nScalable Technology &\nIntelligent Solutions",
+  headline: "AI-Powered IT Solutions\nThat Actually\nMove the Needle",
   intro:
-    "We help organizations accelerate growth through cloud, software, data, AI, and digital marketing, all under one unified strategy delivered by the best IT services company in USA.",
-  supporting: "End-to-end digital transformation partner for modern enterprises and growing brands.",
-  /**
-   * NOTE: this is the address supplied with the SEO copy — it is a
-   * vivacitysolutions.com inbox on an orbitworks-branded site. Intentional
-   * during the rebrand, but worth switching once the OrbitWorks mailbox exists.
-   */
-  email: "info@vivacitysolutions.com",
-  /** The SEO copy left this as "+XXX XXX XXX"; using the real number instead. */
-  phone: "+1 (203) 689-7583",
+    "OrbitWorks is a leading AI automation and IT services company in USA, helping businesses scale through intelligent automation, cloud infrastructure, custom software, and data-driven marketing — all aligned with your business goals.",
+  supporting:
+    "From strategy to execution, we're the IT solutions company that turns complexity into competitive advantage.",
+  email: "sales@orb-itworks.com",
+  phone: "+1 443 260 9169",
   footerAbout:
-    "OrbitWorks is a top IT services company in USA delivering innovative solutions in software development, cloud infrastructure, AI, and digital marketing. We help businesses scale with performance-driven strategies and advanced technology.",
+    "OrbitWorks is a premier AI automation and IT services company in USA, delivering innovative solutions in software development, cloud infrastructure, artificial intelligence, and digital marketing. We partner with businesses of all sizes to build scalable technology strategies that drive measurable growth.",
 } as const;
 
 /** Section copy, kept here so the page files stay structural. */
 export const SECTIONS = {
-  trustEyebrow: "Trusted by forward-thinking companies worldwide",
+  trustEyebrow: "Trusted by innovative companies across the United States",
   trustBody:
-    "As a top IT services company in USA, OrbitWorks partners with startups, enterprises, and global brands to deliver scalable technology and digital growth solutions. Our reputation among leading IT consulting services companies is built on performance, innovation, and measurable results.",
-  pillarsHeading: "Our Core Capabilities",
+    "OrbitWorks has earned its reputation as a trusted IT services company by delivering results that speak for themselves. From bootstrapped startups to enterprise brands, our clients rely on us for AI automation and IT services in USA that drive real growth. We're not just another IT solutions company — we're a strategic partner that understands technology is only as valuable as the business outcomes it unlocks. Our track record spans manufacturing, healthcare, fintech, SaaS, and professional services, making us one of the most versatile IT consulting services companies in the market today.",
+  pillarsHeading: "Everything We Do",
   pillarsIntro:
-    "We combine technology, data, and strategy to deliver measurable business outcomes as a trusted IT consultancy company.",
+    "One partner for all the technology your business needs — AI automation, digital marketing, cloud infrastructure, and on-demand tech talent, under one strategy.",
   industriesHeading: "Industries We Empower",
   industriesIntro:
-    "As an IT company for small business USA, we deliver tailored solutions across diverse industries with deep domain expertise.",
+    "OrbitWorks brings deep domain expertise to every engagement. We've helped businesses across these industries solve complex challenges and unlock new growth through AI automation and IT services in the USA.",
   casesHeading: "Real Results. Proven Impact.",
   casesIntro:
-    "See how our IT services company in USA helps businesses solve complex challenges and achieve measurable growth.",
-  whyHeading: "Why Choose OrbitWorks",
+    "Here's what happens when you partner with an IT solutions company that actually delivers. These are just a few examples of how OrbitWorks helps businesses turn technology investments into measurable outcomes.",
+  whyHeading: "Why Companies Choose OrbitWorks",
   whyIntro:
-    "As a top outsourced IT services provider, we combine technical excellence with strategic thinking to deliver high-impact solutions.",
-  approachHeading: "Our Approach",
+    "In a crowded market of IT services companies, what makes OrbitWorks different? It's not just our technical expertise, though that certainly helps. It's our commitment to outcomes over outputs, partnerships over projects, and results over rhetoric. We're the AI automation and IT services company in USA that actually shows up, listens, and delivers.",
+  approachHeading: "Our Approach: From Idea to Impact",
   approachBody:
-    "Our structured approach ensures consistent delivery, faster execution, and measurable outcomes for every project handled by our IT consulting services company.",
-  ctaHeading: "Ready to Transform Your Business?",
+    "Every engagement follows a proven framework that keeps us aligned with your goals, your timeline, and your budget. We don't believe in one-size-fits-all — but we do believe in a process that works.",
+  ctaHeading: "Ready to Build Something Remarkable?",
   ctaBody:
-    "Partner with the best IT solutions company to implement scalable technology and digital strategies tailored to your goals.",
+    "Join the growing list of businesses that trust OrbitWorks for AI automation and IT services in USA. Let's talk about your goals, your challenges, and how we can help you get where you're going — faster.",
 } as const;
 
 export type Pillar = {
@@ -155,46 +150,61 @@ export const PILLARS: Pillar[] = [
 export const WHY = [
   {
     title: "End-to-End Expertise",
-    body: "From strategy to execution, we handle everything as a full IT company for small business USA.",
+    body: "From strategy and architecture to development, deployment, and ongoing support, we handle the entire lifecycle. You don't need to juggle multiple vendors. We're your one-stop IT solutions company.",
   },
   {
     title: "Scalable Solutions",
-    body: "Our solutions are designed to grow with your business and evolving needs.",
+    body: "We build for tomorrow, not just today. Our solutions grow with your business, so you're never left rebuilding what you just built.",
   },
   {
-    title: "Industry Experience",
-    body: "We bring deep expertise across industries, making us one of the trusted managed IT services providers USA.",
+    title: "Deep Industry Experience",
+    body: "We've worked across manufacturing, healthcare, fintech, SaaS, logistics, and more. We understand the unique challenges of your industry and bring proven solutions to the table.",
   },
-  { title: "Agile Delivery", body: "Fast, flexible, and results-driven development approach." },
+  {
+    title: "Agile Delivery",
+    body: "Fast doesn't mean reckless. We ship working software early and often, gathering feedback and iterating continuously. No waterfall delays. No surprises.",
+  },
   {
     title: "Global Delivery Model",
-    body: "Seamless collaboration with distributed teams across time zones.",
+    body: "Our distributed teams work seamlessly across time zones, so your project keeps moving, even while you sleep. We combine the best of onshore strategy with global execution.",
   },
 ];
 
 /** The four-step process. */
 export const APPROACH = [
-  { step: "Discover & Strategize", body: "Understand the problem, the constraints and the number that has to move." },
-  { step: "Design & Develop", body: "Build it with the people who planned it — no handoff to a different team." },
-  { step: "Deploy & Optimize", body: "Ship, measure against the agreed metric, and tune." },
-  { step: "Scale & Grow", body: "Extend what worked; retire what didn't." },
+  {
+    step: "Discover & Strategize",
+    body: "We start by understanding your business, your challenges, and your vision. We conduct stakeholder interviews, assess your current technology landscape, and identify the highest-impact opportunities.",
+  },
+  {
+    step: "Design & Develop",
+    body: "We design solutions that are intuitive, scalable, and built to last. Our developers write clean, maintainable code, and our designers create experiences your users will love.",
+  },
+  {
+    step: "Deploy & Optimize",
+    body: "We launch with precision, monitor performance in real time, and make data-driven adjustments. Deployment isn't the finish line — it's where the real work begins.",
+  },
+  {
+    step: "Scale & Grow",
+    body: "As your business evolves, so do we. We continuously optimize, add features, and expand capabilities to keep you ahead of the curve.",
+  },
 ];
 
 /** Headline outcomes for the homepage case strip. */
 export const CASE_RESULTS = [
   {
-    title: "Cloud Transformation for Manufacturing Firm",
-    result: "Reduced infrastructure costs by 40%",
+    title: "Cloud Transformation for a Manufacturing Firm",
+    result: "Infrastructure costs reduced by 40% year-over-year",
     sector: "Manufacturing",
   },
   {
     title: "AI-Powered Analytics for Healthcare",
-    result: "Improved decision-making speed by 60%",
+    result: "Clinical decision-making speed improved by 60%",
     sector: "Healthcare",
   },
   {
     title: "Custom SaaS Platform Development",
-    result: "Increased user engagement by 3X",
+    result: "User engagement increased by 3X in the first quarter",
     sector: "SaaS & Technology",
   },
 ];
@@ -382,16 +392,86 @@ export const SERVICES: Service[] = [
 
 export const INDUSTRIES = [
   { name: "Manufacturing", note: "Operations visibility and the systems under it." },
-  { name: "Healthcare", note: "Patient-facing digital that clears compliance." },
+  { name: "Healthcare & Life Sciences", note: "Patient-facing digital that clears compliance." },
   { name: "Transport & Logistics", note: "Tracking, routing and integration." },
   { name: "Professional Services", note: "Pipeline, proposals and authority content." },
   { name: "SaaS & Technology", note: "Product engineering, onboarding and retention." },
   { name: "Real Estate", note: "Listings, portals and the CRM behind them." },
-  { name: "Education", note: "Learning platforms and enrolment journeys." },
-  { name: "Financial Services", note: "Secure workflows and reporting that stands up to audit." },
+  { name: "Education & EdTech", note: "Learning platforms and enrolment journeys." },
+  {
+    name: "Financial Services & Fintech",
+    note: "Secure workflows and reporting that stands up to audit.",
+  },
   { name: "Hospitality", note: "Booking, ordering and local search." },
   { name: "Sports & Fitness", note: "Membership, booking and retention." },
-  { name: "Construction", note: "Project tracking, documents and field-to-office flow." },
+  { name: "Construction & Engineering", note: "Project tracking, documents and field-to-office flow." },
+  { name: "Retail & E-Commerce", note: "Storefronts, checkout and the data behind them." },
+  { name: "Energy & Utilities", note: "Asset monitoring, reporting and field operations." },
+  { name: "Nonprofit & Public Sector", note: "Service delivery on a constrained budget." },
+];
+
+/** Deep-dive spotlights on the industries page. */
+export const INDUSTRY_SPOTLIGHTS = [
+  {
+    name: "Healthcare & Life Sciences",
+    body: "Healthcare runs on data, but it's drowning in silos. Providers struggle with interoperability, patient engagement, and administrative overhead. We deliver IT Solutions USA that unify electronic health records, automate prior authorizations using NLP, and build HIPAA-compliant patient portals that actually get used.",
+    points: [
+      "AI-powered clinical decision support",
+      "Secure cloud migrations for sensitive patient data",
+      "Automated billing and claims processing",
+      "Telehealth platforms with seamless EHR integration",
+    ],
+  },
+  {
+    name: "Manufacturing & Industrial",
+    body: "Margins are thin. Downtime is expensive. Quality control is non-negotiable. Our IT Solutions USA for manufacturing focus on predictive maintenance, supply chain visibility, and shop-floor automation.",
+    points: [
+      "Computer vision for real-time defect detection",
+      "IoT sensor integration for equipment monitoring",
+      "Cloud-based inventory and logistics management",
+      "Custom MES (Manufacturing Execution Systems)",
+    ],
+  },
+  {
+    name: "Financial Services & Fintech",
+    body: "Security, speed, and trust are everything. Banks, insurers, and fintech startups need IT Solutions USA that can handle massive transaction volumes while staying ahead of evolving threats.",
+    points: [
+      "Fraud detection using behavioral analytics",
+      "Automated KYC and AML compliance workflows",
+      "Real-time risk assessment dashboards",
+      "Secure mobile and web banking platforms",
+    ],
+  },
+  {
+    name: "Transportation & Logistics",
+    body: "Supply chains are more fragile than ever. Visibility and agility separate the winners from the rest. We deliver IT Solutions USA that optimize routing, track shipments in real time, and reduce fuel costs.",
+    points: [
+      "AI-driven route optimization",
+      "Warehouse automation and robotics integration",
+      "Real-time fleet tracking and telematics",
+      "Predictive analytics for demand forecasting",
+    ],
+  },
+  {
+    name: "SaaS & Technology",
+    body: "Hyper-growth requires hyper-scalable infrastructure. Tech companies need IT Solutions USA that can handle millions of users without breaking the bank or the user experience.",
+    points: [
+      "Cloud-native architecture and microservices",
+      "CI/CD pipeline automation",
+      "Product analytics and user behavior tracking",
+      "Scalable backend systems for B2B and B2C platforms",
+    ],
+  },
+  {
+    name: "Professional Services & Consulting",
+    body: "Time is literally money. Law firms, accounting practices, and consultancies need IT Solutions USA that streamline client onboarding, document management, and collaboration.",
+    points: [
+      "Secure client portals and document exchange",
+      "Automated time tracking and invoicing",
+      "CRM and practice management integrations",
+      "AI-powered contract analysis and due diligence",
+    ],
+  },
 ];
 
 export const STATS = [
@@ -401,44 +481,60 @@ export const STATS = [
   { value: 100, suffix: "", label: "Five-star reviews" },
 ];
 
-export type Testimonial = { quote: string; client: string; sector: string };
+export type Testimonial = {
+  quote: string;
+  client: string;
+  sector: string;
+  /**
+   * Client logo in public/brand/clients/. Optional — TestimonialCard falls back
+   * to a monogram when the file is absent, so adding the real logo file is the
+   * only step needed to switch a card over.
+   */
+  logo?: string;
+};
 
 export const TESTIMONIALS: Testimonial[] = [
   {
     quote:
-      "OrbitWorks developed a professional website for our technical services business with modern design, responsive layout, and smooth user experience.",
-    client: "Ado Technical Services",
-    sector: "Technical services",
+      "OrbitWorks delivered the right talent exactly when we needed it. Their staff augmentation service helped us move faster while maintaining the high standards our clients expect.",
+    client: "Zaawia",
+    sector: "Staff augmentation",
+    logo: "/brand/clients/zaawia.png",
   },
   {
     quote:
-      "The team built a high-performance website for our powersports business with attractive design and optimised performance.",
-    client: "Nitro3powersports",
-    sector: "Powersports",
-  },
-  {
-    quote:
-      "OrbitWorks created a clean and user-friendly business website that reflects our brand perfectly.",
-    client: "Confivend",
-    sector: "Vending",
-  },
-  {
-    quote:
-      "Our company website was designed with a modern, professional look that showcases our services effectively.",
-    client: "alg-eis",
-    sector: "Engineering",
-  },
-  {
-    quote:
-      "OrbitWorks developed a healthcare-focused website with intuitive design, easy navigation, and a trustworthy appearance.",
-    client: "Aroujo Kidney Wellness",
+      "OrbitWorks streamlined our patient communication with AI automations that save our team valuable time every day. The implementation was smooth, and the solutions fit naturally into our workflow.",
+    client: "Kidney Wellness Clinic",
     sector: "Healthcare",
+    logo: "/brand/clients/kidney-wellness-clinic.png",
   },
   {
     quote:
-      "They built an engaging restaurant website featuring an attractive menu layout, online ordering integration, and mobile-friendly design.",
-    client: "Pizza Hub",
+      "OrbitWorks completely transformed our online presence. The new website looks fantastic, and their SEO and digital marketing have helped us reach more local customers and generate more orders.",
+    client: "Dock Pizza",
     sector: "Hospitality",
+    logo: "/brand/clients/dock-pizza.png",
+  },
+  {
+    quote:
+      "OrbitWorks transformed our digital presence with effective marketing, SEO, and lead generation strategies. Their professionalism and commitment have made them a trusted partner for our business growth.",
+    client: "A&B Travels",
+    sector: "Travel",
+    logo: "/brand/clients/ab-travels.png",
+  },
+  {
+    quote:
+      "OrbitWorks understands how to turn complex cybersecurity offerings into clear, impactful digital communication. Their strategic marketing support has helped strengthen our brand presence and connect us with the audiences that matter most.",
+    client: "Advanzatech",
+    sector: "Cybersecurity",
+    logo: "/brand/clients/advanzatech.png",
+  },
+  {
+    quote:
+      "OrbitWorks built a custom software solution that simplified our processes and improved efficiency across our operations. Reliable team, quality work, and excellent support.",
+    client: "M Maqsood and Co",
+    sector: "Professional services",
+    logo: "/brand/clients/m-maqsood-and-co.png",
   },
 ];
 
@@ -446,7 +542,7 @@ export const TESTIMONIALS: Testimonial[] = [
 export const CLIENTS = TESTIMONIALS.map((t) => t.client);
 
 export const TEAM = [
-  { name: "Taha Becker", role: "Founder & CEO" },
+  
   { name: "Muhammad Haider", role: "COO" },
   { name: "Muhammad Anis", role: "CFO" },
   { name: "Muhammad Irfan", role: "IT Manager" },
@@ -454,9 +550,7 @@ export const TEAM = [
 ];
 
 export const OFFICES = [
-  { country: "United States", city: "New York", address: "350 Fifth Avenue, Suite 4100, NY 10118" },
-  { country: "Germany", city: "Berlin", address: "Pariser Platz 1, 10117" },
-  { country: "UAE", city: "Dubai", address: "Sheikh Mohammed bin Rashid Blvd, Downtown" },
+  { country: "United States", city: "Baltimore", address: "Baltimore, MD, USA" },
   { country: "Canada", city: "Toronto", address: "100 King St W, Suite 5600, ON M5X 1A9" },
 ];
 
@@ -475,16 +569,23 @@ export const PRODUCTS = [
 
 /** Case studies are drawn from the testimonial set — same engagements. */
 export const CASE_STUDIES = [
-  {
-    slug: "ado-technical-services",
-    client: "Ado Technical Services",
-    title: "A technical services business, properly online",
-    sector: "Technical services",
-    image: "/media/2024/05/lkq-homepage-case-2844x1600.jpg",
+   {
+    slug: "AB-Travels",
+    client: "AB-Travels",
+    title: "A brand, reflected properly",
+    sector: "Vending",
+    image: "/media/2024/05/future-homepage-case-2880x1423.png",
   },
   {
-    slug: "nitro3powersports",
-    client: "Nitro3powersports",
+    slug: "M Maqsood-and-Co",
+    client: "M Maqsood-and-Co",
+    title: "A technical services business, properly online",
+    sector: "Technical services",
+    image: "/media/2024/05/lkq-homepage-case-2844x1600.png",
+  },
+  {
+    slug: "Advanzatech",
+    client: "Advanzatech Distribution delivers trusted cybersecurity solutions",
     title: "High performance, on and off the page",
     sector: "Powersports",
     image: "/media/2024/05/intelligent-homepage-case-2880x1423.jpg",
@@ -494,22 +595,16 @@ export const CASE_STUDIES = [
     client: "Aroujo Kidney Wellness",
     title: "Healthcare that reads as trustworthy",
     sector: "Healthcare",
-    image: "/media/2024/05/hpe-nasa-homepage-case-2828x1600.jpg",
+    image: "/media/2024/05/Kidney-Wellness-Clinic-07-28-2026_04_30_PM.png",
   },
   {
     slug: "pizza-hub",
     client: "Pizza Hub",
     title: "Menu, ordering and mobile in one flow",
     sector: "Hospitality",
-    image: "/media/2024/05/poetry-homepage-case--2880x1423.jpg",
-  },
-  {
-    slug: "confivend",
-    client: "Confivend",
-    title: "A brand, reflected properly",
-    sector: "Vending",
-    image: "/media/2024/05/future-homepage-case-2880x1423.jpg",
-  },
+    image: "/media/2024/05/Dock-Pizza-—-Fresh-off-the-dock-07-28-2026_04_34_PM.png",
+  }
+ ,
 ];
 
 export const RESOURCES = [

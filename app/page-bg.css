@@ -1,0 +1,44 @@
+/*
+ * Page background finish — a faint dot grid with a soft brand-tinted wash, so
+ * the white pages read as designed rather than blank.
+ *
+ * Static (no animation), painted on a fixed z-index:-1 layer between html's
+ * white background and body content. Sections with their own background (navy
+ * footer, hero photos, tinted bands) simply cover it.
+ *
+ * TO REMOVE: delete this file and its import in app/layout.tsx. Nothing else
+ * references it.
+ */
+
+body::before {
+  background-color: transparent;
+  /* dot grid + two soft corner washes */
+  background-image: radial-gradient(rgba(11, 14, 40, 0.07) 1.5px, transparent 1.6px),
+    radial-gradient(70rem 50rem at 92% -6%, rgba(243, 18, 78, 0.07), transparent 70%),
+    radial-gradient(60rem 46rem at 4% 42%, rgba(11, 14, 40, 0.045), transparent 70%);
+  background-position: 0 0, 0 0, 0 0;
+  background-repeat: repeat, no-repeat, no-repeat;
+  background-size: 26px 26px, 100% 100%, 100% 100%;
+  content: "";
+  inset: 0;
+  pointer-events: none;
+  position: fixed;
+  z-index: -1;
+}
+
+/* Fade the grid out toward the bottom so it never fights the footer seam. */
+body::after {
+  background: linear-gradient(180deg, transparent 55%, var(--paper, #fdfcf7) 100%);
+  content: "";
+  inset: 0;
+  opacity: 0.55;
+  pointer-events: none;
+  position: fixed;
+  z-index: -1;
+}
+
+@media screen and (max-width: 743px) {
+  body::before {
+    background-size: 20px 20px, 100% 100%, 100% 100%;
+  }
+}

@@ -20,6 +20,10 @@ import "./services-hub.css";
 // Vivacity-inspired restyle — loaded last so its tokens win. Revert this import
 // plus lib/fonts.ts to return to the previous theme.
 import "./vivacity.css";
+// Page background finish (dot grid + brand wash) — delete this import + the file to remove.
+import "./page-bg.css";
+// Constellation canvas backdrop — delete this import + <ParticleBackground/> to remove.
+import "./particles.css";
 
 import { ppMori, outfit } from "@/lib/fonts";
 import { chromeFor } from "@/lib/routes";
@@ -27,6 +31,7 @@ import TransitionEngine from "@/components/animation/TransitionEngine";
 import Nav from "@/components/layout/Nav";
 import ChromeSync from "@/components/layout/ChromeSync";
 import SiteLoader from "@/components/layout/SiteLoader";
+import ParticleBackground from "@/components/layout/ParticleBackground";
 import ContactFooter from "@/components/layout/ContactFooter";
 import SiteFooter from "@/components/layout/SiteFooter";
 import CookieBanner from "@/components/layout/CookieBanner";
@@ -35,25 +40,36 @@ import CookieBanner from "@/components/layout/CookieBanner";
  * TODO: metadataBase must point at the real production origin before launch —
  * OG/twitter image URLs resolve against it.
  */
+const HOME_TITLE = "AI Automation and IT Services USA | Orbit Works";
+const HOME_DESC =
+  "Orbit Works delivers AI automation, digital marketing, cloud solutions, and IT talent for US businesses ready to scale. Start with a free discovery call.";
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://orbitworks.com"),
   title: {
-    default: "OrbitWorks — Crafting Solutions With Purpose",
+    default: HOME_TITLE,
     template: "%s",
   },
-  description:
-    "A digital agency for cloud, software, data, AI and digital marketing. Strategy through delivery, in one team.",
+  description: HOME_DESC,
+  keywords: [
+    "AI Automation and IT Services USA",
+    "IT services company USA",
+    "AI automation",
+    "cloud solutions",
+    "digital marketing",
+    "staff augmentation",
+  ],
+  alternates: { canonical: "/" },
   openGraph: {
     type: "website",
-    locale: "en_GB",
-    siteName: "OrbitWorks",
-    title: "OrbitWorks — Crafting Solutions With Purpose",
-    description:
-      "A digital agency for cloud, software, data, AI and digital marketing. Strategy through delivery, in one team.",
+    locale: "en_US",
+    siteName: "Orbit Works",
+    title: HOME_TITLE,
+    description: HOME_DESC,
   },
-  twitter: { card: "summary_large_image" },
+  twitter: { card: "summary_large_image", title: HOME_TITLE, description: HOME_DESC },
   robots: { index: true, follow: true },
-  icons: { icon: "/brand/orbitworks-dark.png", apple: "/brand/orbitworks-dark.png" },
+  icons: { icon: "/icon.svg", apple: "/brand/orbitworks-dark.png" },
 };
 
 export const viewport = {
@@ -92,6 +108,7 @@ export default async function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: BOOT }} />
       </head>
       <body className={body}>
+        <ParticleBackground />
         <SiteLoader />
         <ChromeSync />
         <a id="top" className="top-link" />

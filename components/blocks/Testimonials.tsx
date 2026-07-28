@@ -1,4 +1,5 @@
 import { TESTIMONIALS } from "@/lib/content";
+import ClientLogo from "./ClientLogo";
 
 /**
  * Client quotes. Uses the theme's blockquote + .quote-no treatment, and rides
@@ -19,11 +20,9 @@ export default function Testimonials({ limit }: { limit?: number }) {
         What the work looked like from the other side.
       </h3>
 
-      {items.map((t, i) => (
+      {items.map((t) => (
         <blockquote key={t.client} className="orbit-quote">
-          <span className="quote-no" aria-hidden="true">
-            {String(i + 1).padStart(2, "0")}
-          </span>
+          <ClientLogo name={t.client} logo={t.logo} />
           <p>{t.quote}</p>
           <footer>
             <cite>{t.client}</cite>

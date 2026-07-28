@@ -1,116 +1,120 @@
 import Link from "next/link";
 import NewsletterForm from "./NewsletterForm";
-import { NAV_ITEMS } from "@/lib/nav";
 import { SOCIAL, BRAND } from "@/lib/content";
 import { SERVICE_BUCKETS } from "@/lib/services-data";
 import { LEGAL_DOCS } from "@/lib/legal-data";
 
 /**
- * The engine looks this up as `footer[data-transition="slideup"]`.
- * The empty middle column is intentional — it is the grid spacer the theme
- * relies on, and is hidden from assistive tech.
+ * Site footer — a four-column grid (brand · quick links · services · contact)
+ * over a slim bottom bar. Columns are top-aligned; layout lives in the footer
+ * block of app/vivacity.css.
+ *
+ * Link lists are plain <ul>s inside `.orbit-footer__links` sections (NOT <nav>):
+ * the theme's global `nav:not(.social)` rule forces every <nav> to
+ * position:fixed;top:0, which used to stack these columns at the top of the page.
  */
+const QUICK_LINKS = [
+  { label: "Home", href: "/" },
+  { label: "Services", href: "/services" },
+  { label: "Industries", href: "/industries" },
+  { label: "Case Studies", href: "/case-studies" },
+  { label: "About", href: "/about" },
+  { label: "Resources", href: "/resources" },
+  { label: "Contact", href: "/contact" },
+];
+
 export default function SiteFooter() {
   const year = new Date().getFullYear();
+  const tel = BRAND.phone.replace(/[^+\d]/g, "");
 
   return (
     <footer className="invert" data-transition="slideup">
       <div className="inner">
-        <section className="col" data-transition="slideup">
-          <article>
-            <p className="orbit-footer__about">{BRAND.footerAbout}</p>
-            <NewsletterForm />
-          </article>
+        <section className="col orbit-footer__brand">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            className="orbit-footer__logo"
+            src="/brand/orbitworks-full-light.png"
+            alt="OrbitWorks"
+            width={188}
+            height={34}
+          />
+          <p className="orbit-footer__about">{BRAND.footerAbout}</p>
+          <NewsletterForm />
         </section>
 
         <section className="col orbit-footer__links">
-          {/* A <div>, not a <nav>: the theme's global `nav:not(.social)` rule
-           * forces every <nav> to position:fixed;top:0, which was stacking these
-           * footer columns at the top of the page. */}
-          <div className="orbit-footer__nav">
-            <h4>Quick links</h4>
-            <ul className="orbit-footer__quick">
-              <li>
-                <Link href="/">Home</Link>
+          <h4>Quick links</h4>
+          <ul>
+            {QUICK_LINKS.map((item) => (
+              <li key={item.href}>
+                <Link href={item.href}>{item.label}</Link>
               </li>
-              {NAV_ITEMS.map((item) => (
-                <li key={item.href}>
-                  <Link href={item.href}>{item.label}</Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+            ))}
+          </ul>
         </section>
 
         <section className="col orbit-footer__links">
-          <div className="orbit-footer__nav">
-            <h4>Services</h4>
-            <ul>
-              {SERVICE_BUCKETS.map((b) => (
-                <li key={b.slug}>
-                  <Link href={`/services#${b.slug}`}>{b.name}</Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <h4>Services</h4>
+          <ul>
+            {SERVICE_BUCKETS.map((b) => (
+              <li key={b.slug}>
+                <Link href={`/services#${b.slug}`}>{b.name}</Link>
+              </li>
+            ))}
+          </ul>
+        </section>
 
-          <div className="orbit-footer__contact">
-            <h4>Contact</h4>
-            <p>
+        <section className="col orbit-footer__links orbit-footer__contact">
+          <h4>Contact</h4>
+          <ul>
+            <li>
               <a href={`mailto:${BRAND.email}`}>{BRAND.email}</a>
-              <br />
-              <a href={`tel:${BRAND.phone.replace(/[^+\d]/g, "")}`}>{BRAND.phone}</a>
-              <br />
-              <span>Global delivery centres</span>
-            </p>
-          </div>
+            </li>
+            <li>
+              <a href={`tel:${tel}`}>{BRAND.phone}</a>
+            </li>
+          </ul>
+          <p className="orbit-footer__addr">
+            Baltimore, USA
+            <br />
+            100 King St W, Suite 5600,
+            <br />
+            Toronto, ON M5X 1A9, Canada
+          </p>
 
           {/* Hidden until real handles exist — see SOCIAL in lib/content.ts. */}
           {SOCIAL.length > 0 && (
-            <nav className="social">
-              <h4>Follow our moves</h4>
-              <ul>
-                {SOCIAL.map((s, i) => (
-                  <li key={s.href} className={`cl${i + 1} ${s.cls}`}>
-                    <a target="_blank" rel="noopener noreferrer" href={s.href}>
-                      {s.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </nav>
+            <ul className="orbit-footer__social">
+              {SOCIAL.map((s) => (
+                <li key={s.href}>
+                  <a target="_blank" rel="noopener noreferrer" href={s.href}>
+                    {s.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
           )}
         </section>
       </div>
 
       <div className="footer">
         <div className="inner">
-          <section className="col copy">
-            <div>
-              &copy; {year} OrbitWorks. All rights reserved.
-            </div>
-          </section>
-
-          <section className="col logo">
-            <Link href="/" className="logo-mark">
-              OrbitWorks
-            </Link>
-          </section>
-
-          <section className="col legal">
-            <ul className="label small">
-              {LEGAL_DOCS.map((d, i) => (
-                <li key={d.slug} className={`cl${i + 4}`}>
-                  <Link rel="nofollow" href={`/${d.slug}`}>
-                    {d.navLabel}
-                  </Link>
-                </li>
-              ))}
-              <li className="back-to-top">
-                <a href="#top">Back to top</a>
+          <span className="orbit-footer__copy">
+            &copy; {year} OrbitWorks. All rights reserved.
+          </span>
+          <ul className="orbit-footer__legal">
+            {LEGAL_DOCS.map((d) => (
+              <li key={d.slug}>
+                <Link rel="nofollow" href={`/${d.slug}`}>
+                  {d.navLabel}
+                </Link>
               </li>
-            </ul>
-          </section>
+            ))}
+            <li>
+              <a href="#top">Back to top</a>
+            </li>
+          </ul>
         </div>
       </div>
     </footer>

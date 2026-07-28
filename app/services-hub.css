@@ -305,150 +305,6 @@ main h1.orbit-hub-title {
   font-weight: 600;
 }
 
-/* ---------------------------------------------------------- service cards -- */
-.orbit-svccards {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  margin-top: 2rem;
-}
-
-.orbit-svccard {
-  border: 0.1rem solid var(--grey);
-  border-top: 0.3rem solid var(--bucket-accent);
-  display: grid;
-  gap: 4rem;
-  grid-template-columns: 1.55fr 1fr;
-  padding: 3.4rem 3.6rem;
-  scroll-margin-top: 10rem;
-  transition: box-shadow 0.5s var(--ease);
-}
-
-.orbit-svccard:hover {
-  box-shadow: 0 2rem 5rem rgba(11, 14, 40, 0.08);
-}
-
-.orbit-svccard__no {
-  color: var(--bucket-accent);
-  font-size: 1.5rem;
-  font-weight: 700;
-  letter-spacing: 0.1rem;
-}
-
-.orbit-svccard__title {
-  font-size: 2.6rem;
-  font-weight: 600;
-  margin: 0.6rem 0 1.4rem;
-}
-
-.orbit-svccard__tagline {
-  color: var(--bucket-accent);
-  font-size: 1.8rem;
-  font-weight: 500;
-  margin: 0 0 1.6rem;
-}
-
-.orbit-svccard__desc {
-  color: var(--slate);
-  font-size: 1.6rem;
-  line-height: 1.6;
-  margin: 0 0 2.4rem;
-}
-
-.orbit-svccard__label {
-  color: var(--slate);
-  display: block;
-  font-size: 1.2rem;
-  font-weight: 600;
-  letter-spacing: 0.1rem;
-  margin-bottom: 1.2rem;
-  text-transform: uppercase;
-}
-
-.orbit-svccard__subs {
-  columns: 2;
-  column-gap: 3rem;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.orbit-svccard__subs li {
-  break-inside: avoid;
-  color: var(--ink);
-  font-size: 1.5rem;
-  padding: 0.55rem 0 0.55rem 1.8rem;
-  position: relative;
-}
-
-.orbit-svccard__subs li::before {
-  color: var(--bucket-accent);
-  content: "+";
-  font-weight: 600;
-  left: 0;
-  position: absolute;
-  top: 0.55rem;
-}
-
-.orbit-svccard__aside {
-  display: flex;
-  flex-direction: column;
-  gap: 2.4rem;
-}
-
-.orbit-svccard__block p {
-  font-size: 1.6rem;
-  line-height: 1.55;
-  margin: 0;
-}
-
-.orbit-svccard__block > p {
-  color: var(--slate);
-}
-
-.orbit-svccard__outcome {
-  background: color-mix(in srgb, var(--bucket-accent) 8%, transparent);
-  border-left: 0.3rem solid var(--bucket-accent);
-  padding: 2rem 2.2rem;
-}
-
-.orbit-svccard__outcome p {
-  color: var(--ink);
-  font-weight: 500;
-}
-
-@media screen and (max-width: 979px) {
-  .orbit-svccard {
-    grid-template-columns: 1fr;
-    gap: 2.6rem;
-  }
-}
-
-@media screen and (max-width: 743px) {
-  .orbit-svcbucket__head {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 1.6rem;
-    padding: 2.6rem 2.2rem;
-  }
-  .orbit-svcbucket__count {
-    text-align: left;
-  }
-  .orbit-svccard {
-    padding: 2.6rem 2.2rem;
-  }
-  .orbit-svccard__subs {
-    columns: 1;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .orbit-bucket__link,
-  .orbit-svcnav a::after {
-    transition: none;
-  }
-}
-
 /* --------------------------------------------- bucket showcase (homepage) --
  * The theme's hover split-panel (styles in orbit.css), retinted per bucket via
  * --bucket-accent set on the container and each row (see BucketShowcase).
@@ -469,4 +325,392 @@ main h1.orbit-hub-title {
 
 .orbit-showcase--bucket .orbit-showcase__index {
   color: var(--bucket-accent);
+}
+
+/* ============================================ services explorer (hub page) ==
+ * Category sidebar beside the selected category's cards. Cards are built for
+ * PORTRAIT artwork: a tall image column with the copy alongside.
+ */
+.orbit-svcx {
+  align-items: start;
+  display: grid;
+  gap: 4rem;
+  grid-template-columns: 27rem 1fr;
+  margin-top: 4rem;
+}
+
+/* --- sidebar --- */
+.orbit-svcx__side {
+  position: sticky;
+  top: 11rem;
+}
+
+.orbit-svcx__side ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.orbit-svcx__tab {
+  align-items: center;
+  background: none;
+  border: 0;
+  border-left: 0.3rem solid var(--grey);
+  color: var(--slate);
+  cursor: pointer;
+  display: flex;
+  font-family: inherit;
+  gap: 1.4rem;
+  padding: 1.5rem 1.6rem;
+  text-align: left;
+  transition: color 0.3s var(--ease), background 0.3s var(--ease),
+    border-color 0.3s var(--ease);
+  width: 100%;
+}
+
+.orbit-svcx__tab:hover {
+  background: var(--mist);
+  color: var(--ink);
+}
+
+.orbit-svcx__tab.is-active {
+  background: var(--mist);
+  border-left-color: var(--orbit);
+  color: var(--ink);
+}
+
+.orbit-svcx__tabicon {
+  align-items: center;
+  color: var(--grey);
+  display: inline-flex;
+  flex-shrink: 0;
+  justify-content: center;
+  transition: color 0.3s var(--ease);
+}
+
+.orbit-svcx__tab.is-active .orbit-svcx__tabicon,
+.orbit-svcx__tab:hover .orbit-svcx__tabicon {
+  color: var(--orbit);
+}
+
+.orbit-svcx__tabtext {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.orbit-svcx__tabname {
+  font-size: 1.6rem;
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+.orbit-svcx__tabcount {
+  color: var(--grey);
+  font-size: 1.2rem;
+  margin-top: 0.3rem;
+}
+
+/* --- panel --- */
+.orbit-svcx__panel {
+  --bucket-accent: var(--orbit);
+  scroll-margin-top: 12rem;
+}
+
+.orbit-svcx__head {
+  border-bottom: 0.1rem solid var(--grey);
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+}
+
+.orbit-svcx__head h2 {
+  font-size: clamp(2.4rem, 3vw, 3.2rem);
+  font-weight: 600;
+  margin: 0 0 0.8rem;
+}
+
+.orbit-svcx__head p {
+  color: var(--slate);
+  font-size: 1.7rem;
+  line-height: 1.5;
+  margin: 0;
+  max-width: 60ch;
+}
+
+.orbit-svcx__cards {
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
+}
+
+/* --- portrait service card --- */
+.orbit-svcard {
+  align-items: stretch;
+  background: var(--paper);
+  border: 0.1rem solid var(--grey);
+  display: grid;
+  gap: 0;
+  /* Wide enough that the portrait artwork reads in full rather than a sliver. */
+  grid-template-columns: 38rem 1fr;
+  overflow: hidden;
+  transition: box-shadow 0.5s var(--ease), transform 0.5s var(--ease);
+}
+
+/* Zig-zag: even cards put the image on the RIGHT. */
+.orbit-svcard:nth-child(even) {
+  grid-template-columns: 1fr 38rem;
+}
+
+.orbit-svcard:nth-child(even) .orbit-svcard__media {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.orbit-svcard:nth-child(even) .orbit-svcard__body {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.orbit-svcard:hover {
+  box-shadow: 0 2.4rem 6rem rgba(11, 14, 40, 0.1);
+  transform: translateY(-0.3rem);
+}
+
+/* Portrait frame. min-height keeps the tall proportion on short cards, while
+ * height:100% + the stretched grid row makes the art fill the FULL card height
+ * on long ones — otherwise a gap opened under the image. */
+.orbit-svcard__media {
+  background: var(--mist);
+  height: 100%;
+  min-height: 34rem;
+  overflow: hidden;
+  position: relative;
+}
+
+.orbit-svcard__media img {
+  display: block;
+  height: 100%;
+  inset: 0;
+  object-fit: cover;
+  position: absolute;
+  transition: transform 1.2s var(--ease);
+  width: 100%;
+}
+
+.orbit-svcard:hover .orbit-svcard__media img {
+  transform: scale(1.04);
+}
+
+.orbit-svcard__body {
+  border-top: 0.3rem solid var(--bucket-accent);
+  padding: 3rem 3.2rem;
+}
+
+.orbit-svcard__title {
+  font-size: 2.4rem;
+  font-weight: 600;
+  margin: 0 0 1rem;
+}
+
+.orbit-svcard__tagline {
+  color: var(--bucket-accent);
+  font-size: 1.7rem;
+  font-weight: 500;
+  margin: 0 0 1.4rem;
+}
+
+.orbit-svcard__desc {
+  color: var(--slate);
+  font-size: 1.55rem;
+  line-height: 1.6;
+  margin: 0 0 2rem;
+}
+
+.orbit-svcard__label {
+  color: var(--slate);
+  display: block;
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.1rem;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+}
+
+.orbit-svcard__subs {
+  columns: 2;
+  column-gap: 2.6rem;
+  list-style: none;
+  margin: 0 0 2.2rem;
+  padding: 0;
+}
+
+.orbit-svcard__subs li {
+  break-inside: avoid;
+  color: var(--ink);
+  font-size: 1.45rem;
+  padding: 0.5rem 0 0.5rem 1.6rem;
+  position: relative;
+}
+
+.orbit-svcard__subs li::before {
+  color: var(--bucket-accent);
+  content: "+";
+  font-weight: 600;
+  left: 0;
+  position: absolute;
+  top: 0.5rem;
+}
+
+.orbit-svcard__meta {
+  border-top: 0.1rem solid var(--grey);
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: 1fr 1fr;
+  padding-top: 2rem;
+}
+
+.orbit-svcard__meta p {
+  color: var(--slate);
+  font-size: 1.45rem;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.orbit-svcard__outcome {
+  background: color-mix(in srgb, var(--bucket-accent) 8%, transparent);
+  border-left: 0.3rem solid var(--bucket-accent);
+  padding: 1.4rem 1.6rem;
+}
+
+.orbit-svcard__outcome p {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+@media screen and (max-width: 1133px) {
+  .orbit-svcx {
+    grid-template-columns: 22rem 1fr;
+    gap: 3rem;
+  }
+  .orbit-svcard {
+    grid-template-columns: 28rem 1fr;
+  }
+  .orbit-svcard:nth-child(even) {
+    grid-template-columns: 1fr 28rem;
+  }
+}
+
+@media screen and (max-width: 979px) {
+  .orbit-svcx {
+    grid-template-columns: 1fr;
+  }
+  .orbit-svcx__side {
+    position: static;
+  }
+  .orbit-svcx__side ul {
+    display: grid;
+    gap: 0.8rem;
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .orbit-svcard,
+  .orbit-svcard:nth-child(even) {
+    grid-template-columns: 1fr;
+  }
+  /* Stacked: image always on top, whatever the desktop side. */
+  .orbit-svcard:nth-child(even) .orbit-svcard__media {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .orbit-svcard:nth-child(even) .orbit-svcard__body {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .orbit-svcard__media {
+    aspect-ratio: 16 / 9;
+    min-height: 0;
+  }
+  .orbit-svcard__body {
+    padding: 2.4rem 2.2rem;
+  }
+}
+
+@media screen and (max-width: 620px) {
+  .orbit-svcx__side ul {
+    grid-template-columns: 1fr;
+  }
+  .orbit-svcard__subs,
+  .orbit-svcard__meta {
+    columns: 1;
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ------------------------------------------- category switch animation --
+ * Clicking a sidebar category fades the current panel out (.is-leaving), then
+ * React remounts the panel (keyed by slug) so the enter animation replays and
+ * the cards stagger in.
+ */
+.orbit-svcx__panel {
+  animation: orbit-panel-in 0.45s var(--ease) both;
+}
+
+.orbit-svcx__panel.is-leaving {
+  animation: orbit-panel-out 0.19s var(--ease) forwards;
+}
+
+@keyframes orbit-panel-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 1.6rem, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes orbit-panel-out {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(0, -0.8rem, 0);
+  }
+}
+
+/* Cards stagger in behind the panel. */
+.orbit-svcx__panel:not(.is-leaving) .orbit-svcard {
+  animation: orbit-card-in 0.5s var(--ease) both;
+}
+
+.orbit-svcx__panel .orbit-svcard:nth-child(1) { animation-delay: 0.06s; }
+.orbit-svcx__panel .orbit-svcard:nth-child(2) { animation-delay: 0.12s; }
+.orbit-svcx__panel .orbit-svcard:nth-child(3) { animation-delay: 0.18s; }
+.orbit-svcx__panel .orbit-svcard:nth-child(4) { animation-delay: 0.24s; }
+.orbit-svcx__panel .orbit-svcard:nth-child(5) { animation-delay: 0.3s; }
+.orbit-svcx__panel .orbit-svcard:nth-child(6) { animation-delay: 0.36s; }
+.orbit-svcx__panel .orbit-svcard:nth-child(7) { animation-delay: 0.42s; }
+
+/* Odd cards drift in from the left, even from the right — matches the zig-zag. */
+@keyframes orbit-card-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 2.4rem, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbit-svcx__panel,
+  .orbit-svcx__panel.is-leaving,
+  .orbit-svcx__panel:not(.is-leaving) .orbit-svcard {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
 }

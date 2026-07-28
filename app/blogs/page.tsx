@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import PageHeader from "@/components/blocks/PageHeader";
+import PageHero from "@/components/blocks/PageHero";
 import { BLOGS } from "@/lib/content";
 import { chromeFor } from "@/lib/routes";
 import { formatPostDate } from "@/lib/dates";
@@ -14,10 +14,17 @@ export default function Blogs() {
 
   return (
     <main>
-      <PageHeader
-        title="Blog"
-        lead="Notes from the delivery floor."
-        intro="Short pieces on digital marketing, AI, cloud and shipping software — written by the people doing the work."
+      <PageHero
+        chip="Notes from the delivery floor"
+        icon="blog"
+        title="Insights on AI, cloud & growth"
+        lead="Short pieces on digital marketing, AI, cloud and shipping software — written by the people doing the work, not a content team."
+        ctas={[
+          { label: "Talk to our team", href: "/contact" },
+          { label: "Explore Our Services", href: "/services", ghost: true },
+        ]}
+        proof={["Written by practitioners", "No gated PDFs", "Updated monthly"]}
+        image="https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=1800&q=70"
       />
 
       {/* Lead post gets the wide treatment; the rest run as a grid. */}

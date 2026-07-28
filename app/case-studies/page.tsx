@@ -16,6 +16,8 @@ export default function CaseStudies() {
         title="Cases"
         lead="Selected work."
         intro="Five engagements, in the clients' own words. Each one shipped and handed over."
+        eyebrow="Selected work"
+        image="/media/2024/05/LKQ_13_14_Group_1576-4-2407x1600.jpg"
       />
 
       <div

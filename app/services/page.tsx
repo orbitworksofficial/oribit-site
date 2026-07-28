@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import ServiceBuckets from "@/components/blocks/ServiceBuckets";
+import PageHero from "@/components/blocks/PageHero";
+import ServiceExplorer from "@/components/blocks/ServiceExplorer";
 import Testimonials from "@/components/blocks/Testimonials";
 import { SERVICES_HUB } from "@/lib/services-data";
 import { chromeFor } from "@/lib/routes";
@@ -12,25 +13,25 @@ export const metadata: Metadata = { title: chrome.title, description: chrome.des
 export default function Services() {
   return (
     <main>
-      {/* Hero — shares the inner-page navy hero treatment (.orbit-pagehero). */}
-      <div
-        className="wp-block-kenza-column-constraint column-constraint cols-12 orbit-pagehero"
-        data-transition="slideup"
-        data-transition-include="through"
-      >
-        <span className="orbit-eyebrow orbit-pagehero__eyebrow">OrbitWorks · Services</span>
-        <h1 className="wp-block-heading deco-l mobile orbit-hub-title">{SERVICES_HUB.heading}</h1>
-        <p className="has-text-align-left large large-intro shorten shorten-70 wp-block-paragraph">
-          {SERVICES_HUB.sub}
-        </p>
-      </div>
+      <PageHero
+        chip="13 services · 4 categories"
+        icon="services"
+        title={SERVICES_HUB.heading}
+        lead={SERVICES_HUB.sub}
+        ctas={[
+          { label: "Book a Discovery Call", href: "/contact" },
+          { label: "Browse all services", href: "#ai-automation", ghost: true },
+        ]}
+        proof={["One delivery team", "Fixed scope, clear pricing", "Handover you can maintain"]}
+        image="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1800&q=70"
+      />
 
       {/* Sticky category nav + the 4 buckets with full service cards */}
       <div
         className="wp-block-kenza-column-constraint column-constraint cols-12"
         data-transition="slideup"
       >
-        <ServiceBuckets />
+        <ServiceExplorer />
       </div>
 
       <Testimonials limit={3} />

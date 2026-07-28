@@ -15,6 +15,9 @@ export default function Products() {
         title="Products"
         lead="Two things we're building for ourselves."
         intro="Client work pays the bills; these are the products we're building on the side of it. Both are pre-launch."
+        eyebrow="Our products"
+        image="/media/2024/05/Services-Web3-Design-and-Development.jpg"
+        flip
       />
 
       <div

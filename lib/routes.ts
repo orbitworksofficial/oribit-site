@@ -33,26 +33,26 @@ export const ROUTES: Record<string, RouteChrome> = {
     body: `home ${THEME} classic homepage nav-white`,
     nav: "white",
     selected: null,
-    title: "OrbitWorks — Crafting Solutions With Purpose",
+    title: "AI Automation and IT Services USA | Orbit Works",
     description:
-      "A digital agency for cloud, software, data, AI and digital marketing. Strategy through delivery, in one team.",
+      "Orbit Works delivers AI automation, digital marketing, cloud solutions, and IT talent for US businesses ready to scale. Start with a free discovery call.",
     hero: true,
   },
   "/about": {
     body: `${THEME} classic nav-black`,
     nav: "black",
     selected: "About",
-    title: "About — OrbitWorks",
+    title: "About Orbit Works | AI and IT Services Company USA",
     description:
-      "Who we are: 50 specialists across four offices, building for clients in 10+ countries.",
+      "Meet the team behind Orbit Works. We deliver AI automation, digital marketing, and IT infrastructure for US businesses under one unified strategy.",
   },
   "/services": {
     body: `${THEME} services page-parent nav-black`,
     nav: "black",
     selected: "Services",
-    title: "Services — OrbitWorks",
+    title: "IT and AI Services for US Businesses | Orbit Works",
     description:
-      "Digital marketing, software, AI, cloud and data. Thirteen services, one delivery team.",
+      "Explore 13 specialist services across AI automation, digital marketing, cloud infrastructure, and tech talent. One partner for everything your business needs.",
   },
   "/products": {
     body: `${THEME} classic nav-black`,
@@ -65,9 +65,9 @@ export const ROUTES: Record<string, RouteChrome> = {
     body: `${THEME} classic nav-black`,
     nav: "black",
     selected: "Industries",
-    title: "Industries — OrbitWorks",
+    title: "Industries We Serve | Orbit Works IT Solutions USA",
     description:
-      "Manufacturing, healthcare, real estate, logistics, education, hospitality and more.",
+      "Orbit Works serves professional services, real estate, healthcare, e-commerce, SaaS, and more. Tailored AI and IT solutions built for your industry.",
   },
   "/case-studies": {
     body: `${THEME} classic page-parent nav-black`,

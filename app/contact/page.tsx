@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import PageHeader from "@/components/blocks/PageHeader";
+import PageHero from "@/components/blocks/PageHero";
 import { BRAND, OFFICES } from "@/lib/content";
 import { SERVICE_TITLES } from "@/lib/services-data";
 import { chromeFor } from "@/lib/routes";
@@ -12,10 +12,17 @@ export const metadata: Metadata = { title: chrome.title, description: chrome.des
 export default function Contact() {
   return (
     <main>
-      <PageHeader
-        title="Contact"
-        lead="Tell us what isn't moving."
-        intro="Four offices, one inbox. A short note about the problem beats a long one about the brief."
+      <PageHero
+        chip="Baltimore & Toronto · one inbox"
+        icon="contact"
+        title="Tell us what isn't moving"
+        lead="A short note about the problem beats a long one about the brief. Send it over and the person who reads it is the person who can help."
+        ctas={[
+          { label: "Book a Discovery Call", href: "#contact-form" },
+          { label: "Email the team", href: "mailto:sales@orb-itworks.com", ghost: true },
+        ]}
+        proof={["Reply within 1 business day", "No sales script", "Free 15-min discovery"]}
+        image="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1800&q=70"
       />
 
       <div
@@ -43,6 +50,7 @@ export default function Contact() {
         className="wp-block-kenza-column-constraint column-constraint cols-12"
         data-transition="slideup"
       >
+        <span id="contact-form" />
         <ContactForm services={SERVICE_TITLES} />
       </div>
 

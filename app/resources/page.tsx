@@ -15,6 +15,8 @@ export default function Resources() {
         title="Resources"
         lead="The checklists we actually run."
         intro="Nothing gated, nothing theoretical — these are the working documents our delivery teams use, published as-is."
+        eyebrow="Free resources"
+        variant="center"
       />
 
       <div

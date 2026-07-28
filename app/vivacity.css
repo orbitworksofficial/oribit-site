@@ -83,87 +83,135 @@ footer.invert {
 }
 
 /* Column grid: brand+newsletter wide, then three link columns. */
+/* Four columns: brand (wide) · quick links · services · contact. Top-aligned so
+ * every heading sits on the same line. */
 footer.invert > .inner {
   align-items: start;
   display: grid;
-  gap: 3rem 5rem;
-  grid-template-columns: 1.8fr 1fr 1fr 1fr;
-  padding-bottom: 3.6rem;
-  padding-top: 5rem;
+  gap: 4rem;
+  grid-template-columns: 1.9fr 1fr 1.1fr 1.2fr;
+  padding-bottom: 4rem;
+  padding-top: 5.5rem;
 }
 
 footer.invert > .inner > .col {
   display: block;
+  margin: 0;
+  padding: 0;
 }
 
-/* Brand column: tighter about text + newsletter. */
+/* Brand column. */
+.orbit-footer__logo {
+  height: 3rem;
+  margin-bottom: 2.2rem;
+  width: auto;
+}
+
 .orbit-footer__about {
+  color: rgba(200, 208, 222, 0.72);
   font-size: 1.45rem;
-  line-height: 1.6;
-  margin: 0 0 2rem;
-  max-width: 40ch;
+  line-height: 1.65;
+  margin: 0 0 2.4rem;
+  max-width: 42ch;
 }
 
-/* Quick links in two columns so nine items don't drive the height. */
-.orbit-footer__quick {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0 2rem;
+/* Every column heading aligned + consistent. */
+.orbit-footer__links h4 {
+  color: var(--orbit-paper);
+  font-size: 1.3rem;
+  letter-spacing: 0.1rem;
+  margin: 0 0 1.8rem;
+  text-transform: uppercase;
 }
 
-.orbit-footer__links li {
-  margin-bottom: 0.5rem;
-}
-
-.orbit-footer__links a,
-.orbit-footer__contact a,
-.orbit-footer__contact p {
-  font-size: 1.45rem;
-}
-
-.orbit-footer__links h4,
-.orbit-footer__contact h4 {
-  margin-bottom: 1.2rem;
-}
-
-/* Slim bottom bar: copyright · legal links · back to top, on one row. */
-footer.invert .footer {
-  background-color: var(--navy);
-  padding-bottom: 2.8rem;
-  padding-top: 2.8rem;
-}
-
-footer.invert .footer > .inner {
-  align-items: center;
-  display: flex;
-  gap: 2rem;
-  justify-content: space-between;
-  padding-bottom: 0;
-  padding-top: 0;
-}
-
-footer.invert .footer .legal ul {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.2rem 2rem;
+.orbit-footer__links ul {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-footer.invert .footer .legal li {
-  margin: 0;
+.orbit-footer__links li {
+  margin-bottom: 1rem;
 }
 
-/* ---- shorter contact band ---- */
+.orbit-footer__links a {
+  color: rgba(200, 208, 222, 0.82);
+  font-size: 1.45rem;
+  text-decoration: none;
+  transition: color 0.25s var(--ease);
+}
+
+.orbit-footer__links a:hover {
+  color: var(--orbit);
+}
+
+.orbit-footer__addr {
+  color: rgba(200, 208, 222, 0.72);
+  font-size: 1.45rem;
+  line-height: 1.7;
+  margin: 1.6rem 0 0;
+}
+
+/* Slim bottom bar: copyright (left) · legal + back to top (right), one row. */
+footer.invert .footer {
+  background-color: var(--navy);
+  border-top: 0.1rem solid rgba(255, 255, 255, 0.07);
+  padding-bottom: 2.6rem;
+  padding-top: 2.6rem;
+}
+
+footer.invert .footer > .inner {
+  align-items: center;
+  display: flex;
+  gap: 2rem 3rem;
+  justify-content: space-between;
+  padding-bottom: 0;
+  padding-top: 0;
+}
+
+.orbit-footer__copy {
+  color: rgba(200, 208, 222, 0.62);
+  font-size: 1.35rem;
+}
+
+.orbit-footer__legal {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 2.4rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.orbit-footer__legal a {
+  color: rgba(200, 208, 222, 0.72);
+  font-size: 1.35rem;
+  text-decoration: none;
+  transition: color 0.25s var(--ease);
+}
+
+.orbit-footer__legal a:hover {
+  color: var(--orbit);
+}
+
+/* ---- contact band: centred content with breathing room ---- */
 .contact-footer {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   margin-top: 7rem;
-  min-height: 24rem;
+  min-height: 32rem;
+  padding: 7.5rem 3.2rem;
 }
 
 .contact-footer h3 {
-  padding-bottom: 2rem;
-  padding-top: 5rem;
+  padding: 0 0 2.4rem;
+}
+
+.contact-footer a {
+  font-size: 2rem;
 }
 
 @media screen and (max-width: 979px) {

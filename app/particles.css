@@ -1,0 +1,16 @@
+/*
+ * Constellation backdrop canvas (see components/layout/ParticleBackground).
+ * Fixed z-index:-1 layer — above html's white background, below body content,
+ * so any section with its own background covers it.
+ *
+ * TO REMOVE: delete this file + its import in app/layout.tsx.
+ */
+.orbit-particles {
+  display: block;
+  height: 100vh;
+  inset: 0;
+  pointer-events: none;
+  position: fixed;
+  width: 100vw;
+  z-index: -1;
+}
