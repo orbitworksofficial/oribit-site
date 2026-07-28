@@ -42,7 +42,7 @@ export default function FrontPageImageCluster() {
               width={1203}
               height={800}
               loading="lazy"
-              src="/media/2024/05/11.jpg"
+              src="/media/2025/09/1.jpeg"
               alt=""
               className="wp-image-150"
             />
@@ -60,7 +60,7 @@ export default function FrontPageImageCluster() {
               width={948}
               height={533}
               loading="lazy"
-              src="/media/2024/05/22.jpg"
+              src="/media/2025/09/3.jpeg"
               alt=""
               className="wp-image-151"
             />
