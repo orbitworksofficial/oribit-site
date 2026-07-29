@@ -15,10 +15,12 @@ import { MOBILE_MEDIA } from "./video";
 
 /** Stills shown in the first screens of the homepage. */
 export const PRELOAD_IMAGES: string[] = [
+  // NOTE: these are .jpeg, not .jpg — the wrong extension made every homepage
+  // load 404 three times and the loader counted the failures as "done".
   "/media/2024/05/front.png",
-  "/media/2024/05/data.jpg",
-  "/media/2024/05/marketing.jpg",
-  "/media/2024/05/cloud.jpg",
+  "/media/2024/05/data.jpeg",
+  "/media/2024/05/marketing.jpeg",
+  "/media/2024/05/cloud.jpeg",
   "/media/2024/05/11.jpg",
 ];
 

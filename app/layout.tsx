@@ -30,6 +30,7 @@ import { chromeFor } from "@/lib/routes";
 import TransitionEngine from "@/components/animation/TransitionEngine";
 import Nav from "@/components/layout/Nav";
 import ChromeSync from "@/components/layout/ChromeSync";
+import NavDrawer from "@/components/layout/NavDrawer";
 import SiteLoader from "@/components/layout/SiteLoader";
 import ParticleBackground from "@/components/layout/ParticleBackground";
 import ContactFooter from "@/components/layout/ContactFooter";
@@ -111,6 +112,7 @@ export default async function RootLayout({
         <ParticleBackground />
         <SiteLoader />
         <ChromeSync />
+        <NavDrawer />
         <a id="top" className="top-link" />
 
         <Nav pathname={pathname} />

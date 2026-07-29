@@ -3060,3 +3060,92 @@ main .orbit-pagehero--center h1.deco-l {
 .orbit-sec__full {
   grid-column: 1 / -1;
 }
+
+/* ==================================================== nav overlap (critical) ==
+ * The theme makes BOTH the hero's `.fake-nav` clone and the real `nav.header`
+ * `position:fixed; top:0`, and never hides either — so on the homepage they sat
+ * stacked at the same coordinates: white hero links painted over dark header
+ * links (doubled / washed-out text), the logo drawn twice, and clicks landing on
+ * whichever happened to be on top.
+ *
+ * The theme's intent is either/or, so make that explicit:
+ *   hero page, at top      -> .fake-nav owns the nav; hide nav.header + logo
+ *   scrolled past the hero -> html.mob-nav; hide .fake-nav, show nav.header
+ *   drawer open            -> nav.header must always be visible (it holds the ul)
+ *
+ * `nav-white` is on <body>, `mob-nav` on <html>, hence the descendant order.
+ */
+
+/* The swap is SEQUENTIAL, never a crossfade: whichever nav is leaving fades out
+ * over --navfade, and the one arriving waits that long before fading in. A
+ * simultaneous crossfade left both partially drawn for ~300ms — white hero links
+ * at 80% over dark header links at 20% — which is precisely the doubled,
+ * washed-out header. Sequencing guarantees they are never both visible.
+ */
+:root {
+  --navfade: 0.14s;
+}
+
+/* --- at the top of a hero page: the hero's clone owns the nav --- */
+.nav-white nav.header,
+.nav-white figure.logo {
+  opacity: 0;
+  transition: opacity var(--navfade) var(--ease); /* leaves immediately */
+}
+
+.nav-white nav.header {
+  pointer-events: none;
+}
+
+.nav-white .fake-nav:not(.social) {
+  opacity: 1;
+  transition: opacity var(--navfade) var(--ease) var(--navfade); /* arrives after */
+}
+
+/* --- scrolled past the hero: the real header takes over --- */
+.mob-nav .fake-nav:not(.social) {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--navfade) var(--ease); /* leaves immediately */
+}
+
+.mob-nav .nav-white nav.header,
+.mob-nav .nav-white figure.logo {
+  opacity: 1;
+  transition: opacity var(--navfade) var(--ease) var(--navfade); /* arrives after */
+}
+
+/* --- drawer open: the header must be visible, it holds the menu --- */
+.nav-white .nav-toggle:checked ~ nav.header,
+.nav-white .nav-toggle:checked ~ figure.logo {
+  opacity: 1;
+  transition: opacity var(--navfade) var(--ease);
+}
+
+/* Keep the theme's slide-away transform for the logo/burger. */
+figure.logo {
+  transition: opacity var(--navfade) var(--ease),
+    transform 2s cubic-bezier(0.86, 0, 0.07, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --navfade: 0.01s;
+  }
+}
+
+/* ------------------------------------------------- mobile drawer polish --
+ * The drawer background was rgba(...,0.98), so ~2% of the page ghosted through
+ * and read as a rendering fault. Make it fully opaque.
+ */
+.nav-toggle:checked ~ nav.header > ul,
+.mob-nav:not(.mob-nav-animating) .nav-toggle:checked ~ nav.header > ul {
+  background: #0d0e12;
+}
+
+/* The cookie banner sat on top of the open drawer and stayed clickable.
+ * Hide it while the menu is open. */
+.nav-toggle:checked ~ .cookie-warning {
+  opacity: 0;
+  pointer-events: none;
+}

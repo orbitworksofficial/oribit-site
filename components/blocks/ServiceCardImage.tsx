@@ -1,20 +1,16 @@
-"use client";
-
-import { useEffect, useState } from "react";
-
 /**
- * Service card artwork, built for PORTRAIT images.
+ * Service card artwork (portrait).
  *
- * Renders the known-good stock image immediately, then probes for your own art
- * at `/services/<slug>.jpg` in the background and swaps it in only once it has
- * actually loaded. Probing (rather than rendering the custom path first and
- * catching onError) means a missing file never flashes a broken image.
+ * Renders whatever lib/service-images maps the slug to — nothing more. An
+ * earlier version also probed `/services/<slug>.jpg` in the background so art
+ * could be dropped in without a code change, but that fired a 404 for every
+ * service without custom art and filled the console with errors. Since the map
+ * is edited directly anyway, the probe was pure noise.
  *
- * So: drop a portrait JPG named after the service slug into `public/services/`
- * and it takes over automatically — no code change.
+ * To use your own art: drop the file in public/services/ and point the slug at
+ * it in lib/service-images.ts.
  */
 export default function ServiceCardImage({
-  slug,
   fallback,
   alt,
 }: {
@@ -22,23 +18,8 @@ export default function ServiceCardImage({
   fallback?: string;
   alt: string;
 }) {
-  const [src, setSrc] = useState(fallback);
-
-  useEffect(() => {
-    const custom = `/services/${slug}.jpg`;
-    let cancelled = false;
-    const probe = new Image();
-    probe.onload = () => {
-      if (!cancelled) setSrc(custom);
-    };
-    probe.src = custom;
-    return () => {
-      cancelled = true;
-    };
-  }, [slug]);
-
-  if (!src) return null;
+  if (!fallback) return null;
 
   // eslint-disable-next-line @next/next/no-img-element
-  return <img src={src} alt={alt} loading="lazy" />;
+  return <img src={fallback} alt={alt} loading="lazy" />;
 }

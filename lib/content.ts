@@ -536,6 +536,20 @@ export const TESTIMONIALS: Testimonial[] = [
     sector: "Professional services",
     logo: "/brand/clients/m-maqsood-and-co.png",
   },
+  {
+    quote:
+      "Unified Risk Solutions LLC	Working with OrbitWorks was a seamless experience from start to finish. They took the time to understand our business and delivered a custom solution that aligned perfectly with our goals and continues to add value every day.",
+    client: "Unified Risk Solutions LLC",
+    sector: "Professional services",
+    logo: "/brand/clients/unified risk.png",
+  },
+  {
+    quote:
+      "Gravity BPO LLC	OrbitWorks transformed the way we manage our operations with a CRM built around our business. Professional team, smooth implementation, and results we noticed immediately.",
+    client: "Gravity BPO LLC",
+    sector: "Professional services",
+    logo: "/brand/clients/gravity.png",
+  },
 ];
 
 /** Marquee runs client names as type — we have no rights-cleared logo files. */
