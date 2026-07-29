@@ -7,7 +7,7 @@ import CaseSlider from "@/components/blocks/CaseSlider";
 import PreviewVideo from "@/components/blocks/PreviewVideo";
 import BucketShowcase from "@/components/blocks/BucketShowcase";
 import Stats from "@/components/blocks/Stats";
-import Testimonials from "@/components/blocks/Testimonials";
+import TestimonialCarousel from "@/components/blocks/TestimonialCarousel";
 import { MIRROR_PORTRAIT } from "@/lib/video";
 import { BRAND, INDUSTRIES, SECTIONS, WHY, APPROACH, CASE_RESULTS } from "@/lib/content";
 import { SERVICES_HOMEPAGE, SERVICE_BUCKETS } from "@/lib/services-data";
@@ -171,8 +171,17 @@ export default function Home() {
         </ul>
       </div>
 
-      {/* All six client quotes on the homepage; inner pages show a shorter set. */}
-      <Testimonials />
+      {/* Client reviews as a single-line carousel; inner pages use the grid. */}
+      <div
+        className="wp-block-kenza-column-constraint column-constraint cols-12"
+        data-transition="slideup"
+      >
+        <h2 className="wp-block-heading deco-l mobile">Clients</h2>
+        <h3 className="wp-block-heading book mobilexl shorten">
+          What the work looked like from the other side.
+        </h3>
+        <TestimonialCarousel />
+      </div>
 
       {/* 7. Approach */}
       <div
