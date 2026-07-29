@@ -3258,3 +3258,72 @@ figure.logo {
     scroll-behavior: auto;
   }
 }
+
+/* --------------------------------------------------- case slider legibility --
+ * The case-card title was absolutely positioned white type straight on the
+ * artwork with no scrim — unreadable over the bright portfolio graphics.
+ *
+ * Those graphics are self-contained: each already carries the client name, the
+ * quote, the client logo, the website and the OrbitWorks partner mark. So the
+ * overlaid headline duplicated information AND covered the artwork's own text
+ * (it sat across the website URL). Neither a scrim nor a solid chip fixes that —
+ * the honest fix is to stop drawing a second label over a finished design.
+ *
+ * The heading stays in the DOM: it is the accessible name for the card link and
+ * the slider's a11y label. It is only visually hidden.
+ *
+ * If a future case image is a plain photo with no baked-in text, delete this
+ * block to bring the label back.
+ */
+.wp-block-kenza-case-card h3,
+.wp-block-kenza-case-card .wp-block-heading {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 1px;
+}
+
+/* ============================================================ mobile fixes ==
+ * 1. Case slider artwork was cover-cropped. The portfolio graphics are ~16:9
+ *    landscape with baked-in text (quote, client, logo, URL); the theme's card
+ *    is calc(45.25vw + 7rem) tall, which on a phone is PORTRAIT — so `cover`
+ *    threw away both sides and left an unreadable middle slice. Show the whole
+ *    graphic instead and size the card to the artwork.
+ * 2. Testimonial cards stretched to the tallest quote in the row, leaving a big
+ *    void under the short ones when only one card is visible.
+ */
+@media screen and (max-width: 743px) {
+  /* --- case slider: show the full graphic ---
+   * The theme scopes these through `.inner` (3 classes), so anything shorter
+   * loses on specificity — that is why an earlier 2-class attempt did nothing. */
+  .wp-block-kenza-case-slider .inner .wp-block-kenza-case-card {
+    height: calc(56.25vw + 2rem); /* 16:9 + a little breathing room */
+  }
+
+  .wp-block-kenza-case-slider .inner .wp-block-kenza-case-card img,
+  .wp-block-kenza-case-slider .inner.reverse .wp-block-kenza-case-card img {
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    /* The theme scales/offsets the image for its reveal; that re-crops a
+     * contained image, so keep it still on small screens. */
+    transform: none;
+    width: 100%;
+  }
+
+  /* --- testimonials: card fits its own content --- */
+  .orbit-carousel__track {
+    align-items: start;
+  }
+
+  .orbit-quote {
+    padding: 2.4rem 2.2rem 2rem;
+  }
+
+  .orbit-quote p {
+    font-size: 1.7rem;
+    margin: 1.2rem 0 1.8rem;
+  }
+}

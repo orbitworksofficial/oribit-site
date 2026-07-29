@@ -15,13 +15,16 @@ export default function PreviewVideo({
   sources,
   className = "preview",
   poster,
+  skipOnMobile = false,
 }: {
   sources: VideoSet;
   className?: string;
   poster?: string;
+  /** Show the poster instead of playing, below 743px — see useVideoPlay. */
+  skipOnMobile?: boolean;
 }) {
   const ref = useRef<HTMLVideoElement>(null);
-  useVideoPlay(ref);
+  useVideoPlay(ref, { skipOnMobile });
 
   const { desktop, mobile } = sources;
 

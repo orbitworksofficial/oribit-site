@@ -55,7 +55,7 @@ export default function VideoLoopHeader({
           <p className="wp-block-heading alignfull" aria-hidden="true" />
         </div>
 
-        <PreviewVideo sources={HEADLOOP} />
+        <PreviewVideo sources={HEADLOOP} skipOnMobile />
       </div>
 
       {/*
