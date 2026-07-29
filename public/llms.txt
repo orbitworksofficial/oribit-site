@@ -1,0 +1,30 @@
+# OrbitWorks
+
+> AI automation and IT services company in the USA. We help businesses scale
+> through intelligent automation, cloud infrastructure, custom software and
+> data-driven marketing — delivered by one team under a single strategy.
+
+## About
+OrbitWorks delivers AI automation, digital marketing, cloud infrastructure and
+on-demand tech talent for US businesses. Offices in Baltimore (USA) and Toronto
+(Canada). Contact: sales@orb-itworks.com · +1 443 260 9169
+
+## Services
+- AI Automation and Solutions: AI automation & GenAI, unified revenue dashboards, CRM setup and sales pipeline automation.
+- Digital Marketing Growth: paid advertising management (Google, Meta, LinkedIn), SEO, content, email and WhatsApp marketing.
+- IT and Cloud Solutions: cloud migrations and modernization, custom website development, mobile apps, software and product development, Power Platform and Dynamics 365, IT consulting and strategy, website maintenance.
+- Staff Augmentation: on-demand IT talent and dedicated remote teams.
+
+## Pages
+- /: Home
+- /services: All 13 services across 4 categories
+- /industries: Industries served
+- /about: Company, philosophy, values and team
+- /case-studies: Client work
+- /blogs: Articles on AI, cloud, marketing and software delivery
+- /contact: Contact and discovery call
+
+## Policies
+- /privacy: Privacy Policy
+- /terms: Terms and Conditions
+- /refund-policy: Cancellation and Refund Policy

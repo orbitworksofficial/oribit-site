@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 
 import { BLOGS, postBySlug } from "@/lib/content";
 import { formatPostDate } from "@/lib/dates";
+import { postMetadata } from "@/lib/seo";
+import ArticleSchema from "@/components/layout/ArticleSchema";
 
 /** Every post is known at build time, so prerender them all. */
 export function generateStaticParams() {
@@ -19,17 +21,9 @@ export async function generateMetadata({
   const post = postBySlug(slug);
   if (!post) return { title: "Not found — OrbitWorks" };
 
-  return {
-    title: `${post.title} — OrbitWorks`,
-    description: post.excerpt,
-    openGraph: {
-      type: "article",
-      title: post.title,
-      description: post.excerpt,
-      publishedTime: post.date,
-      images: [post.image],
-    },
-  };
+  // Canonical + absolute OG image URLs — relative ones are dropped by most
+  // crawlers and social unfurlers.
+  return postMetadata(post);
 }
 
 export default async function Post({ params }: { params: Promise<{ slug: string }> }) {
@@ -39,8 +33,10 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
 
   const more = BLOGS.filter((p) => p.slug !== post.slug).slice(0, 3);
 
+
   return (
     <main>
+      <ArticleSchema post={post} />
       <article className="orbit-post">
         <div
           className="wp-block-kenza-column-constraint column-constraint cols-12"

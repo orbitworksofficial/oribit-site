@@ -3,10 +3,9 @@ import Link from "next/link";
 
 import PageHeader from "@/components/blocks/PageHeader";
 import { PRODUCTS } from "@/lib/content";
-import { chromeFor } from "@/lib/routes";
+import { pageMetadata } from "@/lib/seo";
 
-const chrome = chromeFor("/products");
-export const metadata: Metadata = { title: chrome.title, description: chrome.description };
+export const metadata: Metadata = pageMetadata("/products");
 
 export default function Products() {
   return (

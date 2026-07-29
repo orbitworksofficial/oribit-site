@@ -5,10 +5,9 @@ import PageHero from "@/components/blocks/PageHero";
 import Stats from "@/components/blocks/Stats";
 import TeamGrid from "@/components/blocks/TeamGrid";
 import { OFFICES } from "@/lib/content";
-import { chromeFor } from "@/lib/routes";
+import { pageMetadata } from "@/lib/seo";
 
-const chrome = chromeFor("/about");
-export const metadata: Metadata = { title: chrome.title, description: chrome.description };
+export const metadata: Metadata = pageMetadata("/about");
 
 /** Philosophy / values, rendered as ticked lists. */
 const PHILOSOPHY = [

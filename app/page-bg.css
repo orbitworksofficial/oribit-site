@@ -12,13 +12,13 @@
 
 body::before {
   background-color: transparent;
-  /* dot grid + two soft corner washes */
-  background-image: radial-gradient(rgba(11, 14, 40, 0.07) 1.5px, transparent 1.6px),
-    radial-gradient(70rem 50rem at 92% -6%, rgba(243, 18, 78, 0.07), transparent 70%),
+  /* Dot grid removed — the constellation canvas is the background texture now.
+   * Only the soft brand washes remain, to keep the white from reading flat. */
+  background-image: radial-gradient(70rem 50rem at 92% -6%, rgba(243, 18, 78, 0.07), transparent 70%),
     radial-gradient(60rem 46rem at 4% 42%, rgba(11, 14, 40, 0.045), transparent 70%);
-  background-position: 0 0, 0 0, 0 0;
-  background-repeat: repeat, no-repeat, no-repeat;
-  background-size: 26px 26px, 100% 100%, 100% 100%;
+  background-position: 0 0, 0 0;
+  background-repeat: no-repeat, no-repeat;
+  background-size: 100% 100%, 100% 100%;
   content: "";
   inset: 0;
   pointer-events: none;
@@ -26,7 +26,7 @@ body::before {
   z-index: -1;
 }
 
-/* Fade the grid out toward the bottom so it never fights the footer seam. */
+/* Soften toward the bottom so the wash never fights the footer seam. */
 body::after {
   background: linear-gradient(180deg, transparent 55%, var(--paper, #fdfcf7) 100%);
   content: "";
@@ -37,8 +37,3 @@ body::after {
   z-index: -1;
 }
 
-@media screen and (max-width: 743px) {
-  body::before {
-    background-size: 20px 20px, 100% 100%, 100% 100%;
-  }
-}

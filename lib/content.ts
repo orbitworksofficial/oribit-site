@@ -21,6 +21,9 @@ export const BRAND = {
     "OrbitWorks is a premier AI automation and IT services company in USA, delivering innovative solutions in software development, cloud infrastructure, artificial intelligence, and digital marketing. We partner with businesses of all sizes to build scalable technology strategies that drive measurable growth.",
 } as const;
 
+/** Countries/regions served — used by the Organization JSON-LD. */
+export const SERVICES_JSONLD_AREA = ["United States", "Canada"];
+
 /** Section copy, kept here so the page files stay structural. */
 export const SECTIONS = {
   trustEyebrow: "Trusted by innovative companies across the United States",
@@ -99,8 +102,6 @@ export const PILLARS: Pillar[] = [
       "Predictive analytics",
       "GenAI & automation",
     ],
-    // NOTE: ai.mp4 is 23MB — it only loads once the card is in view, but it
-    // wants compressing to ~1-2MB.
     image: "/media/2024/05/ai.mp4",
     poster: "/media/2024/05/data.jpg",
   },
@@ -274,8 +275,7 @@ export const SERVICES: Service[] = [
       "NLP, chatbots & GenAI",
       "Computer vision solutions",
     ],
-    // Loop rather than a still. NOTE: ai.mp4 is 23MB — it only loads when the
-    // card scrolls into view, but it wants compressing to ~1-2MB.
+    // Loop rather than a still; re-encoded from 4K/22MB down to ~0.2MB.
     image: "/media/2024/05/ai.mp4",
     poster: "/media/2024/05/data.jpg",
   },

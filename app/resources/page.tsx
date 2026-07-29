@@ -3,10 +3,9 @@ import Link from "next/link";
 
 import PageHeader from "@/components/blocks/PageHeader";
 import { RESOURCES } from "@/lib/content";
-import { chromeFor } from "@/lib/routes";
+import { pageMetadata } from "@/lib/seo";
 
-const chrome = chromeFor("/resources");
-export const metadata: Metadata = { title: chrome.title, description: chrome.description };
+export const metadata: Metadata = pageMetadata("/resources");
 
 export default function Resources() {
   return (

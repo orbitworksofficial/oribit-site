@@ -3,11 +3,10 @@ import type { Metadata } from "next";
 import PageHero from "@/components/blocks/PageHero";
 import { BRAND, OFFICES } from "@/lib/content";
 import { SERVICE_TITLES } from "@/lib/services-data";
-import { chromeFor } from "@/lib/routes";
+import { pageMetadata } from "@/lib/seo";
 import ContactForm from "@/components/layout/ContactForm";
 
-const chrome = chromeFor("/contact");
-export const metadata: Metadata = { title: chrome.title, description: chrome.description };
+export const metadata: Metadata = pageMetadata("/contact");
 
 export default function Contact() {
   return (

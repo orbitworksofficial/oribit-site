@@ -4,10 +4,9 @@ import Link from "next/link";
 import PageHero from "@/components/blocks/PageHero";
 import Testimonials from "@/components/blocks/Testimonials";
 import { INDUSTRIES, INDUSTRY_SPOTLIGHTS } from "@/lib/content";
-import { chromeFor } from "@/lib/routes";
+import { pageMetadata } from "@/lib/seo";
 
-const chrome = chromeFor("/industries");
-export const metadata: Metadata = { title: chrome.title, description: chrome.description };
+export const metadata: Metadata = pageMetadata("/industries");
 
 /** "Why generic IT fails" proof points. */
 const WHY_GENERIC_FAILS = [

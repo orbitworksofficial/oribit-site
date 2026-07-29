@@ -6,10 +6,10 @@ import { useEffect, useRef } from "react";
  * Constellation backdrop — drifting particles joined by lines to their near
  * neighbours, on a canvas behind the whole site.
  *
- * Tuned for a WHITE page: navy dots/lines with a few crimson accents, so the
- * network is legible without competing with content (the earlier CSS-ring
- * attempt was invisible because outlines alone give the eye nothing to catch;
- * the connecting lines are what make this read).
+ * Tuned for a WHITE page and deliberately bold: every dot is brand crimson and
+ * every link line is black, so the network actually reads as a design element
+ * rather than a faint smudge. The connecting lines are what make it legible —
+ * outlines alone give the eye nothing to catch.
  *
  * Cheap by construction: particle count scales with viewport area and is capped,
  * neighbour search is O(n²) over that small n, the canvas is DPR-aware, and the
@@ -19,7 +19,7 @@ import { useEffect, useRef } from "react";
  * TO REMOVE: delete the <ParticleBackground /> line and the "./particles.css"
  * import in app/layout.tsx, plus this file and app/particles.css.
  */
-type P = { x: number; y: number; vx: number; vy: number; r: number; accent: boolean };
+type P = { x: number; y: number; vx: number; vy: number; r: number };
 
 const LINK_DIST = 132; // px at which two particles are joined
 const MAX_PARTICLES = 90;
@@ -55,8 +55,7 @@ export default function ParticleBackground() {
         y: Math.random() * h,
         vx: (Math.random() - 0.5) * 0.22,
         vy: (Math.random() - 0.5) * 0.22,
-        r: Math.random() * 1.6 + 1,
-        accent: Math.random() < 0.18,
+        r: Math.random() * 1.9 + 1.3,
       }));
     };
 
@@ -72,9 +71,9 @@ export default function ParticleBackground() {
           const dy = a.y - b.y;
           const d = Math.hypot(dx, dy);
           if (d > LINK_DIST) continue;
-          // Fade the line out as the pair separates.
-          ctx.strokeStyle = `rgba(11, 14, 40, ${(1 - d / LINK_DIST) * 0.13})`;
-          ctx.lineWidth = 1;
+          // Black links, fading out as the pair separates.
+          ctx.strokeStyle = `rgba(0, 0, 0, ${(1 - d / LINK_DIST) * 0.3})`;
+          ctx.lineWidth = 1.1;
           ctx.beginPath();
           ctx.moveTo(a.x, a.y);
           ctx.lineTo(b.x, b.y);
@@ -83,7 +82,7 @@ export default function ParticleBackground() {
       }
 
       for (const p of particles) {
-        ctx.fillStyle = p.accent ? "rgba(243, 18, 78, 0.55)" : "rgba(11, 14, 40, 0.32)";
+        ctx.fillStyle = "rgba(243, 18, 78, 0.85)";
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
         ctx.fill();

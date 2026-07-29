@@ -4,10 +4,9 @@ import Link from "next/link";
 import PageHeader from "@/components/blocks/PageHeader";
 import Testimonials from "@/components/blocks/Testimonials";
 import { CASE_STUDIES } from "@/lib/content";
-import { chromeFor } from "@/lib/routes";
+import { pageMetadata } from "@/lib/seo";
 
-const chrome = chromeFor("/case-studies");
-export const metadata: Metadata = { title: chrome.title, description: chrome.description };
+export const metadata: Metadata = pageMetadata("/case-studies");
 
 export default function CaseStudies() {
   return (

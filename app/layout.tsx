@@ -27,9 +27,11 @@ import "./particles.css";
 
 import { ppMori, outfit } from "@/lib/fonts";
 import { chromeFor } from "@/lib/routes";
+import { SITE_URL } from "@/lib/site";
 import TransitionEngine from "@/components/animation/TransitionEngine";
 import Nav from "@/components/layout/Nav";
 import ChromeSync from "@/components/layout/ChromeSync";
+import StructuredData from "@/components/layout/StructuredData";
 import NavDrawer from "@/components/layout/NavDrawer";
 import SiteLoader from "@/components/layout/SiteLoader";
 import ParticleBackground from "@/components/layout/ParticleBackground";
@@ -46,7 +48,7 @@ const HOME_DESC =
   "Orbit Works delivers AI automation, digital marketing, cloud solutions, and IT talent for US businesses ready to scale. Start with a free discovery call.";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://orbitworks.com"),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: HOME_TITLE,
     template: "%s",
@@ -107,6 +109,7 @@ export default async function RootLayout({
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: BOOT }} />
+        <StructuredData />
       </head>
       <body className={body}>
         <ParticleBackground />

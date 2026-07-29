@@ -25,19 +25,33 @@ export type VideoSet = { desktop: Variant; mobile: Variant; poster?: string };
 
 const V = "/video";
 
-/** Hero loop behind "Design. Science. Intelligence." */
+/**
+ * Hero loop behind "Design. Science. Intelligence."
+ *
+ * Re-encoded from the original 12.2MB 1920x1080 @10.3Mbps master. The first
+ * pass (1280w crf30) was visibly soft on the planet texture and ring detail, so
+ * quality was raised at the cost of some size:
+ *   desktop 1920w crf26 -> 6.10MB  (full resolution retained)
+ *   mobile  1080w crf28 -> 1.75MB
+ * This is high-motion particle animation, which compresses badly — CRF 20 came
+ * out LARGER than the source. crf26 is the point where artefacts stop being
+ * visible on the dark gradients.
+ * Audio stripped (it is muted anyway) and +faststart set so playback can begin
+ * before the file finishes downloading.
+ *
+ * The .webm/.hevc variants are gone deliberately: all six files were byte-
+ * identical copies of the same MP4, so `headloop_CC_v02.webm` was an MP4 served
+ * as video/webm — a container mismatch some browsers refuse. One correctly
+ * encoded MP4 plays everywhere.
+ */
 export const HEADLOOP: VideoSet = {
   desktop: {
     mp4: `${V}/headloop_CC_v02.mp4`,
-    webm: `${V}/headloop_CC_v02.webm`,
-    hevc: `${V}/headloop_CC_v02_hevc.mp4`,
   },
   mobile: {
     mp4: `${V}/headloop_CC_v02_mob.mp4`,
-    webm: `${V}/headloop_CC_v02_mob.webm`,
-    hevc: `${V}/headloop_CC_v02_mob_hevc.mp4`,
   },
-  poster: "/media/2024/05/front.png",
+  poster: "/media/2024/05/hero-poster.jpg",
 };
 
 /** Circles loop inside the front-page image cluster. */

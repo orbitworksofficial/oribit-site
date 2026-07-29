@@ -35,7 +35,7 @@ export const PRIVACY: LegalDoc = {
   subtitle: "How Orbit Works collects, uses, and protects your information.",
   effective: "Effective Date: July 15, 2026  ·  Last Updated: July 15, 2026",
   intro: [
-    "This Privacy Policy describes how Orbit Works LLC (‘Orbit Works,’ ‘we,’ ‘our,’ or ‘us’) collects, uses, shares, and protects personal information when you visit our website at orbitworks.com, use our services, fill out a form, book a call, or otherwise interact with us. By using our website or services, you agree to the terms of this Privacy Policy.",
+    "This Privacy Policy describes how Orbit Works LLC (‘Orbit Works,’ ‘we,’ ‘our,’ or ‘us’) collects, uses, shares, and protects personal information when you visit our website at orb-itworks.com, use our services, fill out a form, book a call, or otherwise interact with us. By using our website or services, you agree to the terms of this Privacy Policy.",
     "This policy complies with applicable US privacy laws including the California Consumer Privacy Act (CCPA) as amended effective January 1, 2026, and applicable data protection regulations across all US states with active privacy legislation.",
   ],
   sections: [
@@ -181,7 +181,7 @@ export const PRIVACY: LegalDoc = {
         },
         {
           type: "p",
-          text: "To exercise any of these rights, contact us at privacy@orbitworks.com. We will respond within 45 days as required by applicable US privacy law.",
+          text: "To exercise any of these rights, contact us at privacy@orb-itworks.com. We will respond within 45 days as required by applicable US privacy law.",
         },
       ],
     },
@@ -220,7 +220,7 @@ export const PRIVACY: LegalDoc = {
       blocks: [
         {
           type: "p",
-          text: "Our website and services are not directed at individuals under the age of 18. We do not knowingly collect personal information from minors. If we become aware that we have collected information from a person under 18 without parental consent, we will delete it promptly. If you believe we have collected such information, contact us at privacy@orbitworks.com.",
+          text: "Our website and services are not directed at individuals under the age of 18. We do not knowingly collect personal information from minors. If we become aware that we have collected information from a person under 18 without parental consent, we will delete it promptly. If you believe we have collected such information, contact us at privacy@orb-itworks.com.",
         },
       ],
     },
@@ -241,7 +241,7 @@ export const PRIVACY: LegalDoc = {
         { type: "p", text: "For questions, concerns, or requests relating to this Privacy Policy, contact us at:" },
         {
           type: "callout",
-          text: "Orbit Works LLC  ·  Email: privacy@orbitworks.com  ·  Website: orbitworks.com  ·  WhatsApp: Available via website contact page",
+          text: "Orbit Works LLC  ·  Email: privacy@orb-itworks.com  ·  Website: orb-itworks.com  ·  WhatsApp: Available via website contact page",
         },
       ],
     },
@@ -422,7 +422,7 @@ export const TERMS: LegalDoc = {
           type: "p",
           text: "Orbit Works reserves the right to update these Terms at any time. Clients will be notified of material changes by email at least 30 days before they take effect. Continued use of our services after the effective date constitutes acceptance of the updated Terms.",
         },
-        { type: "callout", text: "Questions about these Terms? Contact us at: legal@orbitworks.com" },
+        { type: "callout", text: "Questions about these Terms? Contact us at: legal@orb-itworks.com" },
       ],
     },
   ],
@@ -454,7 +454,7 @@ export const REFUND: LegalDoc = {
       blocks: [
         {
           type: "p",
-          text: "After the initial 6-month term, either party may cancel the engagement by providing written notice of at least 30 (thirty) days to the other party. Notice must be submitted in writing via email to hello@orbitworks.com. Verbal notice, WhatsApp messages, or phone calls do not constitute valid cancellation.",
+          text: "After the initial 6-month term, either party may cancel the engagement by providing written notice of at least 30 (thirty) days to the other party. Notice must be submitted in writing via email to hello@orb-itworks.com. Verbal notice, WhatsApp messages, or phone calls do not constitute valid cancellation.",
         },
         {
           type: "list",
@@ -574,7 +574,7 @@ export const REFUND: LegalDoc = {
         { type: "p", text: "All cancellation and refund requests must be submitted in writing to:" },
         {
           type: "callout",
-          text: "Email: hello@orbitworks.com  ·  Subject Line: Cancellation Request [Company Name] [Service Package]. Include in your email: your full name, company name, service package, start date, and reason for cancellation. We will acknowledge your request within 2 business days and process it within 10 business days.",
+          text: "Email: hello@orb-itworks.com  ·  Subject Line: Cancellation Request [Company Name] [Service Package]. Include in your email: your full name, company name, service package, start date, and reason for cancellation. We will acknowledge your request within 2 business days and process it within 10 business days.",
         },
       ],
     },
@@ -584,7 +584,7 @@ export const REFUND: LegalDoc = {
       blocks: [
         {
           type: "p",
-          text: "If you believe a charge was made in error or you have a billing dispute, please contact us at hello@orbitworks.com before initiating a chargeback with your bank or credit card provider. Chargebacks initiated without prior written notice to Orbit Works will be contested with full documentation and may result in immediate termination of all services.",
+          text: "If you believe a charge was made in error or you have a billing dispute, please contact us at hello@orb-itworks.com before initiating a chargeback with your bank or credit card provider. Chargebacks initiated without prior written notice to Orbit Works will be contested with full documentation and may result in immediate termination of all services.",
         },
         {
           type: "p",
@@ -592,7 +592,7 @@ export const REFUND: LegalDoc = {
         },
         {
           type: "callout",
-          text: "Questions About This Policy? Contact us at hello@orbitworks.com or visit orbitworks.com/contact",
+          text: "Questions About This Policy? Contact us at hello@orb-itworks.com or visit orb-itworks.com/contact",
         },
       ],
     },

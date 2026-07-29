@@ -3285,6 +3285,32 @@ figure.logo {
   width: 1px;
 }
 
+/* ------------------------------------------------ case slider artwork --
+ * The portfolio graphics are ~16:9 with baked-in text (quote, client, logo,
+ * URL). The theme drew them with object-fit:cover INSIDE a card that is
+ * calc(45.25vw + 7rem) tall — taller than 16:9 — and then applied its reveal
+ * transform `translate3d(0,-40%,0) scale(1.5)`. Together that zoomed the image
+ * 150% and threw away the corners, so on desktop you saw a cropped middle
+ * section and on mobile an unreadable sliver.
+ *
+ * Show the whole graphic instead and size the card to the artwork. The theme
+ * scopes these through `.inner` (3 classes), so a shorter selector silently
+ * loses the specificity fight — that is why an earlier attempt did nothing.
+ */
+.wp-block-kenza-case-slider .inner .wp-block-kenza-case-card {
+  height: calc(56.25vw + 2rem); /* 16:9 plus a little breathing room */
+}
+
+.wp-block-kenza-case-slider .inner .wp-block-kenza-case-card img,
+.wp-block-kenza-case-slider .inner.reverse .wp-block-kenza-case-card img {
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  /* Kill the reveal's scale/offset: it re-crops a contained image. */
+  transform: none;
+  width: 100%;
+}
+
 /* ============================================================ mobile fixes ==
  * 1. Case slider artwork was cover-cropped. The portfolio graphics are ~16:9
  *    landscape with baked-in text (quote, client, logo, URL); the theme's card
@@ -3295,24 +3321,6 @@ figure.logo {
  *    void under the short ones when only one card is visible.
  */
 @media screen and (max-width: 743px) {
-  /* --- case slider: show the full graphic ---
-   * The theme scopes these through `.inner` (3 classes), so anything shorter
-   * loses on specificity — that is why an earlier 2-class attempt did nothing. */
-  .wp-block-kenza-case-slider .inner .wp-block-kenza-case-card {
-    height: calc(56.25vw + 2rem); /* 16:9 + a little breathing room */
-  }
-
-  .wp-block-kenza-case-slider .inner .wp-block-kenza-case-card img,
-  .wp-block-kenza-case-slider .inner.reverse .wp-block-kenza-case-card img {
-    height: 100%;
-    object-fit: contain;
-    object-position: center;
-    /* The theme scales/offsets the image for its reveal; that re-crops a
-     * contained image, so keep it still on small screens. */
-    transform: none;
-    width: 100%;
-  }
-
   /* --- testimonials: card fits its own content --- */
   .orbit-carousel__track {
     align-items: start;

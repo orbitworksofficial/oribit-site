@@ -3,11 +3,10 @@ import Link from "next/link";
 
 import PageHero from "@/components/blocks/PageHero";
 import { BLOGS } from "@/lib/content";
-import { chromeFor } from "@/lib/routes";
+import { pageMetadata } from "@/lib/seo";
 import { formatPostDate } from "@/lib/dates";
 
-const chrome = chromeFor("/blogs");
-export const metadata: Metadata = { title: chrome.title, description: chrome.description };
+export const metadata: Metadata = pageMetadata("/blogs");
 
 export default function Blogs() {
   const [lead, ...rest] = BLOGS;

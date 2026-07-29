@@ -5,10 +5,9 @@ import PageHero from "@/components/blocks/PageHero";
 import ServiceExplorer from "@/components/blocks/ServiceExplorer";
 import Testimonials from "@/components/blocks/Testimonials";
 import { SERVICES_HUB } from "@/lib/services-data";
-import { chromeFor } from "@/lib/routes";
+import { pageMetadata } from "@/lib/seo";
 
-const chrome = chromeFor("/services");
-export const metadata: Metadata = { title: chrome.title, description: chrome.description };
+export const metadata: Metadata = pageMetadata("/services");
 
 export default function Services() {
   return (
