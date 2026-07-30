@@ -151,8 +151,22 @@
  * following hover disc ("A call for the curious") and the arrow-link glyphs.
  * Retint them to the brand crimson.
  */
-.hoverCircle {
+/* The case-slider disc is a plain filled circle — just retint it. */
+.wp-block-kenza-case + .hoverCircle {
   background: var(--orbit) !important;
+}
+
+/* The cluster disc is an SVG: a filled circle with a down-arrow knocked out of
+ * it. An earlier blanket `background: var(--orbit) !important` replaced that
+ * artwork with a flat colour, which is why the arrow disappeared. Re-declare the
+ * theme's own SVG with the brand crimson instead.
+ *
+ * The theme also had `background-size: s5rem` — an invalid value (stray "s"), so
+ * sizing silently fell back to auto. Fixed to `contain`.
+ */
+.wp-block-kenza-front-page-image-cluster .hoverCircle {
+  background: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='98' height='98' fill='none'%3E%3Cpath fill='%23f3124e' fill-rule='evenodd' d='M48.898 97.342c26.62 0 48.202-21.58 48.202-48.202S75.519.937 48.898.937C22.276.938.694 22.518.694 49.14c0 26.621 21.581 48.202 48.203 48.202zm.616-30.9 12.977-12.17-2.066-1.791-9.478 8.888V31.836h-2.866v29.533l-9.478-8.888-2.067 1.791z' clip-rule='evenodd'/%3E%3C/svg%3E")
+    no-repeat 50% / contain;
 }
 
 .orangerightuparrowonleft,
@@ -3308,6 +3322,40 @@ figure.logo {
   height: calc(56.25vw + 2rem);
 }
 
+/* --- framed presentation ---
+ * Edge-to-edge at 1440x830 the artwork read as overwhelming ("zoomed"), even
+ * though nothing was cropped. Inset it inside the full-bleed track and put a
+ * designed backdrop behind: a navy field with a faint grid and a crimson glow,
+ * so the surrounding space looks deliberate rather than empty.
+ */
+.wp-block-kenza-case-slider .inner {
+  background-color: #07091e;
+  background-image:
+    radial-gradient(60% 80% at 50% 0%, rgba(243, 18, 78, 0.16), transparent 70%),
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 100% 100%, 44px 44px, 44px 44px;
+}
+
+.wp-block-kenza-case-slider .inner .wp-block-kenza-case-card {
+  padding: 3.5rem 7vw;
+}
+
+.wp-block-kenza-case-slider .inner .wp-block-kenza-case-card img,
+.wp-block-kenza-case-slider .inner.reverse .wp-block-kenza-case-card img {
+  border-radius: 1rem;
+  box-shadow: 0 3rem 7rem rgba(0, 0, 0, 0.45);
+}
+
+@media screen and (max-width: 743px) {
+  .wp-block-kenza-case-slider .inner .wp-block-kenza-case-card {
+    padding: 1.6rem 1.8rem;
+  }
+  .wp-block-kenza-case-slider .inner {
+    background-size: 100% 100%, 26px 26px, 26px 26px;
+  }
+}
+
 .wp-block-kenza-case-slider .inner .wp-block-kenza-case-card img,
 .wp-block-kenza-case-slider .inner.reverse .wp-block-kenza-case-card img {
   height: 100%;
@@ -3380,4 +3428,137 @@ figure.logo {
   object-position: center;
   position: absolute;
   width: 100%;
+}
+
+/* ------------------------------------------------------- content measure --
+ * The theme constrains content to 143rem with 6.4rem side padding, which left
+ * wide empty gutters on large screens. Widen the measure and tighten the
+ * padding so the layout uses more of the viewport.
+ */
+.column-constraint {
+  max-width: 168rem;
+  padding-left: 6rem;
+  padding-right: 6rem;
+}
+
+footer.invert > .inner,
+footer.invert .footer > .inner {
+  max-width: 168rem;
+  padding-left: 3.2rem;
+  padding-right: 3.2rem;
+}
+
+@media screen and (max-width: 979px) {
+  .column-constraint {
+    padding-left: 4rem;
+    padding-right: 4rem;
+  }
+  footer.invert > .inner,
+  footer.invert .footer > .inner {
+    padding-left: 2.4rem;
+    padding-right: 2.4rem;
+  }
+}
+
+@media screen and (max-width: 743px) {
+  .column-constraint {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+  footer.invert > .inner,
+  footer.invert .footer > .inner {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+/* ------------------------------------------------------------ tech strip --
+ * Scrolling technology row under the hero (see TechMarquee). Same seamless
+ * loop as the client marquee: list rendered twice, track shifts exactly -50%.
+ */
+.orbit-tech {
+  border-bottom: 0.1rem solid var(--grey);
+  border-top: 0.1rem solid var(--grey);
+  margin: 6rem 0 0;
+  padding: 2.6rem 0;
+}
+
+.orbit-tech__label {
+  color: var(--slate);
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 0.12rem;
+  margin: 0 0 1.8rem;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.orbit-tech__viewport {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  overflow: hidden;
+}
+
+.orbit-tech__track {
+  animation: orbit-tech-scroll 42s linear infinite;
+  display: flex;
+  gap: 4.5rem;
+  width: max-content;
+  will-change: transform;
+}
+
+.orbit-tech:hover .orbit-tech__track {
+  animation-play-state: paused;
+}
+
+@keyframes orbit-tech-scroll {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(calc(-50% - 2.25rem), 0, 0);
+  }
+}
+
+.orbit-tech__item {
+  align-items: center;
+  color: var(--slate);
+  display: flex;
+  flex: 0 0 auto;
+  gap: 1rem;
+  opacity: 0.75;
+  transition: color 0.3s var(--ease), opacity 0.3s var(--ease);
+}
+
+.orbit-tech__item:hover {
+  color: var(--orbit);
+  opacity: 1;
+}
+
+.orbit-tech__name {
+  font-size: 1.5rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+@media screen and (max-width: 743px) {
+  .orbit-tech {
+    margin-top: 4rem;
+    padding: 2rem 0;
+  }
+  .orbit-tech__track {
+    gap: 3rem;
+  }
+  .orbit-tech__name {
+    font-size: 1.3rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbit-tech__track {
+    animation: none;
+  }
+  .orbit-tech__viewport {
+    overflow-x: auto;
+  }
 }

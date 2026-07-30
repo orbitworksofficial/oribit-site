@@ -32,7 +32,7 @@ export default function FrontPageImageCluster() {
           </div>
 
           <h3 className="wp-block-heading">
-            A call <em>for</em>
+            Keep 
           </h3>
 
           <figure className="wp-block-image size-main-page-half-width third">
@@ -43,15 +43,15 @@ export default function FrontPageImageCluster() {
               height={800}
               loading="lazy"
               src="/media/2025/09/1.jpeg"
-              alt=""
+              alt="OrbitWorks engineer working on a software project"
               className="wp-image-150"
             />
           </figure>
 
           <h3 className="wp-block-heading">
-            <em>for</em> the
+            <em><em>Your Business </em>In </em> 
           </h3>
-          <h3 className="wp-block-heading">curious</h3>
+          <h3 className="wp-block-heading"> Orbit</h3>
 
           <figure className="wp-block-image size-main-page-third-width third">
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -61,7 +61,7 @@ export default function FrontPageImageCluster() {
               height={533}
               loading="lazy"
               src="/media/2025/09/3.jpeg"
-              alt=""
+              alt="OrbitWorks specialist reviewing AI analytics"
               className="wp-image-151"
             />
           </figure>

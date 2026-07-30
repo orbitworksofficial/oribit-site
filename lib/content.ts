@@ -617,6 +617,13 @@ export const CASE_STUDIES = [
     title: "Menu, ordering and mobile in one flow",
     sector: "Hospitality",
     image: "/brand/testimonials/pizza.jpeg",
+  },
+  {
+    slug: "sirius-solutions-global",
+    client: "SIRIUS Solutions Global",
+    title: "Menu, ordering and mobile in one flow",
+    sector: "Hospitality",
+    image: "/brand/testimonials/sirus.jpeg",
   }
  ,
 ];

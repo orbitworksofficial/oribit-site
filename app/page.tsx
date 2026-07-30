@@ -3,6 +3,7 @@ import Link from "next/link";
 import VideoLoopHeader from "@/components/blocks/VideoLoopHeader";
 import FrontPageImageCluster from "@/components/blocks/FrontPageImageCluster";
 import ClientMarquee from "@/components/blocks/ClientMarquee";
+import TechMarquee from "@/components/blocks/TechMarquee";
 import CaseSlider from "@/components/blocks/CaseSlider";
 import PreviewVideo from "@/components/blocks/PreviewVideo";
 import BucketShowcase from "@/components/blocks/BucketShowcase";
@@ -29,6 +30,11 @@ export default function Home() {
     <main>
       {/* 1. Hero — the only H1 on the page. */}
       <VideoLoopHeader headline={BRAND.headline} selected={null} />
+
+      {/* Tech strip, directly under the hero. */}
+      <div className="wp-block-kenza-column-constraint column-constraint cols-12">
+        <TechMarquee />
+      </div>
 
       <div
         className="wp-block-kenza-column-constraint column-constraint cols-12 orbit-intro"

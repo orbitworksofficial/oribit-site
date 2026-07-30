@@ -70,7 +70,7 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
         >
           <figure className="orbit-post__hero">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={post.image} alt="" loading="eager" decoding="async" />
+            <img src={post.image} alt={post.title} loading="eager" decoding="async" />
           </figure>
         </div>
 
@@ -102,7 +102,7 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
               <Link href={`/blogs/${p.slug}`} className="orbit-card">
                 <figure>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={p.image} alt="" loading="lazy" decoding="async" />
+                  <img src={p.image} alt={p.title} loading="lazy" decoding="async" />
                 </figure>
                 <span className="label">{p.kind}</span>
                 <h3>{p.title}</h3>

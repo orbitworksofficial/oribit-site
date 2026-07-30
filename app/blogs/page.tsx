@@ -34,7 +34,7 @@ export default function Blogs() {
         <Link href={`/blogs/${lead.slug}`} className="orbit-card orbit-card--lead">
           <figure>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={lead.image} alt="" loading="eager" decoding="async" />
+            <img src={lead.image} alt={lead.title} loading="eager" decoding="async" />
           </figure>
           <div>
             <span className="label">
@@ -54,7 +54,7 @@ export default function Blogs() {
               <Link href={`/blogs/${post.slug}`} className="orbit-card">
                 <figure>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={post.image} alt="" loading="lazy" decoding="async" />
+                  <img src={post.image} alt={post.title} loading="lazy" decoding="async" />
                 </figure>
                 <span className="label">
                   {post.kind} · {post.readingMinutes} min read

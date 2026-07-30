@@ -6,10 +6,10 @@ import { useEffect, useRef } from "react";
  * Constellation backdrop — drifting particles joined by lines to their near
  * neighbours, on a canvas behind the whole site.
  *
- * Tuned for a WHITE page and deliberately bold: every dot is brand crimson and
- * every link line is black, so the network actually reads as a design element
- * rather than a faint smudge. The connecting lines are what make it legible —
- * outlines alone give the eye nothing to catch.
+ * Tuned for a WHITE page: crimson dots joined by black lines, kept deliberately
+ * light so the network reads as texture behind the content rather than
+ * competing with body copy. The connecting lines are what make it legible at
+ * all — outlines alone give the eye nothing to catch.
  *
  * Cheap by construction: particle count scales with viewport area and is capped,
  * neighbour search is O(n²) over that small n, the canvas is DPR-aware, and the
@@ -55,7 +55,7 @@ export default function ParticleBackground() {
         y: Math.random() * h,
         vx: (Math.random() - 0.5) * 0.22,
         vy: (Math.random() - 0.5) * 0.22,
-        r: Math.random() * 1.9 + 1.3,
+        r: Math.random() * 1.5 + 1,
       }));
     };
 
@@ -72,8 +72,8 @@ export default function ParticleBackground() {
           const d = Math.hypot(dx, dy);
           if (d > LINK_DIST) continue;
           // Black links, fading out as the pair separates.
-          ctx.strokeStyle = `rgba(0, 0, 0, ${(1 - d / LINK_DIST) * 0.3})`;
-          ctx.lineWidth = 1.1;
+          ctx.strokeStyle = `rgba(0, 0, 0, ${(1 - d / LINK_DIST) * 0.13})`;
+          ctx.lineWidth = 1;
           ctx.beginPath();
           ctx.moveTo(a.x, a.y);
           ctx.lineTo(b.x, b.y);
@@ -82,7 +82,7 @@ export default function ParticleBackground() {
       }
 
       for (const p of particles) {
-        ctx.fillStyle = "rgba(243, 18, 78, 0.85)";
+        ctx.fillStyle = "rgba(243, 18, 78, 0.45)";
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
         ctx.fill();

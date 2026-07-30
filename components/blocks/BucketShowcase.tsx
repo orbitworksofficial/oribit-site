@@ -32,7 +32,7 @@ export default function BucketShowcase() {
           >
             <Image
               src={b.image}
-              alt=""
+              alt={`${b.name} — OrbitWorks`}
               fill
               sizes="(max-width: 743px) 100vw, 45vw"
               priority={i === 0}
@@ -62,7 +62,7 @@ export default function BucketShowcase() {
               <Image
                 className="orbit-showcase__thumb"
                 src={b.image}
-                alt=""
+                alt={`${b.name} — OrbitWorks`}
                 width={800}
                 height={500}
                 sizes="100vw"

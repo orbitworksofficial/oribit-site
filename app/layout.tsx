@@ -65,6 +65,8 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
+    // og:url was the one Open Graph tag the SEO audit flagged as missing.
+    url: SITE_URL,
     locale: "en_US",
     siteName: "Orbit Works",
     title: HOME_TITLE,

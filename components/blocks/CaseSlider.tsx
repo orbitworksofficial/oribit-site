@@ -133,7 +133,7 @@ export default function CaseSlider({ cards }: { cards: CaseCard[] }) {
                   height={card.height}
                   loading="lazy"
                   src={card.src}
-                  alt=""
+                  alt={`${card.title} — OrbitWorks client work`}
                   className={`wp-image-${card.id}`}
                 />
               </figure>

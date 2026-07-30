@@ -30,7 +30,7 @@ export default function CaseStudies() {
               <article className="orbit-card">
                 <figure>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={c.image} alt="" loading="lazy" decoding="async" />
+                  <img src={c.image} alt={`${c.title} — ${c.client}`} loading="lazy" decoding="async" />
                 </figure>
                 <span className="label">{c.sector}</span>
                 <h3>{c.title}</h3>
