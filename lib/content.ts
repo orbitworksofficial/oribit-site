@@ -550,6 +550,13 @@ export const TESTIMONIALS: Testimonial[] = [
     sector: "Professional services",
     logo: "/brand/clients/gravity.png",
   },
+  {
+    quote:
+      "Working with OrbitWorks was a seamless experience. They built a website that reflects our brand and implemented AI automation that saves our team valuable time every day.",
+    client: "SIRIUS Solutions Global",
+    sector: "Professional services",
+    logo: "/brand/clients/sirus.png",
+  },
 ];
 
 /** Marquee runs client names as type — we have no rights-cleared logo files. */
@@ -595,7 +602,7 @@ export const CASE_STUDIES = [
     client: "M Maqsood-and-Co",
     title: "A technical services business, properly online",
     sector: "Technical services",
-    image: "/brand/testimonials/maqsod.jpeg",
+    image: "/brand/testimonials/maqsodd.jpeg",
   },
   {
     slug: "Advanzatech",
