@@ -3301,6 +3301,13 @@ figure.logo {
   height: calc(56.25vw + 2rem); /* 16:9 plus a little breathing room */
 }
 
+/* The track keeps the theme's original height (calc(45.25vw + 7rem)) and has
+ * overflow:hidden, so a taller card gets clipped top and bottom. Match it. */
+.wp-block-kenza-case-slider .inner,
+.wp-block-kenza-case-slider .sticky .inner {
+  height: calc(56.25vw + 2rem);
+}
+
 .wp-block-kenza-case-slider .inner .wp-block-kenza-case-card img,
 .wp-block-kenza-case-slider .inner.reverse .wp-block-kenza-case-card img {
   height: 100%;
@@ -3334,4 +3341,43 @@ figure.logo {
     font-size: 1.7rem;
     margin: 1.2rem 0 1.8rem;
   }
+}
+
+
+/* ------------------------------------------- "a call for the curious" video --
+ * The theme sizes this slot with the padding-bottom aspect hack
+ * (`height: 0; padding-bottom: %`), NOT a height — which is why an
+ * aspect-ratio/height:auto override silently lost.
+ *
+ * Its ratio was tuned for the original 16:9 clip; the replacement loop is 2:1
+ * (1080x540), so object-fit:cover cropped both sides and only the middle strip
+ * showed. Setting padding-bottom to 50% makes the box exactly 2:1, so the cover
+ * crop becomes a no-op and the whole frame is visible.
+ *
+ * Scoped to the cluster (4 classes) so it beats the theme and leaves the same
+ * block untouched elsewhere.
+ */
+.wp-block-kenza-front-page-image-cluster
+  .wp-block-kenza-cases-video
+  [data-video].k-full-nocrop {
+  height: 0;
+  padding-bottom: 50%; /* 540 / 1080 */
+}
+
+/* The slot uses `height: 0` + padding-bottom, so a percentage height on the
+ * video resolves against a ZERO content box. Pin it to the padding box with
+ * inset instead — that is what actually fills the 2:1 frame. */
+.wp-block-kenza-front-page-image-cluster
+  .wp-block-kenza-cases-video
+  [data-video].k-full-nocrop
+  video {
+  /* 100% (not auto) — with position:absolute this resolves against the padding
+   * box, i.e. the real 2:1 frame. `auto` fell back to the <video> element's
+   * default 150px height before the file had loaded. */
+  height: 100%;
+  inset: 0;
+  object-fit: cover;
+  object-position: center;
+  position: absolute;
+  width: 100%;
 }
