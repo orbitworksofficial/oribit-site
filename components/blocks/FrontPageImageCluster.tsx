@@ -42,7 +42,7 @@ export default function FrontPageImageCluster() {
               width={1203}
               height={800}
               loading="lazy"
-              src="/media/2025/09/1.jpeg"
+              src="/media/2025/09/12.jpeg"
               alt="OrbitWorks engineer working on a software project"
               className="wp-image-150"
             />
@@ -60,7 +60,7 @@ export default function FrontPageImageCluster() {
               width={948}
               height={533}
               loading="lazy"
-              src="/media/2025/09/3.jpeg"
+              src="/media/2025/09/13.jpeg"
               alt="OrbitWorks specialist reviewing AI analytics"
               className="wp-image-151"
             />
