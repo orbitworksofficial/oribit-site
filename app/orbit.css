@@ -1829,8 +1829,10 @@ main h3.deco-l:before {
   overflow: hidden;
 }
 
+/* Same ratio as the grid cards: the covers are authored 16:9, and a 16:10 box
+ * with object-fit:cover clipped their right edge. */
 .orbit-card--lead img {
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 16 / 9;
 }
 
 .orbit-card--lead h2 {
@@ -2699,11 +2701,20 @@ main .orbit-pagehero--center h1.deco-l {
  * lists on the right. Single-column text left the right half of the page empty
  * on the long content pages (About, Industries); this fills the measure.
  */
+/* minmax(0, …) rather than a bare fr: a grid track's automatic minimum is its
+ * content's min-content size, and the logo marquee inside .orbit-sec__full is
+ * intrinsically ~2880px wide (18 fixed-width cells). A bare `1fr` inherited
+ * that minimum and blew the whole section past the viewport, taking the
+ * headings and body copy with it. */
 .orbit-sec {
   align-items: start;
   display: grid;
   gap: 3rem 6rem;
-  grid-template-columns: 0.8fr 1.2fr;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+}
+
+.orbit-sec > * {
+  min-width: 0;
 }
 
 /* Sticky so the heading tracks alongside its body copy as you scroll. */
@@ -2749,7 +2760,7 @@ main .orbit-pagehero--center h1.deco-l {
 @media screen and (max-width: 979px) {
   .orbit-sec {
     gap: 2rem;
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .orbit-sec__head {
     position: static;
@@ -2771,14 +2782,21 @@ main .orbit-pagehero--center h1.deco-l {
   position: relative;
 }
 
-/* Full-bleed warm panel + faded photo behind the type. */
+/* Full-bleed warm panel + faded photo behind the type.
+ *
+ * The two washes compound: whatever ::before leaves, ::after covers again. At
+ * the old values (55% mist, then 68-92% paper) the photo was down to ~14% at
+ * its most visible and ~4% at the bottom — i.e. invisible, which read as the
+ * hero image being broken. These let it through on the right, where only the
+ * lead paragraph and the solid CTA pills sit; the headline side stays opaque.
+ */
 .orbit-hero::before {
   background-color: var(--mist);
   background-image: linear-gradient(
       100deg,
-      var(--mist) 6%,
-      color-mix(in srgb, var(--mist) 88%, transparent) 42%,
-      color-mix(in srgb, var(--mist) 55%, transparent) 100%
+      var(--mist) 4%,
+      color-mix(in srgb, var(--mist) 74%, transparent) 40%,
+      color-mix(in srgb, var(--mist) 28%, transparent) 100%
     ),
     var(--hero-photo, none);
   background-position: center, center 30%;
@@ -2798,8 +2816,8 @@ main .orbit-pagehero--center h1.deco-l {
 .orbit-hero::after {
   background: linear-gradient(
     180deg,
-    color-mix(in srgb, var(--paper) 68%, transparent),
-    color-mix(in srgb, var(--paper) 92%, transparent)
+    color-mix(in srgb, var(--paper) 34%, transparent),
+    color-mix(in srgb, var(--paper) 74%, transparent)
   );
   bottom: 0;
   content: "";
@@ -3020,21 +3038,40 @@ main .orbit-pagehero--center h1.deco-l {
   flex: 0 0 auto;
   height: 9rem;
   justify-content: center;
-  padding: 0 2rem;
+  padding: 1.2rem 2rem;
   width: 22rem;
 }
 
-/* Fixed height + auto width: logos with different aspect ratios still read as
- * one even row (max-height alone let wide marks tower over square ones). */
+/* Fit each mark into the SAME box rather than pinning it to a fixed height.
+ * A fixed height is only fair to logos of one shape: at 4.6rem the wide
+ * wordmarks (zaawia 3.6:1) ran the full cell while the stacked badges
+ * (m-maqsood 1:1, dock-pizza 1.5:1) shrank their own lettering to nothing.
+ * With `contain` in a 2.4:1 box the wide ones are width-limited and the tall
+ * ones height-limited, so every mark gets a comparable footprint. */
 .orbit-marquee__logo {
   filter: grayscale(1);
-  height: 4.6rem;
+  height: 100%;
+  /* The shared .orbit-clientlogo base caps at 4.4rem for the testimonial
+   * quotes; in the strip the cell is the constraint. */
+  max-height: none;
   max-width: 100%;
   object-fit: contain;
   object-position: center;
   opacity: 0.72;
+  transform: scale(var(--logo-scale, 1));
   transition: filter 0.35s var(--ease), opacity 0.35s var(--ease);
-  width: auto;
+  width: 100%;
+}
+
+/* Optical corrections. Bounding boxes can be equal and still read unevenly:
+ * a tightly-cropped wordmark carries more weight than an airy badge. The
+ * source PNGs are trimmed flush, so these are small nudges, not rescues.
+ * Keyed on the logo filename — see ClientMarquee's data-logo. */
+.orbit-marquee__item[data-logo="gravity"] {
+  --logo-scale: 0.88;
+}
+.orbit-marquee__item[data-logo="m-maqsood-and-co"] {
+  --logo-scale: 0.92;
 }
 
 .orbit-marquee__item:hover .orbit-marquee__logo {
@@ -3052,12 +3089,9 @@ main .orbit-pagehero--center h1.deco-l {
 
 @media screen and (max-width: 743px) {
   .orbit-marquee__item {
-    height: 7.5rem;
-    padding: 0 1.4rem;
-    width: 16rem;
-  }
-  .orbit-marquee__logo {
-    height: 3.6rem;
+    height: 7rem;
+    padding: 1rem 1.4rem;
+    width: 15rem;
   }
 }
 
@@ -3310,60 +3344,89 @@ figure.logo {
  * Show the whole graphic instead and size the card to the artwork. The theme
  * scopes these through `.inner` (3 classes), so a shorter selector silently
  * loses the specificity fight — that is why an earlier attempt did nothing.
+ *
+ * The height is ALSO capped against the viewport. `.sticky` is height:auto and
+ * pins itself with position:sticky, so a purely vw-derived card is taller than
+ * the screen on any wide-but-short window (1920x1080: 56.25vw = 1080px, plus
+ * the 7rem bottom panel) — which is what cut the top and bottom off the
+ * artwork, quote line included. min() keeps whichever fits.
  */
-.wp-block-kenza-case-slider .inner .wp-block-kenza-case-card {
-  height: calc(56.25vw + 2rem); /* 16:9 plus a little breathing room */
-}
-
-/* The track keeps the theme's original height (calc(45.25vw + 7rem)) and has
- * overflow:hidden, so a taller card gets clipped top and bottom. Match it. */
 .wp-block-kenza-case-slider .inner,
-.wp-block-kenza-case-slider .sticky .inner {
-  height: calc(56.25vw + 2rem);
+.wp-block-kenza-case-slider .sticky .inner,
+.wp-block-kenza-case-slider .inner .wp-block-kenza-case-card {
+  height: min(calc(52vw + 4rem), calc(100vh - 15rem));
 }
 
 /* --- framed presentation ---
- * Edge-to-edge at 1440x830 the artwork read as overwhelming ("zoomed"), even
- * though nothing was cropped. Inset it inside the full-bleed track and put a
- * designed backdrop behind: a navy field with a faint grid and a crimson glow,
- * so the surrounding space looks deliberate rather than empty.
+ * Edge-to-edge the artwork read as overwhelming ("zoomed") and, past ~1600px,
+ * upscaled past its own pixels. Inset it inside the full-bleed track, cap it at
+ * its native width, and put a designed backdrop behind: a navy field with a
+ * faint grid and a crimson glow, so the surrounding space looks deliberate.
  */
+.wp-block-kenza-case-slider .sticky,
+.wp-block-kenza-case-slider .bottomPanel {
+  background: #07091e;
+}
+
 .wp-block-kenza-case-slider .inner {
   background-color: #07091e;
   background-image:
-    radial-gradient(60% 80% at 50% 0%, rgba(243, 18, 78, 0.16), transparent 70%),
+    radial-gradient(65% 85% at 50% 8%, rgba(254, 6, 59, 0.2), transparent 72%),
     linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
   background-size: 100% 100%, 44px 44px, 44px 44px;
 }
 
+/* Centre the artwork by layout rather than by object-fit. The theme pins the
+ * <img> with position:absolute + inset:0, so the card's padding did nothing and
+ * a `contain` fit letterboxed INSIDE the img box — leaving the border-radius
+ * and shadow floating off the visible edges. Taking the image out of the
+ * absolute flow makes its box exactly the artwork, so the frame lines up. */
 .wp-block-kenza-case-slider .inner .wp-block-kenza-case-card {
-  padding: 3.5rem 7vw;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  padding: 3.2rem 5vw;
+}
+
+.wp-block-kenza-case-slider .inner .wp-block-kenza-case-card figure {
+  align-items: center;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  margin: 0;
+  width: 100%;
 }
 
 .wp-block-kenza-case-slider .inner .wp-block-kenza-case-card img,
 .wp-block-kenza-case-slider .inner.reverse .wp-block-kenza-case-card img {
-  border-radius: 1rem;
-  box-shadow: 0 3rem 7rem rgba(0, 0, 0, 0.45);
+  border-radius: 1.2rem;
+  box-shadow: 0 2.4rem 6rem rgba(0, 0, 0, 0.55);
+  height: auto;
+  inset: auto;
+  margin: 0;
+  max-height: 100%;
+  /* 144rem ≈ the 1600px source, so the artwork never has to be upscaled. */
+  max-width: min(100%, 144rem);
+  object-fit: contain;
+  position: relative;
+  /* Kill the reveal's scale/offset: it re-crops an already-fitted image. */
+  transform: none;
+  width: auto;
 }
 
 @media screen and (max-width: 743px) {
+  .wp-block-kenza-case-slider .inner,
+  .wp-block-kenza-case-slider .sticky .inner,
+  .wp-block-kenza-case-slider .inner .wp-block-kenza-case-card {
+    height: min(calc(62vw + 3.2rem), calc(100vh - 12rem));
+  }
   .wp-block-kenza-case-slider .inner .wp-block-kenza-case-card {
     padding: 1.6rem 1.8rem;
   }
   .wp-block-kenza-case-slider .inner {
     background-size: 100% 100%, 26px 26px, 26px 26px;
   }
-}
-
-.wp-block-kenza-case-slider .inner .wp-block-kenza-case-card img,
-.wp-block-kenza-case-slider .inner.reverse .wp-block-kenza-case-card img {
-  height: 100%;
-  object-fit: contain;
-  object-position: center;
-  /* Kill the reveal's scale/offset: it re-crops a contained image. */
-  transform: none;
-  width: 100%;
 }
 
 /* ============================================================ mobile fixes ==
@@ -3428,6 +3491,200 @@ figure.logo {
   object-position: center;
   position: absolute;
   width: 100%;
+}
+
+/* ------------------------------------ crimson-tinted background-video band --
+ * The "Industries We Empower" loop is a neutral greyscale clip, so the section
+ * read as a plain black hole in an otherwise crimson palette. Duotone it into
+ * the brand red rather than swapping the asset.
+ *
+ * The filter chain is the standard duotone recipe: flatten to luminance, warm
+ * it with sepia, then rotate the resulting ~40deg gold down onto red and push
+ * the saturation back up. The ::after adds depth (a glow behind the heading,
+ * a darker floor) so the white type keeps its contrast.
+ *
+ * Scoped to the modifier class on the section — the same block is used
+ * untinted on the services pages.
+ */
+.orbit-bgvideo--crimson .wp-block-kenza-services-page-background-video {
+  background: #16040c;
+}
+
+.orbit-bgvideo--crimson .wp-block-kenza-services-page-background-video video.preview {
+  background: #16040c;
+  filter: grayscale(1) brightness(0.9) contrast(1.2) sepia(1) hue-rotate(-56deg) saturate(5.5);
+}
+
+.orbit-bgvideo--crimson .wp-block-kenza-services-page-background-video::after {
+  background:
+    radial-gradient(72% 58% at 50% 42%, rgba(254, 6, 59, 0.3), transparent 74%),
+    linear-gradient(
+      165deg,
+      rgba(140, 5, 38, 0.5) 0%,
+      rgba(22, 4, 12, 0.72) 52%,
+      rgba(100, 3, 28, 0.55) 100%
+    );
+  content: "";
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 1;
+}
+
+/* ------------------------------- "keep your business in orbit" on mobile --
+ * The theme's phone layout for this block is an absolutely-positioned collage
+ * tuned to the original site's content, and it does not survive ours:
+ *
+ *  - child 3 (the first photo) is position:absolute at width:190% with a
+ *    clip-path reveal driven by a --reveal variable that only the unused
+ *    `frontanimation` scroll trigger ever sets. Frozen at its 52.8% default it
+ *    both crops the photo and spills past the section into the one below;
+ *  - children 4 and 5 (the "Your Business In" / "Orbit" lines) are absolute at
+ *    top:47.6%/49.6%, so the type lands on top of that photo;
+ *  - and `h3:nth-child(4) em{display:none}` hides the words "Your Business In"
+ *    outright, because on the original block that <em> held decorative text.
+ *
+ * The tablet and narrow-desktop ranges are the same collage with different
+ * offsets and break the same way — "Your Business In" runs off the right edge
+ * and is cut by the sticky's overflow:hidden anywhere under ~1200px.
+ *
+ * Rather than re-tune six absolute offsets, drop the collage below 1200px and
+ * let the block be what it reads as: a video, a three-line headline, two
+ * photos. The full composition still runs from 1200px up.
+ */
+@media screen and (max-width: 1199px) {
+  .wp-block-kenza-front-page-image-cluster {
+    margin: 6rem 0 9rem;
+    padding-top: 0;
+  }
+
+  .wp-block-kenza-front-page-image-cluster .sticky {
+    margin: 0;
+    /* was hidden, to contain the 190%-wide absolute photo */
+    overflow: visible;
+    padding: 0 3.2rem;
+  }
+
+  .wp-block-kenza-front-page-image-cluster .wrapper {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: 1fr;
+    left: auto;
+    margin: 0;
+    padding: 0;
+    transform: none;
+    width: auto;
+  }
+
+  /* Undo the collage on every child in one go.
+   * The `.sticky` step is load-bearing: the theme targets these children as
+   * `.cluster .wp-block-image:nth-child(3)` (0,3,0), so a two-class selector
+   * loses the cascade and the reset silently does nothing. */
+  .wp-block-kenza-front-page-image-cluster .sticky .wrapper > .wp-block-kenza-cases-video,
+  .wp-block-kenza-front-page-image-cluster .sticky .wrapper > .wp-block-image,
+  .wp-block-kenza-front-page-image-cluster .sticky .wrapper > h3 {
+    aspect-ratio: auto;
+    border-top: 0;
+    clear: none;
+    clip-path: none;
+    float: none;
+    inset: auto;
+    margin: 0;
+    max-width: none;
+    position: relative;
+    text-align: left;
+    text-indent: 0;
+    transform: none;
+    width: auto;
+  }
+
+  /* Reading order: video, headline (3 lines), photo, photo. */
+  .wp-block-kenza-front-page-image-cluster .sticky .wrapper > .wp-block-kenza-cases-video {
+    order: 1;
+  }
+  .wp-block-kenza-front-page-image-cluster .sticky .wrapper > h3:nth-child(2) {
+    order: 2;
+  }
+  .wp-block-kenza-front-page-image-cluster .sticky .wrapper > h3:nth-child(4) {
+    order: 3;
+  }
+  .wp-block-kenza-front-page-image-cluster .sticky .wrapper > h3:nth-child(5) {
+    order: 4;
+  }
+  .wp-block-kenza-front-page-image-cluster .sticky .wrapper > .wp-block-image:nth-child(3) {
+    order: 5;
+  }
+  .wp-block-kenza-front-page-image-cluster .sticky .wrapper > .wp-block-image:nth-child(6) {
+    order: 6;
+  }
+
+  /* The headline is three sibling h3s; close the gap so they read as one. */
+  .wp-block-kenza-front-page-image-cluster .sticky .wrapper > h3 {
+    font-size: clamp(3.4rem, 6.5vw, 6.4rem);
+    font-weight: 100;
+    letter-spacing: normal;
+    line-height: 1.08;
+  }
+  .wp-block-kenza-front-page-image-cluster .sticky .wrapper > h3:nth-child(2) {
+    margin-top: 1.2rem;
+  }
+  .wp-block-kenza-front-page-image-cluster .sticky .wrapper > h3:nth-child(4),
+  .wp-block-kenza-front-page-image-cluster .sticky .wrapper > h3:nth-child(5) {
+    margin-top: -2rem; /* cancel the grid gap between headline lines */
+  }
+  /* "Your Business In" lives inside the <em> the theme hides on phones. */
+  .wp-block-kenza-front-page-image-cluster .sticky .wrapper > h3:nth-child(4) em {
+    display: inline;
+    font-style: normal;
+  }
+  .wp-block-kenza-front-page-image-cluster .sticky .wrapper > h3:nth-child(5) {
+    color: var(--orbit);
+    margin-bottom: 1.2rem;
+  }
+
+  /* Photos at their own aspect ratio — nothing cropped, nothing overflowing. */
+  .wp-block-kenza-front-page-image-cluster .sticky .wrapper > .wp-block-image img {
+    aspect-ratio: auto;
+    border-radius: 1rem;
+    display: block;
+    height: auto;
+    max-height: none;
+    max-width: 100%;
+    object-fit: contain;
+    width: 100%;
+  }
+}
+
+/* Once there is room, the two photos share a row and the video and headline
+ * span it — the same reading order, just less scrolling. */
+@media screen and (min-width: 560px) and (max-width: 1199px) {
+  .wp-block-kenza-front-page-image-cluster .wrapper {
+    align-items: end;
+    column-gap: 2.4rem;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .wp-block-kenza-front-page-image-cluster .sticky .wrapper > .wp-block-kenza-cases-video,
+  .wp-block-kenza-front-page-image-cluster .sticky .wrapper > h3 {
+    grid-column: 1 / -1;
+  }
+}
+
+/* On desktop the same photo is drawn 91% wide and then clipped to `--reveal`,
+ * a variable only the unused `frontanimation` scroll trigger ever animates. Sat
+ * at its 52.8% default it cuts the artwork mid-logo. Drop the clip and size the
+ * figure to what was visible (91% x 52.8% = 48%), so the footprint in the
+ * composition is unchanged and the whole photo fits inside it. */
+@media screen and (min-width: 1200px) {
+  .wp-block-kenza-front-page-image-cluster .sticky .wrapper > .wp-block-image:nth-child(3) {
+    clip-path: none;
+    width: 48%;
+  }
+
+  .wp-block-kenza-front-page-image-cluster .sticky .wrapper > .wp-block-image:nth-child(3) img {
+    height: auto;
+    width: 100%;
+  }
 }
 
 /* ------------------------------------------------------- content measure --

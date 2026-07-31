@@ -12,6 +12,13 @@ import ClientLogo from "./ClientLogo";
  * dimensions still read as one even row. Pauses on hover; honours
  * prefers-reduced-motion.
  */
+
+/** Logo filename without extension — the key .orbit-marquee__item[data-logo]
+ *  uses for the handful of per-mark optical size corrections. */
+function logoKey(logo?: string): string | undefined {
+  return logo?.split("/").pop()?.replace(/\.\w+$/, "");
+}
+
 export default function ClientMarquee() {
   const items = [...TESTIMONIALS, ...TESTIMONIALS];
 
@@ -22,6 +29,7 @@ export default function ClientMarquee() {
           <div
             className="orbit-marquee__item"
             key={`${t.client}-${i}`}
+            data-logo={logoKey(t.logo)}
             /* The duplicated half is decorative — hide it from screen readers. */
             aria-hidden={i >= TESTIMONIALS.length ? "true" : undefined}
           >

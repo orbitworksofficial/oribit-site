@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img" aria-label="Abstract compounding growth curve">
+  <defs>
+    <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
+      <path d="M50 0H0v50" fill="none" stroke="#ffffff" stroke-opacity=".045" stroke-width="1"/>
+    </pattern>
+    <radialGradient id="glow" cx="50%" cy="8%" r="78%">
+      <stop offset="0%" stop-color="#fe063b" stop-opacity=".34"/>
+      <stop offset="70%" stop-color="#fe063b" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="underCurve" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fe063b" stop-opacity=".38"/>
+      <stop offset="100%" stop-color="#fe063b" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="stroke" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0%" stop-color="#fe063b" stop-opacity=".55"/>
+      <stop offset="100%" stop-color="#ff8ea8"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1600" height="900" fill="#07091e"/>
+  <rect width="1600" height="900" fill="url(#grid)"/>
+  <rect width="1600" height="900" fill="url(#glow)"/>
+
+  <!-- Artwork is inset into the 21:9 safe zone: the post header crops this
+       16:9 canvas to 21:9, and only the background may be cut. -->
+  <g data-safe-zone="" transform="translate(160 90) scale(0.8)">
+
+  <!-- Rented: flat, evenly spaced bars that go nowhere. -->
+  <g fill="#ffffff" fill-opacity=".07">
+    <rect x="190" y="646" width="54" height="94" rx="6"/>
+    <rect x="300" y="646" width="54" height="94" rx="6"/>
+    <rect x="410" y="646" width="54" height="94" rx="6"/>
+    <rect x="520" y="646" width="54" height="94" rx="6"/>
+  </g>
+
+  <!-- Earned: the same interval, compounding. -->
+  <g fill="#ffffff" fill-opacity=".13">
+    <rect x="700" y="590" width="54" height="150" rx="6"/>
+    <rect x="810" y="516" width="54" height="224" rx="6"/>
+    <rect x="920" y="418" width="54" height="322" rx="6"/>
+  </g>
+  <g fill="#fe063b" fill-opacity=".55">
+    <rect x="1030" y="300" width="54" height="440" rx="6"/>
+    <rect x="1140" y="196" width="54" height="544" rx="6"/>
+  </g>
+
+  <path d="M190 706c260 6 430-24 560-108s232-220 444-372" fill="none" stroke="url(#stroke)" stroke-width="7" stroke-linecap="round"/>
+  <path d="M190 706c260 6 430-24 560-108s232-220 444-372v514H190z" fill="url(#underCurve)" opacity=".5"/>
+
+  <g fill="#ffffff">
+    <circle cx="190" cy="706" r="9" fill-opacity=".45"/>
+    <circle cx="750" cy="598" r="9" fill-opacity=".6"/>
+    <circle cx="1194" cy="226" r="13" fill="#fe063b"/>
+    <circle cx="1194" cy="226" r="26" fill="none" stroke="#fe063b" stroke-opacity=".4" stroke-width="3"/>
+  </g>
+
+  <path d="M120 740h1360" stroke="#ffffff" stroke-opacity=".12" stroke-width="2"/>
+  <path d="M120 792h150" stroke="#fe063b" stroke-width="6" stroke-linecap="round"/>
+  </g>
+</svg>

@@ -681,7 +681,7 @@ export const BLOGS: Post[] = [
     excerpt: "Why the ranking you buy disappears and the one you earn does not.",
     author: "OrbitWorks",
     readingMinutes: 4,
-    image: "/media/2024/05/Services-Brand-and-Experience-Design.jpg",
+    image: "/brand/blog/seo-that-compounds.png",
     body: [
       "Every few months a client asks us to “do SEO” as though it were a switch. It isn’t, and the reason matters: search rankings are a lagging indicator of something else. They measure whether the rest of your business is legible to a machine that is trying to answer a question on someone’s behalf.",
       "## Rented versus owned",
@@ -703,7 +703,7 @@ export const BLOGS: Post[] = [
     excerpt: "Most paid budgets fail on the landing page, not the bid.",
     author: "OrbitWorks",
     readingMinutes: 3,
-    image: "/media/2024/05/Services-Business-Innovation-Design.jpg",
+    image: "/brand/blog/ppc-without-the-leak.png",
     body: [
       "When a paid campaign underperforms, the first instinct is to open the bidding strategy. That is almost never where the money is going.",
       "## The leak is downstream",
@@ -723,7 +723,7 @@ export const BLOGS: Post[] = [
     excerpt: "What changes between the demo and the thing customers touch.",
     author: "OrbitWorks",
     readingMinutes: 5,
-    image: "/media/2024/05/Services-Applied-Research.jpg",
+    image: "/brand/blog/genai-in-production.png",
     body: [
       "The demo always works. That is what a demo is for. The gap between it and production is not model quality — it is everything around the model.",
       "## The demo is a happy path",
@@ -744,7 +744,7 @@ export const BLOGS: Post[] = [
     excerpt: "Sequencing a migration so the business never notices.",
     author: "OrbitWorks",
     readingMinutes: 4,
-    image: "/media/2024/05/Services-Metaverse-Design-and-Development.jpg",
+    image: "/brand/blog/migrating-without-downtime.png",
     body: [
       "A migration is a sequencing problem wearing an infrastructure costume. The hard part is not moving the workload; it is moving it while people are using it.",
       "## Move the boring things first",

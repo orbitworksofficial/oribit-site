@@ -39,10 +39,10 @@ export default function FrontPageImageCluster() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               decoding="async"
-              width={1203}
-              height={800}
+              width={1047}
+              height={1254}
               loading="lazy"
-              src="/media/2025/09/12.jpeg"
+              src="/media/2025/09/122.jpeg"
               alt="OrbitWorks engineer working on a software project"
               className="wp-image-150"
             />
@@ -57,10 +57,10 @@ export default function FrontPageImageCluster() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               decoding="async"
-              width={948}
-              height={533}
+              width={1254}
+              height={1254}
               loading="lazy"
-              src="/media/2025/09/13.jpeg"
+              src="/media/2025/09/133.jpeg"
               alt="OrbitWorks specialist reviewing AI analytics"
               className="wp-image-151"
             />

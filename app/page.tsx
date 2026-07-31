@@ -110,7 +110,7 @@ export default function Home() {
       </div>
 
       {/* 4. Industries — over the theme's fixed background loop */}
-      <div className="wp-block-kenza-column-constraint column-constraint cols-12 background-transparent clip">
+      <div className="wp-block-kenza-column-constraint column-constraint cols-12 background-transparent clip orbit-bgvideo--crimson">
         {/* data-video is a styling hook — see VideoLoopHeader. */}
         <div className="wp-block-kenza-services-page-background-video k-full" data-video="">
           <PreviewVideo sources={MIRROR_PORTRAIT} />

@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img" aria-label="Abstract layered network of connected nodes">
+  <defs>
+    <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
+      <path d="M50 0H0v50" fill="none" stroke="#ffffff" stroke-opacity=".045" stroke-width="1"/>
+    </pattern>
+    <radialGradient id="glow" cx="50%" cy="8%" r="78%">
+      <stop offset="0%" stop-color="#fe063b" stop-opacity=".34"/>
+      <stop offset="70%" stop-color="#fe063b" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1600" height="900" fill="#07091e"/>
+  <rect width="1600" height="900" fill="url(#grid)"/>
+  <rect width="1600" height="900" fill="url(#glow)"/>
+
+  <!-- Artwork is inset into the 21:9 safe zone: the post header crops this
+       16:9 canvas to 21:9, and only the background may be cut. -->
+  <g data-safe-zone="" transform="translate(160 90) scale(0.8)">
+
+  <!-- Edges. The demo path (top to bottom of the middle) is crimson; the rest
+       is everything else the thing has to survive. -->
+  <g stroke="#ffffff" stroke-opacity=".16" stroke-width="2" fill="none">
+    <path d="M330 250 630 190M330 250 630 350M330 450 630 190M330 450 630 350M330 450 630 510M330 650 630 350M330 650 630 510M330 650 630 670"/>
+    <path d="M630 190 960 250M630 190 960 430M630 350 960 250M630 350 960 430M630 350 960 610M630 510 960 430M630 510 960 610M630 670 960 610M630 670 960 430"/>
+    <path d="M960 250 1270 350M960 250 1270 550M960 430 1270 350M960 430 1270 550M960 610 1270 550M960 610 1270 350"/>
+  </g>
+  <g stroke="#fe063b" stroke-opacity=".75" stroke-width="4" fill="none">
+    <path d="M330 450 630 350 960 430 1270 350"/>
+  </g>
+
+  <!-- Nodes. -->
+  <g fill="#0b0f26" stroke="#ffffff" stroke-opacity=".35" stroke-width="3">
+    <circle cx="330" cy="250" r="20"/><circle cx="330" cy="450" r="20"/><circle cx="330" cy="650" r="20"/>
+    <circle cx="630" cy="190" r="20"/><circle cx="630" cy="350" r="20"/><circle cx="630" cy="510" r="20"/><circle cx="630" cy="670" r="20"/>
+    <circle cx="960" cy="250" r="20"/><circle cx="960" cy="430" r="20"/><circle cx="960" cy="610" r="20"/>
+    <circle cx="1270" cy="350" r="20"/><circle cx="1270" cy="550" r="20"/>
+  </g>
+  <g fill="#fe063b">
+    <circle cx="330" cy="450" r="11"/><circle cx="630" cy="350" r="11"/>
+    <circle cx="960" cy="430" r="11"/><circle cx="1270" cy="350" r="11"/>
+  </g>
+  <circle cx="1270" cy="350" r="38" fill="none" stroke="#fe063b" stroke-opacity=".35" stroke-width="3"/>
+
+  <path d="M120 792h150" stroke="#fe063b" stroke-width="6" stroke-linecap="round"/>
+  </g>
+</svg>

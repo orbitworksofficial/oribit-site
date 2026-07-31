@@ -23,7 +23,7 @@ export default function Blogs() {
           { label: "Explore Our Services", href: "/services", ghost: true },
         ]}
         proof={["Written by practitioners", "No gated PDFs", "Updated monthly"]}
-        image="https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=1800&q=70"
+        image="https://images.unsplash.com/photo-1644088379091-d574269d422f?q=80&w=1993&auto=format&fit=crop&w=1800&q=70&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
       />
 
       {/* Lead post gets the wide treatment; the rest run as a grid. */}

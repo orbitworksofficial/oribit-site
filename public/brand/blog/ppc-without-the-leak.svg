@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img" aria-label="Abstract funnel losing volume through a leak">
+  <defs>
+    <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
+      <path d="M50 0H0v50" fill="none" stroke="#ffffff" stroke-opacity=".045" stroke-width="1"/>
+    </pattern>
+    <radialGradient id="glow" cx="50%" cy="8%" r="78%">
+      <stop offset="0%" stop-color="#fe063b" stop-opacity=".34"/>
+      <stop offset="70%" stop-color="#fe063b" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="fill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fe063b" stop-opacity=".5"/>
+      <stop offset="100%" stop-color="#fe063b" stop-opacity=".12"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1600" height="900" fill="#07091e"/>
+  <rect width="1600" height="900" fill="url(#grid)"/>
+  <rect width="1600" height="900" fill="url(#glow)"/>
+
+  <!-- Artwork is inset into the 21:9 safe zone: the post header crops this
+       16:9 canvas to 21:9, and only the background may be cut. -->
+  <g data-safe-zone="" transform="translate(160 90) scale(0.8)">
+
+  <!-- Clicks arriving. -->
+  <g fill="#ffffff" fill-opacity=".5">
+    <circle cx="540" cy="132" r="7"/>
+    <circle cx="640" cy="106" r="7"/>
+    <circle cx="740" cy="140" r="7"/>
+    <circle cx="840" cy="104" r="7"/>
+    <circle cx="940" cy="134" r="7"/>
+    <circle cx="1040" cy="110" r="7"/>
+  </g>
+
+  <!-- The funnel. -->
+  <path d="M470 220H1130L900 560v200H700V560z" fill="url(#fill)"/>
+  <path d="M470 220H1130L900 560v200H700V560z" fill="none" stroke="#ffffff" stroke-opacity=".3" stroke-width="4" stroke-linejoin="round"/>
+
+  <!-- The leak: the seam it escapes through, and what escapes. -->
+  <path d="M1010 386 1290 386" stroke="#fe063b" stroke-width="5" stroke-linecap="round" stroke-dasharray="26 22"/>
+  <g fill="#fe063b">
+    <circle cx="1180" cy="452" r="10" opacity=".85"/>
+    <circle cx="1268" cy="524" r="8" opacity=".65"/>
+    <circle cx="1344" cy="614" r="6" opacity=".45"/>
+    <circle cx="1400" cy="704" r="5" opacity=".3"/>
+  </g>
+
+  <!-- What is left at the bottom. -->
+  <rect x="700" y="800" width="200" height="12" rx="6" fill="#ffffff" fill-opacity=".22"/>
+
+  <path d="M120 792h150" stroke="#fe063b" stroke-width="6" stroke-linecap="round"/>
+  </g>
+</svg>
