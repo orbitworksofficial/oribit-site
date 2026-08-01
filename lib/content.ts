@@ -12,7 +12,7 @@ export const BRAND = {
   /** \n becomes <br/>; FadeText splits the rest per character. */
   headline: "AI-Powered IT Solutions\nThat Actually\nMove the Needle",
   intro:
-    "OrbitWorks is a leading AI automation and IT services company in USA, helping businesses scale through intelligent automation, cloud infrastructure, custom software, and data-driven marketing — all aligned with your business goals.",
+    "OrbitWorks is a leading AI automation and IT services company in USA, helping businesses scale through intelligent automation, cloud infrastructure, custom software, and data-driven marketing, all aligned with your business goals.",
   supporting:
     "From strategy to execution, we're the IT solutions company that turns complexity into competitive advantage.",
   email: "sales@orb-itworks.com",
@@ -28,10 +28,10 @@ export const SERVICES_JSONLD_AREA = ["United States", "Canada"];
 export const SECTIONS = {
   trustEyebrow: "Trusted by innovative companies across the United States",
   trustBody:
-    "OrbitWorks has earned its reputation as a trusted IT services company by delivering results that speak for themselves. From bootstrapped startups to enterprise brands, our clients rely on us for AI automation and IT services in USA that drive real growth. We're not just another IT solutions company — we're a strategic partner that understands technology is only as valuable as the business outcomes it unlocks. Our track record spans manufacturing, healthcare, fintech, SaaS, and professional services, making us one of the most versatile IT consulting services companies in the market today.",
+    "OrbitWorks has earned its reputation as a trusted IT services company by delivering results that speak for themselves. From bootstrapped startups to enterprise brands, our clients rely on us for AI automation and IT services in USA that drive real growth. We're not just another IT solutions company. We're a strategic partner that understands technology is only as valuable as the business outcomes it unlocks. Our track record spans manufacturing, healthcare, fintech, SaaS, and professional services, making us one of the most versatile IT consulting services companies in the market today.",
   pillarsHeading: "Everything We Do",
   pillarsIntro:
-    "One partner for all the technology your business needs — AI automation, digital marketing, cloud infrastructure, and on-demand tech talent, under one strategy.",
+    "One partner for all the technology your business needs: AI automation, digital marketing, cloud infrastructure, and on-demand tech talent, under one strategy.",
   industriesHeading: "Industries We Empower",
   industriesIntro:
     "OrbitWorks brings deep domain expertise to every engagement. We've helped businesses across these industries solve complex challenges and unlock new growth through AI automation and IT services in the USA.",
@@ -43,10 +43,10 @@ export const SECTIONS = {
     "In a crowded market of IT services companies, what makes OrbitWorks different? It's not just our technical expertise, though that certainly helps. It's our commitment to outcomes over outputs, partnerships over projects, and results over rhetoric. We're the AI automation and IT services company in USA that actually shows up, listens, and delivers.",
   approachHeading: "Our Approach: From Idea to Impact",
   approachBody:
-    "Every engagement follows a proven framework that keeps us aligned with your goals, your timeline, and your budget. We don't believe in one-size-fits-all — but we do believe in a process that works.",
+    "Every engagement follows a proven framework that keeps us aligned with your goals, your timeline, and your budget. We don't believe in one-size-fits-all, but we do believe in a process that works.",
   ctaHeading: "Ready to Build Something Remarkable?",
   ctaBody:
-    "Join the growing list of businesses that trust OrbitWorks for AI automation and IT services in USA. Let's talk about your goals, your challenges, and how we can help you get where you're going — faster.",
+    "Join the growing list of businesses that trust OrbitWorks for AI automation and IT services in USA. Let's talk about your goals, your challenges, and how we can help you get where you're going, faster.",
 } as const;
 
 export type Pillar = {
@@ -183,7 +183,7 @@ export const APPROACH = [
   },
   {
     step: "Deploy & Optimize",
-    body: "We launch with precision, monitor performance in real time, and make data-driven adjustments. Deployment isn't the finish line — it's where the real work begins.",
+    body: "We launch with precision, monitor performance in real time, and make data-driven adjustments. Deployment isn't the finish line. It's where the real work begins.",
   },
   {
     step: "Scale & Grow",
@@ -268,7 +268,7 @@ export const SERVICES: Service[] = [
     slug: "ai-automation",
     title: "AI automation & GenAI",
     summary:
-      "Automation with a business case attached — scoped against the work it removes, not the hype.",
+      "Automation with a business case attached, scoped against the work it removes, not the hype.",
     points: [
       "AI strategy & consulting",
       "Custom AI development",
@@ -308,7 +308,7 @@ export const SERVICES: Service[] = [
   {
     slug: "product-development",
     title: "Product development as a service",
-    summary: "From MVP to a product with a roadmap — a full team, without the hiring cycle.",
+    summary: "From MVP to a product with a roadmap: a full team, without the hiring cycle.",
     points: [
       "MVP development",
       "Custom software & SaaS",
@@ -344,7 +344,7 @@ export const SERVICES: Service[] = [
   {
     slug: "power-platform",
     title: "Power Platform & Dynamics 365",
-    summary: "Enterprise plumbing — the integrations that stop the copy-paste.",
+    summary: "Enterprise plumbing: the integrations that stop the copy-paste.",
     points: [
       "Enterprise platform setup",
       "Cross-platform integrations",
@@ -378,7 +378,7 @@ export const SERVICES: Service[] = [
   {
     slug: "website-maintenance",
     title: "Website maintenance",
-    summary: "The unglamorous half — kept patched, backed up and fast.",
+    summary: "The unglamorous half: kept patched, backed up and fast.",
     points: [
       "Content updates",
       "Security monitoring",
@@ -562,12 +562,27 @@ export const TESTIMONIALS: Testimonial[] = [
 /** Marquee runs client names as type — we have no rights-cleared logo files. */
 export const CLIENTS = TESTIMONIALS.map((t) => t.client);
 
-export const TEAM = [
-  
-  { name: "Muhammad Haider", role: "COO" },
-  { name: "Muhammad Anis", role: "CFO" },
-  { name: "Muhammad Irfan", role: "IT Manager" },
-  { name: "Shaheer Arish", role: "CRM Operational Manager" },
+/**
+ * Leadership.
+ *
+ * `photo` currently points at the branded placeholder tiles in
+ * public/brand/team/ — abstract artwork, NOT a likeness, because these are real
+ * named people. Swap each path for the real headshot when you have it;
+ * TeamGrid falls back to the initials monogram if a file is missing.
+ */
+export type TeamMember = { name: string; role: string; photo?: string };
+
+export const TEAM: TeamMember[] = [
+  { name: "Muhammad Haider", role: "CEO", photo: "/brand/team/haider.jpeg" },
+  { name: "Muhammad Anis", role: "CFO", photo: "/brand/team/anis.jpeg" },
+  { name: "Muhammad Usman", role: "Data Analyst", photo: "/brand/team/usama.jpeg" },
+    { name: "Kainat Fazal", role: "Sr Seo Expert", photo: "/brand/team/kainat.jpeg" },
+
+  {
+    name: "Kashif Rehman",
+    role: "Sr Software Engineer",
+    photo: "/brand/team/kashif.png",
+  },
 ];
 
 export const OFFICES = [
@@ -639,7 +654,7 @@ export const RESOURCES = [
   {
     title: "The digital marketing audit checklist",
     kind: "Checklist",
-    summary: "What we run before proposing spend — search, social, paid and analytics.",
+    summary: "What we run before proposing spend: search, social, paid and analytics.",
   },
   {
     title: "Cloud migration: a readiness guide",
@@ -685,7 +700,7 @@ export const BLOGS: Post[] = [
     body: [
       "Every few months a client asks us to “do SEO” as though it were a switch. It isn’t, and the reason matters: search rankings are a lagging indicator of something else. They measure whether the rest of your business is legible to a machine that is trying to answer a question on someone’s behalf.",
       "## Rented versus owned",
-      "Paid placement is rented. The moment the card stops, the traffic stops with it, and nothing you paid for accrues. That is not an argument against paid — it is an argument for knowing which line item you are funding. Rented attention buys you time. It does not compound.",
+      "Paid placement is rented. The moment the card stops, the traffic stops with it, and nothing you paid for accrues. That is not an argument against paid. It is an argument for knowing which line item you are funding. Rented attention buys you time. It does not compound.",
       "Earned position behaves differently. A page that genuinely answers a question keeps answering it, gets linked to because it is useful, and the links make the next page rank faster. The second year is cheaper than the first. That is the whole case.",
       "## What we actually audit",
       "Before we propose spend, we look at four things: what the site is technically able to say about itself, what it actually says, who else says it, and whether the thing being said is true. In that order. Most engagements stall on the fourth.",
@@ -707,7 +722,7 @@ export const BLOGS: Post[] = [
     body: [
       "When a paid campaign underperforms, the first instinct is to open the bidding strategy. That is almost never where the money is going.",
       "## The leak is downstream",
-      "A click is a promise. The ad makes it and the landing page either keeps it or doesn’t. If the ad says one thing and the page opens on a different one, the visitor leaves — and you were charged either way. Sharpening the bid on a leaking page just buys more expensive water.",
+      "A click is a promise. The ad makes it and the landing page either keeps it or doesn’t. If the ad says one thing and the page opens on a different one, the visitor leaves, and you were charged either way. Sharpening the bid on a leaking page just buys more expensive water.",
       "We usually find the mismatch in the first six words of the headline. The ad answers a question; the page introduces the company.",
       "## Measure the conversation, not the click",
       "Optimising to clicks optimises for people who click. Optimising to qualified conversations optimises for revenue. Those are different populations and they respond to different creative. Wire the CRM before you raise the budget, or you will scale the wrong one.",
@@ -725,7 +740,7 @@ export const BLOGS: Post[] = [
     readingMinutes: 5,
     image: "/brand/blog/genai-in-production.png",
     body: [
-      "The demo always works. That is what a demo is for. The gap between it and production is not model quality — it is everything around the model.",
+      "The demo always works. That is what a demo is for. The gap between it and production is not model quality. It is everything around the model.",
       "## The demo is a happy path",
       "In a demo, someone who built the thing types a well-formed question and reads a plausible answer. In production, a stranger types half a sentence, the context is missing, the upstream service is slow, and the answer has to be either right or visibly uncertain. Most of the engineering is in that second sentence.",
       "## Scope against the work removed",
@@ -748,13 +763,13 @@ export const BLOGS: Post[] = [
     body: [
       "A migration is a sequencing problem wearing an infrastructure costume. The hard part is not moving the workload; it is moving it while people are using it.",
       "## Move the boring things first",
-      "Start with what has the fewest dependencies and the least revenue attached. It is not the interesting work, but it is where you find out that the runbook is wrong — and you would rather find that out on a service nobody is watching.",
+      "Start with what has the fewest dependencies and the least revenue attached. It is not the interesting work, but it is where you find out that the runbook is wrong, and you would rather find that out on a service nobody is watching.",
       "## Two of everything, briefly",
       "For a window, the old and new both run and both are correct. That costs money and it is worth it: it turns a cutover into a switch you can flip back. If you cannot flip back, you do not have a migration plan, you have a launch date.",
       "## Watch the thing customers feel",
       "Instrument the user-facing metric, not just the infrastructure one. CPU can look perfect while checkout is failing. If the dashboard would not have caught the last incident, it will not catch the next one.",
       "## Nothing changes on Friday",
-      "The unglamorous rules — small steps, reversible steps, no deploys before a weekend — are unglamorous because they work. Almost every migration horror story is the same story: too much at once, and no way back.",
+      "The unglamorous rules (small steps, reversible steps, no deploys before a weekend) are unglamorous because they work. Almost every migration horror story is the same story: too much at once, and no way back.",
     ],
   },
 ];

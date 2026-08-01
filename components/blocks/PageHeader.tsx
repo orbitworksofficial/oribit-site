@@ -53,7 +53,7 @@ export default function PageHeader({
       {isSplit && (
         <div className="orbit-pagehero__media">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={image} alt={`${title} — OrbitWorks`} loading="eager" />
+          <img src={image} alt={`${title}, OrbitWorks`} loading="eager" />
         </div>
       )}
     </div>

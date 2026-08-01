@@ -17,7 +17,7 @@ export default function Blogs() {
         chip="Notes from the delivery floor"
         icon="blog"
         title="Insights on AI, cloud & growth"
-        lead="Short pieces on digital marketing, AI, cloud and shipping software — written by the people doing the work, not a content team."
+        lead="Short pieces on digital marketing, AI, cloud and shipping software, written by the people doing the work, not a content team."
         ctas={[
           { label: "Talk to our team", href: "/contact" },
           { label: "Explore Our Services", href: "/services", ghost: true },

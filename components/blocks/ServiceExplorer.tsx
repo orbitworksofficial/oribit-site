@@ -70,9 +70,7 @@ export default function ServiceExplorer() {
                 </span>
                 <span className="orbit-svcx__tabtext">
                   <span className="orbit-svcx__tabname">{b.name}</span>
-                  <span className="orbit-svcx__tabcount">
-                    {b.services.length} {b.services.length === 1 ? "service" : "services"}
-                  </span>
+                  
                 </span>
               </button>
             </li>

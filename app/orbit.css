@@ -1416,6 +1416,32 @@ main h3.deco-l:before {
   background: var(--orbit);
 }
 
+/* Photo variant of the monogram — same circle, same footprint, so a member
+ * with a headshot and one without still line up. See TeamGrid. */
+.orbit-team__photo {
+  aspect-ratio: 1;
+  background: var(--ink);
+  border-radius: 50%;
+  display: block;
+  margin-bottom: 1.8rem;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.orbit-team__photo img {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  transition: transform 0.8s var(--ease);
+  width: 100%;
+}
+
+.orbit-team li:hover .orbit-team__photo img {
+  transform: scale(1.05);
+}
+
 .orbit-team strong {
   font-size: 1.8rem;
   font-weight: 400;

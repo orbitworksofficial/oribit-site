@@ -451,14 +451,14 @@ main h1.orbit-hub-title {
   display: grid;
   gap: 0;
   /* Wide enough that the portrait artwork reads in full rather than a sliver. */
-  grid-template-columns: 38rem 1fr;
+  grid-template-columns: 44rem 1fr;
   overflow: hidden;
   transition: box-shadow 0.5s var(--ease), transform 0.5s var(--ease);
 }
 
 /* Zig-zag: even cards put the image on the RIGHT. */
 .orbit-svcard:nth-child(even) {
-  grid-template-columns: 1fr 38rem;
+  grid-template-columns: 1fr 44rem;
 }
 
 .orbit-svcard:nth-child(even) .orbit-svcard__media {
@@ -476,23 +476,33 @@ main h1.orbit-hub-title {
   transform: translateY(-0.3rem);
 }
 
-/* Portrait frame. min-height keeps the tall proportion on short cards, while
- * height:100% + the stretched grid row makes the art fill the FULL card height
- * on long ones — otherwise a gap opened under the image. */
+/* Portrait frame.
+ *
+ * The artwork is a set of 2:3 posters with the headline baked into the top, so
+ * the image has to hold that ratio. It previously did the opposite: the <img>
+ * was position:absolute inset:0, so the box was whatever height the TEXT column
+ * happened to produce and object-fit:cover cropped the poster to fit. That is
+ * fine at 1440 (the box lands near 0.70 by luck) but the ratio fell to 0.53 at
+ * 1280 and 0.27 in the 980-1133 band, cropping the headline off entirely.
+ *
+ * Now the image sizes itself from its own aspect-ratio and the panel fills the
+ * rest of the card behind it — a dark field that continues the posters' own
+ * background rather than a light gap. */
 .orbit-svcard__media {
-  background: var(--mist);
+  background: linear-gradient(180deg, #0d1030 0%, #07091e 100%);
   height: 100%;
-  min-height: 34rem;
+  min-height: 0;
   overflow: hidden;
   position: relative;
 }
 
 .orbit-svcard__media img {
+  aspect-ratio: 2 / 3;
   display: block;
-  height: 100%;
-  inset: 0;
+  height: auto;
   object-fit: cover;
-  position: absolute;
+  object-position: center top;
+  position: static;
   transition: transform 1.2s var(--ease);
   width: 100%;
 }
@@ -592,11 +602,28 @@ main h1.orbit-hub-title {
     grid-template-columns: 22rem 1fr;
     gap: 3rem;
   }
-  .orbit-svcard {
-    grid-template-columns: 28rem 1fr;
-  }
+
+  /* Below this the text column is too narrow to sit beside a portrait poster:
+   * the card grows tall, and the image panel becomes a sliver next to it.
+   * Stack instead — the sidebar keeps its own breakpoint at 979. */
+  .orbit-svcard,
   .orbit-svcard:nth-child(even) {
-    grid-template-columns: 1fr 28rem;
+    grid-template-columns: 1fr;
+  }
+  /* Stacked: image always on top, whatever the desktop side. */
+  .orbit-svcard:nth-child(even) .orbit-svcard__media {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .orbit-svcard:nth-child(even) .orbit-svcard__body {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  /* Centred poster rather than a full-bleed band — a 2:3 image run to the full
+   * card width would be taller than the viewport. */
+  .orbit-svcard__media img {
+    margin: 0 auto;
+    max-width: 34rem;
   }
 }
 
@@ -611,23 +638,6 @@ main h1.orbit-hub-title {
     display: grid;
     gap: 0.8rem;
     grid-template-columns: repeat(2, 1fr);
-  }
-  .orbit-svcard,
-  .orbit-svcard:nth-child(even) {
-    grid-template-columns: 1fr;
-  }
-  /* Stacked: image always on top, whatever the desktop side. */
-  .orbit-svcard:nth-child(even) .orbit-svcard__media {
-    grid-column: 1;
-    grid-row: 1;
-  }
-  .orbit-svcard:nth-child(even) .orbit-svcard__body {
-    grid-column: 1;
-    grid-row: 2;
-  }
-  .orbit-svcard__media {
-    aspect-ratio: 16 / 9;
-    min-height: 0;
   }
   .orbit-svcard__body {
     padding: 2.4rem 2.2rem;

@@ -19,7 +19,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const post = postBySlug(slug);
-  if (!post) return { title: "Not found — OrbitWorks" };
+  if (!post) return { title: "Not found | OrbitWorks" };
 
   // Canonical + absolute OG image URLs — relative ones are dropped by most
   // crawlers and social unfurlers.

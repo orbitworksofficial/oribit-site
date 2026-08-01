@@ -46,7 +46,7 @@ export function postMetadata(post: {
 }): Metadata {
   const url = `${SITE_URL}/blogs/${post.slug}`;
   return {
-    title: `${post.title} — OrbitWorks`,
+    title: `${post.title} | OrbitWorks`,
     description: post.excerpt,
     alternates: { canonical: url },
     openGraph: {

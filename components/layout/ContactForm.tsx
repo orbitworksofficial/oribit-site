@@ -37,7 +37,7 @@ export default function ContactForm({ services }: { services: string[] }) {
 
       if (data.success) {
         setStatus("success");
-        setMessage("Thank you — we’ll be in touch shortly.");
+        setMessage("Thank you, we’ll be in touch shortly.");
         form.reset();
       } else {
         setStatus("error");

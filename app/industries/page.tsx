@@ -16,7 +16,7 @@ const WHY_GENERIC_FAILS = [
   },
   {
     title: "Compliance-First Design",
-    body: "HIPAA, SOC2, GDPR, PCI-DSS — we bake security and regulatory compliance into every solution from day one, not as an afterthought.",
+    body: "HIPAA, SOC2, GDPR, PCI-DSS: we bake security and regulatory compliance into every solution from day one, not as an afterthought.",
   },
   {
     title: "Operational Relevance",
@@ -50,7 +50,7 @@ export default function Industries() {
         chip="14+ verticals, one delivery team"
         icon="industries"
         title="Tailored IT solutions US businesses trust across every industry"
-        lead="OrbitWorks delivers specialized IT Solutions USA companies rely on to solve industry-specific challenges — without the generic playbooks."
+        lead="OrbitWorks delivers specialized IT Solutions USA companies rely on to solve industry-specific challenges, without the generic playbooks."
         ctas={[
           { label: "Book a Discovery Call", href: "/contact" },
           { label: "View Our Industry Expertise", href: "#spotlights", ghost: true },
@@ -66,19 +66,19 @@ export default function Industries() {
       >
         <div className="orbit-sec__head">
           <span className="orbit-eyebrow">One size fits none</span>
-          <h2 className="orbit-section-head">Why Generic IT Fails — And How We Fix It</h2>
+          <h2 className="orbit-section-head">Why Generic IT Fails, And How We Fix It</h2>
         </div>
         <div className="orbit-sec__body">
         <p className="large large-intro wp-block-paragraph">
           Most IT services companies treat every client the same. They apply the same templates, the
           same stacks, and the same strategies to a hospital that they use for a logistics firm. That
-          approach doesn&rsquo;t just waste money — it creates more problems than it solves.
+          approach doesn&rsquo;t just waste money. It creates more problems than it solves.
         </p>
         <p className="small tabletbodyxs wp-block-paragraph">
           OrbitWorks takes a different path. Our IT Solutions USA framework is built around
           vertical-specific intelligence. We don&rsquo;t just ask about your tech stack. We ask about
           your regulatory environment, your supply chain, your customer journey, and your competitive
-          pressures. Then we design solutions that fit your world — not ours.
+          pressures. Then we design solutions that fit your world, not ours.
         </p>
         <ul className="orbit-list orbit-list--check">
           {WHY_GENERIC_FAILS.map((w) => (
@@ -102,7 +102,7 @@ export default function Industries() {
           Industry-Specific IT Solutions USA Companies Are Already Using
         </h2>
         <p className="has-text-align-left large large-intro shorten shorten-70 wp-block-paragraph">
-          Here&rsquo;s how we apply our core capabilities — AI, cloud, marketing, and talent — to real
+          Here&rsquo;s how we apply our core capabilities (AI, cloud, marketing, and talent) to real
           industries with real challenges. These aren&rsquo;t hypotheticals. This is what our IT
           Solutions USA expertise looks like in action.
         </p>
@@ -156,7 +156,7 @@ export default function Industries() {
         <div className="orbit-sec__head">
           <span className="orbit-eyebrow">Why OrbitWorks for your industry</span>
           <h2 className="orbit-section-head">
-            The IT Solutions USA Advantage — Tailored to Your Vertical
+            The IT Solutions USA Advantage: Tailored to Your Vertical
           </h2>
         </div>
         <div className="orbit-sec__body">

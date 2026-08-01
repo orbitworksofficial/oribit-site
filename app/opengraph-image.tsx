@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "OrbitWorks — Crafting Solutions With Purpose";
+export const alt = "OrbitWorks: Crafting Solutions With Purpose";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -70,7 +70,7 @@ export default function OpengraphImage() {
             With Purpose.
           </div>
           <div style={{ marginTop: 28, fontSize: 30, color: "#c8d0de", maxWidth: 900 }}>
-            Cloud, software, data, AI and digital marketing — strategy through delivery, in one team.
+            Cloud, software, data, AI and digital marketing: strategy through delivery, in one team.
           </div>
         </div>
 

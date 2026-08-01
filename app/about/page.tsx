@@ -21,7 +21,7 @@ const PHILOSOPHY = [
   },
   {
     title: "We make complex tech simple",
-    body: "Your team shouldn't need a PhD to use what we build. Intuitive, clean, and practical — that's our standard.",
+    body: "Your team shouldn't need a PhD to use what we build. Intuitive, clean, and practical. That's our standard.",
   },
 ];
 
@@ -51,7 +51,7 @@ export default function About() {
         chip="Engineers, operators & strategists"
         icon="about"
         title="We don't just build tech. We build momentum."
-        lead="OrbitWorks is an AI automation and IT services company in USA built for one reason — to make technology a growth engine, not a management headache."
+        lead="OrbitWorks is an AI automation and IT services company in USA built for one reason: to make technology a growth engine, not a management headache."
         ctas={[
           { label: "Book a Discovery Call", href: "/contact" },
           { label: "Explore Our Services", href: "/services", ghost: true },
@@ -99,7 +99,7 @@ export default function About() {
         </div>
         <div className="orbit-sec__body">
         <p className="large large-intro wp-block-paragraph">
-          OrbitWorks wasn&rsquo;t founded in a boardroom — it was founded in the trenches of real
+          OrbitWorks wasn&rsquo;t founded in a boardroom. It was founded in the trenches of real
           delivery.
         </p>
         <p className="small tabletbodyxs wp-block-paragraph">
@@ -112,7 +112,7 @@ export default function About() {
           great at sales but terrible at execution. So we started OrbitWorks to bridge that gap.
           Today, we operate with a global delivery model, but our heart and strategic direction are
           rooted firmly in the USA. We serve clients who demand quality, transparency, and
-          accountability — and we deliver exactly that.
+          accountability, and we deliver exactly that.
         </p>
         </div>
       </div>
@@ -128,7 +128,7 @@ export default function About() {
         </div>
         <div className="orbit-sec__body">
         <p className="large large-intro wp-block-paragraph">
-          We don&rsquo;t need a 50-page manifesto. Here&rsquo;s our compass — simple, direct, and
+          We don&rsquo;t need a 50-page manifesto. Here&rsquo;s our compass: simple, direct, and
           non-negotiable.
         </p>
         <ul className="orbit-list orbit-list--check">
@@ -202,8 +202,8 @@ export default function About() {
         <h2 className="wp-block-heading book">More Than a Vendor. A Partner.</h2>
         <p className="has-text-align-center small wp-block-paragraph">
           If you&rsquo;re looking for a transactional IT service provider, there are plenty of options
-          out there. But if you want a dedicated partner that actually cares about your growth — and
-          has the technical firepower to back it up — you&rsquo;re in the right place.
+          out there. But if you want a dedicated partner that actually cares about your growth and
+          has the technical firepower to back it up, you&rsquo;re in the right place.
         </p>
         <p className="has-text-align-center small wp-block-paragraph">
           We&rsquo;re proud to be the go-to IT company for small business USA clients and large

@@ -1,15 +1,19 @@
-import { TEAM } from "@/lib/content";
+"use client";
+
+import { useState } from "react";
+import { TEAM, type TeamMember } from "@/lib/content";
 
 /**
  * Leadership cards.
  *
- * Deliberately monograms, not photos. These are real, named people — putting a
- * stock face or one of Kenza's models against "Taha Becker, Founder & CEO"
- * would be inventing a likeness for someone who exists. Initials are honest and
- * read as a design choice.
+ * Each member renders `photo` when TEAM supplies one, and falls back to an
+ * initials monogram otherwise — or if the file 404s, so repointing a path never
+ * leaves a broken image on the page.
  *
- * Swap in real headshots by adding `photo` to TEAM in lib/content.ts and
- * rendering an <img> here instead of .orbit-monogram.
+ * The photos shipped today are branded placeholder tiles, not likenesses: these
+ * are real, named people, and putting a stock face against "Muhammad Haider,
+ * COO" would be inventing one. Drop the real headshots in and update the paths
+ * in lib/content.ts.
  */
 
 function initials(name: string) {
@@ -21,17 +25,39 @@ function initials(name: string) {
     .toUpperCase();
 }
 
+function TeamCard({ person }: { person: TeamMember }) {
+  const [failed, setFailed] = useState(false);
+  const showPhoto = Boolean(person.photo) && !failed;
+
+  return (
+    <li>
+      {showPhoto ? (
+        <span className="orbit-team__photo">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={person.photo}
+            alt={`${person.name}, ${person.role} at OrbitWorks`}
+            loading="lazy"
+            decoding="async"
+            onError={() => setFailed(true)}
+          />
+        </span>
+      ) : (
+        <span className="orbit-monogram" aria-hidden="true">
+          {initials(person.name)}
+        </span>
+      )}
+      <strong>{person.name}</strong>
+      <span className="orbit-role">{person.role}</span>
+    </li>
+  );
+}
+
 export default function TeamGrid() {
   return (
     <ul className="orbit-team">
       {TEAM.map((p) => (
-        <li key={p.name}>
-          <span className="orbit-monogram" aria-hidden="true">
-            {initials(p.name)}
-          </span>
-          <strong>{p.name}</strong>
-          <span className="orbit-role">{p.role}</span>
-        </li>
+        <TeamCard key={p.name} person={p} />
       ))}
     </ul>
   );

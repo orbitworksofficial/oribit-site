@@ -4,7 +4,7 @@ import PageHeader from "@/components/blocks/PageHeader";
 import { BRAND, OFFICES } from "@/lib/content";
 
 export const metadata: Metadata = {
-  title: "Legal — OrbitWorks",
+  title: "Legal | OrbitWorks",
   description: "Privacy, cookies and company details for OrbitWorks.",
   robots: { index: false, follow: true },
 };
@@ -23,7 +23,7 @@ export default function Legal() {
       <PageHeader
         title="Legal"
         lead="Privacy, cookies and company details."
-        intro="Placeholder — this page needs reviewed policy copy before launch."
+        intro="Placeholder: this page needs reviewed policy copy before launch."
       />
 
       <div
