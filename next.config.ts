@@ -30,6 +30,28 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+
+  /**
+   * Long-lived caching for static media.
+   *
+   * Next serves everything in public/ with `Cache-Control: public, max-age=0`,
+   * which means no reuse at all. On the homepage that made the hero loop
+   * download TWICE in a single visit — once for SiteLoader's readiness probe
+   * and once for the <video> element itself, 1.75MB wasted before a repeat
+   * visitor is even considered.
+   *
+   * 30 days, not `immutable`: these filenames are not content-hashed, so a
+   * replaced asset still needs to reach returning visitors within a sane
+   * window. If you swap an image and need it live immediately, rename it.
+   */
+  async headers() {
+    return [
+      {
+        source: "/:dir(video|media|brand|services)/:path*",
+        headers: [{ key: "Cache-Control", value: "public, max-age=2592000" }],
+      },
+    ];
+  },
 };
 
 export default nextConfig;

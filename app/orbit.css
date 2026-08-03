@@ -3486,10 +3486,10 @@ figure.logo {
  * (`height: 0; padding-bottom: %`), NOT a height — which is why an
  * aspect-ratio/height:auto override silently lost.
  *
- * Its ratio was tuned for the original 16:9 clip; the replacement loop is 2:1
- * (1080x540), so object-fit:cover cropped both sides and only the middle strip
- * showed. Setting padding-bottom to 50% makes the box exactly 2:1, so the cover
- * crop becomes a no-op and the whole frame is visible.
+ * Its ratio was tuned for the original 16:9 clip. Keep padding-bottom in step
+ * with whatever CLUSTER_VIDEO points at (FrontPageImageCluster.tsx): the box
+ * has to match the clip, or object-fit:cover throws away the sides. The loop is
+ * currently keep_section, 1920x640, so 640/1920 = 33.333%.
  *
  * Scoped to the cluster (4 classes) so it beats the theme and leaves the same
  * block untouched elsewhere.
@@ -3498,7 +3498,19 @@ figure.logo {
   .wp-block-kenza-cases-video
   [data-video].k-full-nocrop {
   height: 0;
-  padding-bottom: 50%; /* 540 / 1080 */
+  padding-bottom: 33.333%; /* 640 / 1920 */
+}
+
+/* The theme reserves a fixed 40/29 box for this slot, sized for its original
+ * clip. Ours is 3:1 and therefore much shorter, which left ~200px of dead space
+ * under the video and pushed it out of the composition. Let the slot hug
+ * whatever the loop actually is. */
+.wp-block-kenza-front-page-image-cluster
+  .sticky
+  .wrapper
+  > .wp-block-kenza-cases-video:first-child {
+  aspect-ratio: auto;
+  height: auto;
 }
 
 /* The slot uses `height: 0` + padding-bottom, so a percentage height on the
@@ -3509,7 +3521,7 @@ figure.logo {
   [data-video].k-full-nocrop
   video {
   /* 100% (not auto) — with position:absolute this resolves against the padding
-   * box, i.e. the real 2:1 frame. `auto` fell back to the <video> element's
+   * box, i.e. the real video frame. `auto` fell back to the <video> element's
    * default 150px height before the file had loaded. */
   height: 100%;
   inset: 0;

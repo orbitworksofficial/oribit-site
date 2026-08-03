@@ -3,6 +3,23 @@ import { chromeFor } from "./routes";
 import { SITE_URL, NOINDEX_ROUTES } from "./site";
 
 /**
+ * The shared square share card, rendered by app/opengraph-image.tsx.
+ *
+ * Declared explicitly because Next only auto-attaches a file-convention OG
+ * image when the route does NOT define `openGraph` itself. pageMetadata does
+ * define it (for the canonical url), so inner pages were shipping no og:image
+ * at all and previewed as a bare link.
+ *
+ * Keep the dimensions in step with `size` in app/opengraph-image.tsx.
+ */
+const OG_IMAGE = {
+  url: `${SITE_URL}/opengraph-image`,
+  width: 1200,
+  height: 1200,
+  alt: "Orbit Works: AI automation and IT services",
+};
+
+/**
  * Full per-page metadata: title, description, canonical, OpenGraph, Twitter.
  *
  * Pages previously exported only { title, description }, so every page inherited
@@ -30,8 +47,15 @@ export function pageMetadata(path: string): Metadata {
       title,
       description,
       locale: "en_US",
+      images: [OG_IMAGE],
     },
-    twitter: { card: "summary_large_image", title, description },
+    /**
+     * These pages inherit the square share card from app/opengraph-image.tsx,
+     * so `summary` (square thumbnail) rather than `summary_large_image`, which
+     * would crop it to 2:1 and cut the logo. Blog posts below keep the large
+     * card — they supply their own 16:9 cover.
+     */
+    twitter: { card: "summary", title, description, images: [OG_IMAGE.url] },
   };
 }
 

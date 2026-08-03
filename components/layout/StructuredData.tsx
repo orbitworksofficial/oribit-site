@@ -32,9 +32,11 @@ export default function StructuredData() {
       telephone: BRAND.phone,
       address: OFFICES.map((o) => ({
         "@type": "PostalAddress",
+        streetAddress: o.street,
         addressLocality: o.city,
-        addressCountry: o.country,
-        streetAddress: o.address,
+        addressRegion: o.region,
+        postalCode: o.postalCode,
+        addressCountry: o.countryCode,
       })),
       areaServed: SERVICES_JSONLD_AREA,
       knowsAbout: SERVICE_BUCKETS.map((b) => b.name),
@@ -48,6 +50,13 @@ export default function StructuredData() {
       inLanguage: "en-US",
     },
     {
+      /**
+       * ProfessionalService is a LocalBusiness subtype, but an SEO audit still
+       * reported "no Local Business Schema identified" because this node
+       * carried none of the properties that make one: the address and phone
+       * lived only on the Organization above. Validators match on the shape,
+       * not the type name alone, so the NAP is repeated here deliberately.
+       */
       "@type": "ProfessionalService",
       "@id": `${SITE_URL}/#service`,
       name: BRAND.name,
@@ -55,6 +64,25 @@ export default function StructuredData() {
       parentOrganization: { "@id": orgId },
       description: BRAND.intro,
       areaServed: SERVICES_JSONLD_AREA,
+      image: `${SITE_URL}/brand/orbitworks-full-dark.png`,
+      email: BRAND.email,
+      telephone: BRAND.phone,
+      address: OFFICES.map((o) => ({
+        "@type": "PostalAddress",
+        streetAddress: o.street,
+        addressLocality: o.city,
+        addressRegion: o.region,
+        postalCode: o.postalCode,
+        addressCountry: o.countryCode,
+      })),
+      /** Google wants a hint, not a rate card. */
+      priceRange: "$$",
+      openingHoursSpecification: {
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        opens: "09:00",
+        closes: "18:00",
+      },
       hasOfferCatalog: {
         "@type": "OfferCatalog",
         name: "Services",

@@ -75,7 +75,8 @@ export default function SiteLoader() {
     let completed = 0;
     const bump = () => {
       completed += 1;
-      target.current = (completed / total) * 100;
+      // total can be 0 if there is nothing to warm — never divide by it.
+      target.current = total ? (completed / total) * 100 : 100;
     };
 
     const jobs: Promise<void>[] = PRELOAD_IMAGES.map(
@@ -92,25 +93,63 @@ export default function SiteLoader() {
         }),
     );
 
-    let probe: HTMLVideoElement | null = null;
+    /**
+     * Warm the hero by driving the REAL <video> in the page, not a detached
+     * copy of it.
+     *
+     * This used to build its own `document.createElement("video")` and point it
+     * at the same file. Both loaded concurrently, so neither could serve the
+     * other from cache and the homepage downloaded the hero loop twice —
+     * 1.75MB on mobile for nothing. Attaching to the element that is going to
+     * play anyway warms exactly the bytes the page needs.
+     *
+     * PreviewVideo ships `preload="none"` so off-screen loops stay lazy; the
+     * hero is above the fold and is the thing we are gating on, so it gets
+     * promoted to `auto` here.
+     */
+    let heroObserver: MutationObserver | null = null;
+    let heroWait = 0;
+
     if (video) {
       jobs.push(
         new Promise<void>((resolve) => {
-          const v = document.createElement("video");
-          probe = v;
-          v.muted = true;
-          v.preload = "auto";
-          v.playsInline = true;
           const settleOne = () => {
             bump();
             resolve();
           };
-          // canplaythrough = enough buffered to play without stalling; we do not
-          // wait for the full ~13MB download.
-          v.addEventListener("canplaythrough", settleOne, { once: true });
-          v.addEventListener("error", settleOne, { once: true });
-          v.src = video;
-          v.load();
+
+          const attach = (v: HTMLVideoElement) => {
+            // HAVE_FUTURE_DATA or better: already warm enough.
+            if (v.readyState >= 3) return settleOne();
+            // canplaythrough = enough buffered to play without stalling; we do
+            // not wait for the whole file.
+            v.addEventListener("canplaythrough", settleOne, { once: true });
+            v.addEventListener("error", settleOne, { once: true });
+            v.preload = "auto";
+            v.load();
+          };
+
+          const find = () =>
+            document.querySelector<HTMLVideoElement>(
+              ".wp-block-kenza-video-loop-header video",
+            );
+
+          const present = find();
+          if (present) return attach(present);
+
+          // The loader mounts inside the same tree as the hero, so ordering is
+          // not guaranteed — watch for it, and never block on it forever.
+          heroObserver = new MutationObserver(() => {
+            const v = find();
+            if (!v) return;
+            heroObserver?.disconnect();
+            attach(v);
+          });
+          heroObserver.observe(document.body, { childList: true, subtree: true });
+          heroWait = window.setTimeout(() => {
+            heroObserver?.disconnect();
+            settleOne();
+          }, 4000);
         }),
       );
     }
@@ -122,10 +161,8 @@ export default function SiteLoader() {
       cancelled = true;
       window.clearInterval(tick);
       window.clearTimeout(cap);
-      if (probe) {
-        probe.removeAttribute("src");
-        probe.load();
-      }
+      window.clearTimeout(heroWait);
+      heroObserver?.disconnect();
     };
   }, []);
 

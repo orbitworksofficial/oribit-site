@@ -13,16 +13,27 @@
 import { HEADLOOP } from "./video";
 import { MOBILE_MEDIA } from "./video";
 
-/** Stills shown in the first screens of the homepage. */
-export const PRELOAD_IMAGES: string[] = [
-  // NOTE: these are .jpeg, not .jpg — the wrong extension made every homepage
-  // load 404 three times and the loader counted the failures as "done".
-  "/media/2024/05/front.png",
-  "/media/2024/05/data.jpeg",
-  "/media/2024/05/marketing.jpeg",
-  "/media/2024/05/cloud.jpeg",
-  "/media/2024/05/11.jpg",
-];
+/**
+ * Stills shown in the first screens of the homepage.
+ *
+ * Keep this list honest — every entry is a full-size raw download on first
+ * paint, and stale entries cost real megabytes. It previously warmed:
+ *
+ *   front.png (1.66MB) — referenced nowhere on the site at all;
+ *   11.jpg    (1.14MB) — art for PILLARS, whose PillarGrid/PillarShowcase
+ *                        blocks are no longer rendered on any page;
+ *   data/marketing/cloud.jpeg — these DO appear (BucketShowcase), but that
+ *                        block renders them through next/image, so preloading
+ *                        the raw .jpeg downloaded each one twice: once here and
+ *                        once as the optimised .webp the <img> actually used.
+ *
+ * That was ~3.5MB of an 8.2MB mobile homepage spent on bytes nothing painted.
+ * The hero loop is the one asset genuinely worth gating the reveal on.
+ *
+ * NOTE: these are .jpeg, not .jpg — the wrong extension made every homepage
+ * load 404 three times and the loader counted the failures as "done".
+ */
+export const PRELOAD_IMAGES: string[] = [];
 
 /** The hero loop the browser will actually pick for this viewport. */
 export function heroVideoSrc(): string | null {

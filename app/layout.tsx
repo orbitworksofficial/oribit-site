@@ -25,13 +25,21 @@ import "./page-bg.css";
 // Constellation canvas backdrop — delete this import + <ParticleBackground/> to remove.
 import "./particles.css";
 
-import { ppMori, outfit } from "@/lib/fonts";
+/*
+ * Only Outfit is applied. PP Mori is still exported from lib/fonts.ts, but
+ * nothing resolves var(--font-mori) while the Vivacity restyle is active — and
+ * merely applying its `.variable` class shipped all 14 self-hosted faces
+ * (~700KB per page) for type that never renders. Re-add `ppMori` here and to
+ * the className below if you revert the restyle.
+ */
+import { outfit } from "@/lib/fonts";
 import { chromeFor } from "@/lib/routes";
 import { SITE_URL } from "@/lib/site";
 import TransitionEngine from "@/components/animation/TransitionEngine";
 import Nav from "@/components/layout/Nav";
 import ChromeSync from "@/components/layout/ChromeSync";
 import StructuredData from "@/components/layout/StructuredData";
+import Analytics from "@/components/layout/Analytics";
 import NavDrawer from "@/components/layout/NavDrawer";
 import SiteLoader from "@/components/layout/SiteLoader";
 import ParticleBackground from "@/components/layout/ParticleBackground";
@@ -43,7 +51,7 @@ import CookieBanner from "@/components/layout/CookieBanner";
  * TODO: metadataBase must point at the real production origin before launch —
  * OG/twitter image URLs resolve against it.
  */
-const HOME_TITLE = "AI Automation and IT Services USA | Orbit Works";
+const HOME_TITLE = "AI Automation & IT Services Company in USA | Orbit Works";
 const HOME_DESC =
   "Orbit Works delivers AI automation, digital marketing, cloud solutions, and IT talent for US businesses ready to scale. Start with a free discovery call.";
 
@@ -72,7 +80,12 @@ export const metadata: Metadata = {
     title: HOME_TITLE,
     description: HOME_DESC,
   },
-  twitter: { card: "summary_large_image", title: HOME_TITLE, description: HOME_DESC },
+  /**
+   * `summary`, not `summary_large_image`: the share card is square now (see
+   * opengraph-image.tsx), and summary_large_image would crop it to 2:1 and cut
+   * the logo. summary renders a square thumbnail, which is what the card is.
+   */
+  twitter: { card: "summary", title: HOME_TITLE, description: HOME_DESC },
   robots: { index: true, follow: true },
   icons: { icon: "/icon.svg", apple: "/brand/orbitworks-dark.png" },
 };
@@ -106,7 +119,7 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
-      className={`${outfit.variable} ${ppMori.variable}`}
+      className={outfit.variable}
       suppressHydrationWarning
     >
       <head>
@@ -129,6 +142,7 @@ export default async function RootLayout({
         <SiteFooter />
 
         <TransitionEngine />
+        <Analytics />
       </body>
     </html>
   );

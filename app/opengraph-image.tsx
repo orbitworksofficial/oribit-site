@@ -1,13 +1,26 @@
 import { ImageResponse } from "next/og";
+import { OG_MARK_DATA_URI } from "@/lib/og-mark";
 
-export const alt = "OrbitWorks: Crafting Solutions With Purpose";
-export const size = { width: 1200, height: 630 };
+export const alt = "Orbit Works: AI automation and IT services";
+/**
+ * SQUARE, deliberately.
+ *
+ * This was a 1200x630 banner. WhatsApp renders link previews as a small square
+ * thumbnail and centre-crops whatever it is given, so the banner arrived as an
+ * unreadable slice of the headline ("ng Solutions / Purpose."). A square card
+ * survives that crop intact, and every other platform letterboxes a square far
+ * more gracefully than a wide image survives being squared.
+ *
+ * Kept at 1200px: WhatsApp will not fetch previews much above ~600KB, and
+ * next/og emits well under that at this size.
+ */
+export const size = { width: 1200, height: 1200 };
 export const contentType = "image/png";
 
 /**
- * Social share card (Open Graph). A branded navy card with the orbit mark, the
- * wordmark, tagline and a crimson footer rule. Rendered by next/og at build/
- * request time — no external assets, so it always resolves.
+ * Social share card. The real brand mark centred on the navy field with the
+ * wordmark and tagline beneath, so a link shared anywhere reads as the logo
+ * rather than as cropped marketing copy.
  */
 export default function OpengraphImage() {
   return new ImageResponse(
@@ -18,68 +31,33 @@ export default function OpengraphImage() {
           width: "100%",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "space-between",
+          alignItems: "center",
+          justifyContent: "center",
           background: "linear-gradient(135deg, #0d1130 0%, #07091e 70%)",
-          padding: "80px",
           fontFamily: "sans-serif",
         }}
       >
-        {/* orbit mark */}
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <div
-            style={{
-              position: "relative",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: 96,
-              height: 96,
-            }}
-          >
-            <div
-              style={{
-                position: "absolute",
-                width: 96,
-                height: 44,
-                border: "6px solid #f3124e",
-                borderRadius: 999,
-                transform: "rotate(-28deg)",
-              }}
-            />
-            <div style={{ width: 46, height: 46, borderRadius: 999, background: "#f3124e" }} />
-          </div>
-          <div style={{ marginLeft: 28, fontSize: 44, fontWeight: 700, color: "#fdfcf7" }}>
-            OrbitWorks
-          </div>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={OG_MARK_DATA_URI} width={520} height={520} alt="" />
+
+        <div
+          style={{
+            marginTop: 24,
+            fontSize: 108,
+            fontWeight: 700,
+            color: "#fdfcf7",
+            letterSpacing: "-3px",
+          }}
+        >
+          Orbit Works
         </div>
 
-        {/* headline */}
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <div
-            style={{
-              fontSize: 78,
-              fontWeight: 700,
-              color: "#fdfcf7",
-              lineHeight: 1.05,
-              letterSpacing: "-2px",
-            }}
-          >
-            Crafting Solutions
-          </div>
-          <div style={{ fontSize: 78, fontWeight: 700, color: "#f3124e", lineHeight: 1.05, letterSpacing: "-2px" }}>
-            With Purpose.
-          </div>
-          <div style={{ marginTop: 28, fontSize: 30, color: "#c8d0de", maxWidth: 900 }}>
-            Cloud, software, data, AI and digital marketing: strategy through delivery, in one team.
-          </div>
-        </div>
-
-        {/* footer rule */}
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <div style={{ width: 90, height: 6, background: "#f3124e" }} />
-          <div style={{ marginLeft: 20, fontSize: 26, color: "#a7adbe" }}>
+        <div style={{ display: "flex", alignItems: "center", marginTop: 36 }}>
+          <div style={{ width: 70, height: 6, background: "#f3124e" }} />
+          <div style={{ marginLeft: 22, fontSize: 38, color: "#c8d0de" }}>
             Your business, in orbit.
           </div>
+          <div style={{ marginLeft: 22, width: 70, height: 6, background: "#f3124e" }} />
         </div>
       </div>
     ),

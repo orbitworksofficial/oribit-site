@@ -1,6 +1,6 @@
 import Link from "next/link";
 import NewsletterForm from "./NewsletterForm";
-import { SOCIAL, BRAND } from "@/lib/content";
+import { SOCIAL, BRAND, OFFICES } from "@/lib/content";
 import { SERVICE_BUCKETS } from "@/lib/services-data";
 import { LEGAL_DOCS } from "@/lib/legal-data";
 
@@ -75,13 +75,29 @@ export default function SiteFooter() {
               <a href={`tel:${tel}`}>{BRAND.phone}</a>
             </li>
           </ul>
-          <p className="orbit-footer__addr">
-            Baltimore, USA
-            <br />
-            100 King St W, Suite 5600,
-            <br />
-            Toronto, ON M5X 1A9, Canada
-          </p>
+          {/* Rendered from OFFICES rather than hardcoded — the two had already
+            * drifted, and an SEO audit reported the address as missing. The
+            * microdata gives crawlers a parseable NAP on every page. */}
+          {OFFICES.map((o) => (
+            <p
+              className="orbit-footer__addr"
+              key={o.city}
+              itemScope
+              itemType="https://schema.org/PostalAddress"
+            >
+              {o.street && (
+                <>
+                  <span itemProp="streetAddress">{o.street}</span>
+                  <br />
+                </>
+              )}
+              <span itemProp="addressLocality">{o.city}</span>
+              {o.region && <>, <span itemProp="addressRegion">{o.region}</span></>}
+              {o.postalCode && <> <span itemProp="postalCode">{o.postalCode}</span></>}
+              <br />
+              <span itemProp="addressCountry">{o.country}</span>
+            </p>
+          ))}
 
           {/* Hidden until real handles exist — see SOCIAL in lib/content.ts. */}
           {SOCIAL.length > 0 && (

@@ -50,4 +50,14 @@ export const ppMori = localFont({
   display: "swap",
   variable: "--font-mori",
   fallback: ["sans-serif"],
+  /**
+   * next/font preloads every declared face by default, and it does so from the
+   * @font-face block alone — not from whether any CSS rule resolves the family.
+   * With the Vivacity restyle active nothing uses --font-mori, so all 14 faces
+   * (~570KB) were being fetched on every page for type that never renders.
+   *
+   * `preload: false` keeps the family defined and one revert away: the faces
+   * now download only if a rule actually asks for them.
+   */
+  preload: false,
 });
