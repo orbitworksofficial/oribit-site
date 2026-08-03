@@ -54,17 +54,24 @@ export const HEADLOOP: VideoSet = {
   poster: "/media/2024/05/hero-poster.jpg",
 };
 
-/** Circles loop inside the front-page image cluster. */
+/**
+ * Orbit motif loop, behind the "Every orbit begins with a conversation" band.
+ *
+ * Was the ported theme's top_circles clip; now our own orbit_animation
+ * (1080x426, re-encoded from a 1.8MB source into the six variants below).
+ * The name is kept because the front-page cluster no longer uses this set —
+ * it declares its own loop locally in FrontPageImageCluster.tsx.
+ */
 export const TOP_CIRCLES: VideoSet = {
   desktop: {
-    mp4: `${V}/top_circles_new-2.mp4`,
-    webm: `${V}/top_circles_new-2.webm`,
-    hevc: `${V}/top_circles_new-2_hevc.mp4`,
+    mp4: `${V}/orbit_animation.mp4`,
+    webm: `${V}/orbit_animation.webm`,
+    hevc: `${V}/orbit_animation_hevc.mp4`,
   },
   mobile: {
-    mp4: `${V}/top_circles_new-2_mob.mp4`,
-    webm: `${V}/top_circles_new-2_mob.webm`,
-    hevc: `${V}/top_circles_new-2_mob_hevc.mp4`,
+    mp4: `${V}/orbit_animation_mob.mp4`,
+    webm: `${V}/orbit_animation_mob.webm`,
+    hevc: `${V}/orbit_animation_mob_hevc.mp4`,
   },
 };
 
