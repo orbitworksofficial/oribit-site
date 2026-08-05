@@ -16,5 +16,5 @@ export const SERVICE_IMAGES: Record<string, string> = {
   "power-platform": "/services/product.jpeg",
   "it-consulting": "/services/Services-Metaverse-Design-and-Development.jpeg",
   "website-maintenance": "/services/accelerating-thumb-1223x800.jpeg",
-  "staff-augmentation-talent": "/services/11.jpeg",
+  "staff-augmentation-talent": "/services/staff aug.jpeg",
 };

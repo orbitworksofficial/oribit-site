@@ -1,5 +1,5 @@
 import { BRAND } from "@/lib/content";
-import { TOP_CIRCLES } from "@/lib/video";
+import { MIRROR_PORTRAIT } from "@/lib/video";
 import PreviewVideo from "@/components/blocks/PreviewVideo";
 
 /**
@@ -9,15 +9,16 @@ import PreviewVideo from "@/components/blocks/PreviewVideo";
  * `.contact-footer[data-transition="slideup"]`, so both the class and the
  * attribute are load-bearing.
  *
- * Now a dark video band: a looping orbit motif behind a navy scrim, with the
- * copy in the warm off-white on top (see .contact-footer in orbit.css). data-video
- * is the theme's styling hook that fades the loop in on `js-ready`.
+ * Now a dark video band: the same loop and the same crimson duotone as the
+ * homepage's "Industries We Empower" section, so the two dark bands read as one
+ * treatment (see .contact-footer in vivacity.css). data-video is the theme's
+ * styling hook that fades the loop in on `js-ready`.
  */
 export default function ContactFooter() {
   return (
     <article className="contact-footer" data-transition="slideup">
       <div className="contact-footer__bg" data-video="" aria-hidden="true">
-        <PreviewVideo sources={TOP_CIRCLES} />
+        <PreviewVideo sources={MIRROR_PORTRAIT} />
       </div>
       <div className="contact-footer__inner">
         <h3 className="book">

@@ -351,6 +351,9 @@ main h1.orbit-hub-title {
   padding: 0;
 }
 
+/* Anchors now, not buttons — the sidebar is a table of contents over one long
+ * scroll, so each tab is a real link to its bucket. text-decoration and the
+ * inherited link colour have to be reset for that. */
 .orbit-svcx__tab {
   align-items: center;
   background: none;
@@ -363,6 +366,7 @@ main h1.orbit-hub-title {
   gap: 1.4rem;
   padding: 1.5rem 1.6rem;
   text-align: left;
+  text-decoration: none;
   transition: color 0.3s var(--ease), background 0.3s var(--ease),
     border-color 0.3s var(--ease);
   width: 100%;
@@ -411,9 +415,19 @@ main h1.orbit-hub-title {
   margin-top: 0.3rem;
 }
 
-/* --- panel --- */
+/* --- panels ---
+ * Every bucket is mounted, stacked vertically. The gap is what separates one
+ * category from the next now that they are no longer swapped in and out. */
+.orbit-svcx__panels {
+  display: flex;
+  flex-direction: column;
+  gap: 9rem;
+  min-width: 0;
+}
+
 .orbit-svcx__panel {
   --bucket-accent: var(--orbit);
+  /* Clears the fixed nav when a tab click or a #hash scrolls here. */
   scroll-margin-top: 12rem;
 }
 
@@ -655,55 +669,20 @@ main h1.orbit-hub-title {
   }
 }
 
-/* ------------------------------------------- category switch animation --
- * Clicking a sidebar category fades the current panel out (.is-leaving), then
- * React remounts the panel (keyed by slug) so the enter animation replays and
- * the cards stagger in.
+/* --------------------------------------------- panel reveal animation --
+ * All four buckets are mounted at once now (the sidebar is a table of contents
+ * over one long scroll, not a panel switcher), so the old enter/leave pair is
+ * gone. Cards reveal once as they scroll in instead.
+ *
+ * The stagger is kept but capped: with every bucket in the DOM, a delay per
+ * nth-child would leave the seventh card of a long bucket visibly late.
  */
-.orbit-svcx__panel {
-  animation: orbit-panel-in 0.45s var(--ease) both;
-}
-
-.orbit-svcx__panel.is-leaving {
-  animation: orbit-panel-out 0.19s var(--ease) forwards;
-}
-
-@keyframes orbit-panel-in {
-  from {
-    opacity: 0;
-    transform: translate3d(0, 1.6rem, 0);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@keyframes orbit-panel-out {
-  from {
-    opacity: 1;
-    transform: none;
-  }
-  to {
-    opacity: 0;
-    transform: translate3d(0, -0.8rem, 0);
-  }
-}
-
-/* Cards stagger in behind the panel. */
-.orbit-svcx__panel:not(.is-leaving) .orbit-svcard {
+.orbit-svcx__panel .orbit-svcard {
   animation: orbit-card-in 0.5s var(--ease) both;
+  animation-timeline: view();
+  animation-range: entry 0% cover 22%;
 }
 
-.orbit-svcx__panel .orbit-svcard:nth-child(1) { animation-delay: 0.06s; }
-.orbit-svcx__panel .orbit-svcard:nth-child(2) { animation-delay: 0.12s; }
-.orbit-svcx__panel .orbit-svcard:nth-child(3) { animation-delay: 0.18s; }
-.orbit-svcx__panel .orbit-svcard:nth-child(4) { animation-delay: 0.24s; }
-.orbit-svcx__panel .orbit-svcard:nth-child(5) { animation-delay: 0.3s; }
-.orbit-svcx__panel .orbit-svcard:nth-child(6) { animation-delay: 0.36s; }
-.orbit-svcx__panel .orbit-svcard:nth-child(7) { animation-delay: 0.42s; }
-
-/* Odd cards drift in from the left, even from the right — matches the zig-zag. */
 @keyframes orbit-card-in {
   from {
     opacity: 0;
@@ -715,10 +694,19 @@ main h1.orbit-hub-title {
   }
 }
 
+/* Browsers without scroll-driven animations get the cards immediately rather
+ * than stuck at opacity 0 — animation-timeline is ignored there, so pin the
+ * end state explicitly. */
+@supports not (animation-timeline: view()) {
+  .orbit-svcx__panel .orbit-svcard {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .orbit-svcx__panel,
-  .orbit-svcx__panel.is-leaving,
-  .orbit-svcx__panel:not(.is-leaving) .orbit-svcard {
+  .orbit-svcx__panel .orbit-svcard {
     animation: none;
     opacity: 1;
     transform: none;

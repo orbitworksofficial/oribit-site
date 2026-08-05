@@ -101,7 +101,11 @@ export default function Industries() {
         <h2 className="orbit-section-head">
           Industry-Specific IT Solutions USA Companies Are Already Using
         </h2>
-        <p className="has-text-align-left large large-intro shorten shorten-70 wp-block-paragraph">
+        {/* `shorten-70` capped this at 70% while the spotlight grid below runs
+          * the full width, which left a dead band down the right-hand side.
+          * A ch-based measure keeps the line length readable without leaving a
+          * column of nothing beside it. */}
+        <p className="has-text-align-left large large-intro wp-block-paragraph orbit-lead-wide">
           Here&rsquo;s how we apply our core capabilities (AI, cloud, marketing, and talent) to real
           industries with real challenges. These aren&rsquo;t hypotheticals. This is what our IT
           Solutions USA expertise looks like in action.

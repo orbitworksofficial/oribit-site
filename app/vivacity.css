@@ -246,8 +246,16 @@ footer.invert .footer > .inner {
   background: var(--navy);
 }
 
-/* Looping orbit motif, covered by a navy scrim for legibility. */
+/* Looping motif under a crimson duotone — the same clip and the same filter
+ * chain as "Industries We Empower" (see .orbit-bgvideo--crimson in orbit.css),
+ * so the two dark bands read as one treatment rather than two accidents.
+ *
+ * The chain is the standard duotone recipe: flatten to luminance, warm it with
+ * sepia, rotate the resulting ~40deg gold down onto red, push saturation back
+ * up. Opacity is higher than the old navy version because the tint is doing the
+ * legibility work that the scrim used to. */
 .contact-footer__bg {
+  background: #16040c;
   inset: 0;
   overflow: hidden;
   position: absolute;
@@ -255,21 +263,25 @@ footer.invert .footer > .inner {
 }
 
 .contact-footer__bg video {
+  filter: grayscale(1) brightness(0.9) contrast(1.2) sepia(1) hue-rotate(-56deg) saturate(5.5);
   height: 100%;
   left: 0;
   object-fit: cover;
-  opacity: 0.55;
+  opacity: 0.85;
   position: absolute;
   top: 0;
   width: 100%;
 }
 
 .contact-footer::before {
-  background: radial-gradient(
-    120% 120% at 50% 40%,
-    rgba(7, 9, 30, 0.62),
-    rgba(7, 9, 30, 0.9)
-  );
+  background:
+    radial-gradient(72% 58% at 50% 42%, rgba(254, 6, 59, 0.3), transparent 74%),
+    linear-gradient(
+      165deg,
+      rgba(140, 5, 38, 0.5) 0%,
+      rgba(22, 4, 12, 0.72) 52%,
+      rgba(100, 3, 28, 0.55) 100%
+    );
   content: "";
   inset: 0;
   position: absolute;
@@ -285,13 +297,20 @@ footer.invert .footer > .inner {
   color: var(--orbit-paper);
 }
 
+/* Off-white, not brand crimson: the band behind this is now crimson too, and
+ * crimson-on-crimson left the address barely readable. The underline carries
+ * the "this is a link" signal that the colour used to. */
 .contact-footer a {
-  color: var(--orbit);
-  transition: color 0.3s var(--ease);
+  color: var(--orbit-paper);
+  text-decoration: underline;
+  text-decoration-color: rgba(254, 6, 59, 0.55);
+  text-underline-offset: 0.5rem;
+  transition: color 0.3s var(--ease), text-decoration-color 0.3s var(--ease);
 }
 
 .contact-footer a:hover {
   color: var(--orbit-paper);
+  text-decoration-color: var(--orbit-paper);
 }
 
 /* ------------------------------------------------------------------ pills --

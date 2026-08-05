@@ -573,7 +573,7 @@ export const CLIENTS = TESTIMONIALS.map((t) => t.client);
 export type TeamMember = { name: string; role: string; photo?: string };
 
 export const TEAM: TeamMember[] = [
-  { name: "Muhammad Haider", role: "CEO", photo: "/brand/team/haider.jpeg" },
+  { name: "Muhammad Haider", role: "CEO", photo: "/brand/team/haider.jpe00g" },
   { name: "Muhammad Anis", role: "CFO", photo: "/brand/team/anis.jpeg" },
   { name: "Muhammad Usman", role: "Data Analyst", photo: "/brand/team/usama.jpeg" },
     { name: "Kainat Fazal", role: "Sr Seo Expert", photo: "/brand/team/kainat.jpeg" },
@@ -620,11 +620,11 @@ export const OFFICES: Office[] = [
   {
     country: "Canada",
     countryCode: "CA",
-    city: "Toronto",
+    city: "Beechville",
     region: "ON",
     postalCode: "M5X 1A9",
-    street: "100 King St W, Suite 5600",
-    address: "100 King St W, Suite 5600, Toronto, ON M5X 1A9",
+    street: "1213 States Ln,  Beechville, NS B3T 2J3, Canada",
+    address: "213 States Ln,  Beechville, NS B3T 2J3, Canada",
   },
 ];
 

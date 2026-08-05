@@ -2765,6 +2765,14 @@ main .orbit-pagehero--center h1.deco-l {
   max-width: none;
 }
 
+/* Intro paragraph above a full-width grid (e.g. the Industries spotlights).
+ * The theme's `shorten-70` caps at 70% of the container, which leaves a dead
+ * band beside it when the content below runs edge to edge. A ch measure keeps
+ * the line readable and the ragged right much closer to the grid. */
+.orbit-lead-wide {
+  max-width: 92ch;
+}
+
 .orbit-sec__body > p.large-intro {
   color: var(--ink);
   font-size: 2rem;
