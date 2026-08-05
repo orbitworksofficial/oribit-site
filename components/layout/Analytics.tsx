@@ -12,10 +12,11 @@ import Script from "next/script";
  * `afterInteractive` keeps the tag off the critical path — it loads once the
  * page is usable, so it does not push out LCP or Time to Interactive.
  *
- * NOTE ON CONSENT: the site shows a cookie banner, and GA sets cookies. This
- * loads the tag with Consent Mode defaulting to denied, then CookieBanner is
- * responsible for calling gtag('consent', 'update', ...) on accept. Wiring the
- * banner to that call is the remaining step if you operate under GDPR/ePrivacy.
+ * CONSENT: the tag boots with Consent Mode denied, so nothing is stored until
+ * the visitor accepts the cookie banner. Pageviews still reach Google in that
+ * state, but without a _ga cookie they are modelled rather than counted.
+ * CookieBanner calls grantAnalyticsConsent() on accept — and replays it on
+ * later visits, when the banner no longer shows. See lib/consent.
  */
 export default function Analytics() {
   const id = process.env.NEXT_PUBLIC_GA_ID;

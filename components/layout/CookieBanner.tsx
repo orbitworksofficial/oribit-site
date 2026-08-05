@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect } from "react";
+import { CONSENT_KEY, grantAnalyticsConsent, hasAnalyticsConsent } from "@/lib/consent";
 
 /**
  * Port of modules/cookie-banner.
@@ -10,23 +11,22 @@ import { useEffect } from "react";
  * `.cookie` and runs the dismiss transition on `.cookie-animate`. The 1s/2s
  * timings below are what the CSS transition is cut to — shortening them clips
  * the animation.
+ *
+ * It is also the gate for Google Consent Mode: Analytics.tsx boots with
+ * analytics_storage denied, and accepting here is what grants it. See
+ * lib/consent.
  */
-
-const CONSENT_KEY = "cookie-check";
-
-function hasConsented(): boolean {
-  if (/__hs_initial_opt_in/.test(document.cookie)) return true;
-  try {
-    return Boolean(localStorage.getItem(CONSENT_KEY));
-  } catch {
-    // Safari private mode throws on localStorage access.
-    return false;
-  }
-}
 
 export default function CookieBanner() {
   useEffect(() => {
-    if (hasConsented()) return;
+    // Already accepted on an earlier visit: the banner stays hidden, but the
+    // grant still has to be replayed or GA reverts to the denied default and
+    // every return visit is modelled instead of counted.
+    if (hasAnalyticsConsent()) {
+      grantAnalyticsConsent();
+      return;
+    }
+
     const t = window.setTimeout(
       () => document.documentElement.classList.add("cookie"),
       1000,
@@ -42,6 +42,10 @@ export default function CookieBanner() {
       html.classList.remove("cookie");
     }, 1000);
     window.setTimeout(() => html.classList.remove("cookie-animate"), 2000);
+
+    // Consent is now genuinely given — let GA store its cookie, which is what
+    // turns modelled pageviews into exact user and session counts.
+    grantAnalyticsConsent();
 
     // The theme defers to HubSpot's own opt-in button when its banner is present.
     const hs = document.querySelector<HTMLElement>("#hs-eu-confirmation-button");
