@@ -5,9 +5,15 @@ import PageHero from "@/components/blocks/PageHero";
 import Stats from "@/components/blocks/Stats";
 import TeamGrid from "@/components/blocks/TeamGrid";
 import { OFFICES } from "@/lib/content";
-import { pageMetadata } from "@/lib/seo";
+import { pageMetadataFromDb } from "@/lib/page-seo";
 
-export const metadata: Metadata = pageMetadata("/about");
+/**
+ * Editable from the dashboard (Page SEO -> /about), falling back to the
+ * hardcoded copy in lib/routes.ts when no override is set.
+ */
+export async function generateMetadata(): Promise<Metadata> {
+  return pageMetadataFromDb("/about");
+}
 
 /** Philosophy / values, rendered as ticked lists. */
 const PHILOSOPHY = [

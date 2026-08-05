@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Runtime uploads from the dashboard. The files are user content, not source:
+# they belong on the server (or object storage), never in the repo.
+/public/uploads/

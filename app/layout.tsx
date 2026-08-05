@@ -39,6 +39,7 @@ import TransitionEngine from "@/components/animation/TransitionEngine";
 import Nav from "@/components/layout/Nav";
 import ChromeSync from "@/components/layout/ChromeSync";
 import StructuredData from "@/components/layout/StructuredData";
+import PageSchema from "@/components/layout/PageSchema";
 import Analytics from "@/components/layout/Analytics";
 import NavDrawer from "@/components/layout/NavDrawer";
 import SiteLoader from "@/components/layout/SiteLoader";
@@ -116,6 +117,16 @@ export default async function RootLayout({
   const pathname = (await headers()).get("x-pathname") ?? "/";
   const { body } = chromeFor(pathname);
 
+  /**
+   * The admin panel is a different application that happens to share a domain.
+   * It gets none of the marketing chrome: no nav, no footer, no cookie banner,
+   * no particle canvas, no loader, and none of the transition engine — those
+   * exist for the public site and only get in the way of a CMS. It also skips
+   * the Organization JSON-LD and analytics, neither of which belongs on a
+   * signed-in admin screen.
+   */
+  const isAdmin = pathname.startsWith("/admin");
+
   return (
     <html
       lang="en"
@@ -123,26 +134,40 @@ export default async function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        <script dangerouslySetInnerHTML={{ __html: BOOT }} />
-        <StructuredData />
+        {!isAdmin && <script dangerouslySetInnerHTML={{ __html: BOOT }} />}
+        {!isAdmin && <StructuredData />}
+        {/*
+          Per-page JSON-LD authored in the dashboard (Page SEO -> Schema
+          markup). Emitted here rather than in each of the thirteen pages
+          because the layout already resolves the pathname, and pageSchema()
+          returns null for any route without a stored value. Blog posts carry
+          their own, added in app/blogs/[slug]/page.tsx.
+        */}
+        {!isAdmin && !pathname.startsWith("/blogs/") && <PageSchema path={pathname} />}
       </head>
-      <body className={body}>
-        <ParticleBackground />
-        <SiteLoader />
-        <ChromeSync />
-        <NavDrawer />
-        <a id="top" className="top-link" />
+      <body className={isAdmin ? "adm-body" : body}>
+        {isAdmin ? (
+          children
+        ) : (
+          <>
+            <ParticleBackground />
+            <SiteLoader />
+            <ChromeSync />
+            <NavDrawer />
+            <a id="top" className="top-link" />
 
-        <Nav pathname={pathname} />
+            <Nav pathname={pathname} />
 
-        {children}
+            {children}
 
-        <CookieBanner />
-        <ContactFooter />
-        <SiteFooter />
+            <CookieBanner />
+            <ContactFooter />
+            <SiteFooter />
 
-        <TransitionEngine />
-        <Analytics />
+            <TransitionEngine />
+            <Analytics />
+          </>
+        )}
       </body>
     </html>
   );

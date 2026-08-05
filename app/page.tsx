@@ -1,5 +1,7 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
+import { metadataFromDb } from "@/lib/page-seo";
 import VideoLoopHeader from "@/components/blocks/VideoLoopHeader";
 import FrontPageImageCluster from "@/components/blocks/FrontPageImageCluster";
 import ClientMarquee from "@/components/blocks/ClientMarquee";
@@ -13,6 +15,19 @@ import { MIRROR_PORTRAIT } from "@/lib/video";
 import { BRAND, INDUSTRIES, SECTIONS, WHY, APPROACH, CASE_RESULTS } from "@/lib/content";
 import { SERVICES_HOMEPAGE, SERVICE_BUCKETS } from "@/lib/services-data";
 import { HOME_CASE_CARDS } from "@/lib/home-content";
+
+/**
+ * Editable from the dashboard (Page SEO -> /).
+ *
+ * The base is empty rather than a copy of the homepage title and description:
+ * those live in app/layout.tsx and are inherited, so duplicating them here
+ * would create a second place to keep in step. An empty base means every key
+ * below is only ever set when the dashboard actually holds a value, and the
+ * layout's metadata shows through untouched otherwise.
+ */
+export async function generateMetadata(): Promise<Metadata> {
+  return metadataFromDb("/", {});
+}
 
 /**
  * OrbitWorks homepage.

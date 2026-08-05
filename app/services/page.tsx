@@ -5,9 +5,15 @@ import PageHero from "@/components/blocks/PageHero";
 import ServiceExplorer from "@/components/blocks/ServiceExplorer";
 import Testimonials from "@/components/blocks/Testimonials";
 import { SERVICES_HUB } from "@/lib/services-data";
-import { pageMetadata } from "@/lib/seo";
+import { pageMetadataFromDb } from "@/lib/page-seo";
 
-export const metadata: Metadata = pageMetadata("/services");
+/**
+ * Editable from the dashboard (Page SEO -> /services), falling back to the
+ * hardcoded copy in lib/routes.ts when no override is set.
+ */
+export async function generateMetadata(): Promise<Metadata> {
+  return pageMetadataFromDb("/services");
+}
 
 export default function Services() {
   return (

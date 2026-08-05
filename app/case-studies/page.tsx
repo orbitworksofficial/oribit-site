@@ -4,9 +4,15 @@ import Link from "next/link";
 import PageHeader from "@/components/blocks/PageHeader";
 import Testimonials from "@/components/blocks/Testimonials";
 import { CASE_STUDIES } from "@/lib/content";
-import { pageMetadata } from "@/lib/seo";
+import { pageMetadataFromDb } from "@/lib/page-seo";
 
-export const metadata: Metadata = pageMetadata("/case-studies");
+/**
+ * Editable from the dashboard (Page SEO -> /case-studies), falling back to the
+ * hardcoded copy in lib/routes.ts when no override is set.
+ */
+export async function generateMetadata(): Promise<Metadata> {
+  return pageMetadataFromDb("/case-studies");
+}
 
 export default function CaseStudies() {
   return (

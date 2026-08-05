@@ -3,10 +3,16 @@ import type { Metadata } from "next";
 import PageHero from "@/components/blocks/PageHero";
 import { BRAND, OFFICES } from "@/lib/content";
 import { SERVICE_TITLES } from "@/lib/services-data";
-import { pageMetadata } from "@/lib/seo";
+import { pageMetadataFromDb } from "@/lib/page-seo";
 import ContactForm from "@/components/layout/ContactForm";
 
-export const metadata: Metadata = pageMetadata("/contact");
+/**
+ * Editable from the dashboard (Page SEO -> /contact), falling back to the
+ * hardcoded copy in lib/routes.ts when no override is set.
+ */
+export async function generateMetadata(): Promise<Metadata> {
+  return pageMetadataFromDb("/contact");
+}
 
 export default function Contact() {
   return (

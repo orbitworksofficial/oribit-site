@@ -1,5 +1,5 @@
 import { SITE_URL } from "@/lib/site";
-import type { Post } from "@/lib/content";
+import type { PublicPost } from "@/lib/public-blogs";
 
 /**
  * Article + BreadcrumbList JSON-LD for a blog post.
@@ -9,8 +9,21 @@ import type { Post } from "@/lib/content";
  * reference the site Organization by @id (emitted in StructuredData) rather than
  * repeating the publisher details.
  */
-export default function ArticleSchema({ post }: { post: Post }) {
+export default function ArticleSchema({ post }: { post: PublicPost }) {
   const url = `${SITE_URL}/blogs/${post.slug}`;
+
+  /**
+   * Word count from whichever body shape the post carries.
+   *
+   * Posts from the database store their content as HTML in `html` and leave
+   * `body` empty, so the previous `post.body.join(" ")` reported wordCount 1 for
+   * every post once the blog moved to MongoDB. Tags are stripped before
+   * counting so markup is not counted as words.
+   */
+  const text = post.html
+    ? post.html.replace(/<[^>]*>/g, " ")
+    : post.body.join(" ");
+  const wordCount = text.split(/\s+/).filter(Boolean).length;
 
   const graph = [
     {
@@ -25,7 +38,7 @@ export default function ArticleSchema({ post }: { post: Post }) {
       image: [`${SITE_URL}${post.image}`],
       mainEntityOfPage: { "@type": "WebPage", "@id": url },
       articleSection: post.kind,
-      wordCount: post.body.join(" ").split(/\s+/).length,
+      wordCount,
       inLanguage: "en-US",
     },
     {

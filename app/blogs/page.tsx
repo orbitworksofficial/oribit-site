@@ -2,14 +2,20 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import PageHero from "@/components/blocks/PageHero";
-import { BLOGS } from "@/lib/content";
-import { pageMetadata } from "@/lib/seo";
+import { getPosts } from "@/lib/public-blogs";
+import { pageMetadataFromDb } from "@/lib/page-seo";
 import { formatPostDate } from "@/lib/dates";
 
-export const metadata: Metadata = pageMetadata("/blogs");
+/**
+ * Editable from the dashboard (Page SEO -> /blogs), falling back to the
+ * hardcoded copy in lib/routes.ts when no override is set.
+ */
+export async function generateMetadata(): Promise<Metadata> {
+  return pageMetadataFromDb("/blogs");
+}
 
-export default function Blogs() {
-  const [lead, ...rest] = BLOGS;
+export default async function Blogs() {
+  const [lead, ...rest] = await getPosts();
 
   return (
     <main>
@@ -27,6 +33,21 @@ export default function Blogs() {
       />
 
       {/* Lead post gets the wide treatment; the rest run as a grid. */}
+      {/*
+        Guarded because the post list is no longer a hardcoded array: an admin
+        can unpublish everything, and `lead.slug` on an empty list would take
+        the whole page down with a runtime error.
+      */}
+      {!lead ? (
+        <div
+          className="wp-block-kenza-column-constraint column-constraint cols-12"
+          data-transition="slideup"
+        >
+          <p className="orbit-lead">
+            No posts published yet. Check back shortly.
+          </p>
+        </div>
+      ) : (
       <div
         className="wp-block-kenza-column-constraint column-constraint cols-12"
         data-transition="slideup"
@@ -69,6 +90,7 @@ export default function Blogs() {
           ))}
         </ul>
       </div>
+      )}
     </main>
   );
 }

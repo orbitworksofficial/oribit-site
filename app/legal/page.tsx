@@ -1,13 +1,21 @@
 import type { Metadata } from "next";
 
+import { metadataFromDb } from "@/lib/page-seo";
+
 import PageHeader from "@/components/blocks/PageHeader";
 import { BRAND, OFFICES } from "@/lib/content";
 
-export const metadata: Metadata = {
-  title: "Legal | OrbitWorks",
-  description: "Privacy, cookies and company details for OrbitWorks.",
-  robots: { index: false, follow: true },
-};
+/**
+ * Editable from the dashboard (Page SEO -> /legal); the object below is the
+ * fallback used when no override is stored.
+ */
+export async function generateMetadata(): Promise<Metadata> {
+  return metadataFromDb("/legal", {
+    title: "Legal | OrbitWorks",
+    description: "Privacy, cookies and company details for OrbitWorks.",
+    robots: { index: false, follow: true },
+  });
+}
 
 /**
  * Exists because the cookie banner and footer both link here — a consent banner

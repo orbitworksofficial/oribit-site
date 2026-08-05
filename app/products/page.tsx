@@ -3,9 +3,15 @@ import Link from "next/link";
 
 import PageHeader from "@/components/blocks/PageHeader";
 import { PRODUCTS } from "@/lib/content";
-import { pageMetadata } from "@/lib/seo";
+import { pageMetadataFromDb } from "@/lib/page-seo";
 
-export const metadata: Metadata = pageMetadata("/products");
+/**
+ * Editable from the dashboard (Page SEO -> /products), falling back to the
+ * hardcoded copy in lib/routes.ts when no override is set.
+ */
+export async function generateMetadata(): Promise<Metadata> {
+  return pageMetadataFromDb("/products");
+}
 
 export default function Products() {
   return (

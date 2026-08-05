@@ -3,9 +3,15 @@ import Link from "next/link";
 
 import PageHeader from "@/components/blocks/PageHeader";
 import { RESOURCES } from "@/lib/content";
-import { pageMetadata } from "@/lib/seo";
+import { pageMetadataFromDb } from "@/lib/page-seo";
 
-export const metadata: Metadata = pageMetadata("/resources");
+/**
+ * Editable from the dashboard (Page SEO -> /resources), falling back to the
+ * hardcoded copy in lib/routes.ts when no override is set.
+ */
+export async function generateMetadata(): Promise<Metadata> {
+  return pageMetadataFromDb("/resources");
+}
 
 export default function Resources() {
   return (

@@ -4,9 +4,15 @@ import Link from "next/link";
 import PageHero from "@/components/blocks/PageHero";
 import Testimonials from "@/components/blocks/Testimonials";
 import { INDUSTRIES, INDUSTRY_SPOTLIGHTS } from "@/lib/content";
-import { pageMetadata } from "@/lib/seo";
+import { pageMetadataFromDb } from "@/lib/page-seo";
 
-export const metadata: Metadata = pageMetadata("/industries");
+/**
+ * Editable from the dashboard (Page SEO -> /industries), falling back to the
+ * hardcoded copy in lib/routes.ts when no override is set.
+ */
+export async function generateMetadata(): Promise<Metadata> {
+  return pageMetadataFromDb("/industries");
+}
 
 /** "Why generic IT fails" proof points. */
 const WHY_GENERIC_FAILS = [
