@@ -573,7 +573,7 @@ export const CLIENTS = TESTIMONIALS.map((t) => t.client);
 export type TeamMember = { name: string; role: string; photo?: string };
 
 export const TEAM: TeamMember[] = [
-  { name: "Muhammad Haider", role: "CEO", photo: "/brand/team/haider.jpe00g" },
+  { name: "Muhammad Haider", role: "CEO", photo: "/brand/team/haider.jpeg" },
   { name: "Muhammad Anis", role: "CFO", photo: "/brand/team/anis.jpeg" },
   { name: "Muhammad Usman", role: "Data Analyst", photo: "/brand/team/usama.jpeg" },
     { name: "Kainat Fazal", role: "Sr Seo Expert", photo: "/brand/team/kainat.jpeg" },
