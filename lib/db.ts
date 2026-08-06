@@ -29,11 +29,37 @@ function connect(): Promise<MongoClient> {
     );
   }
 
+  /**
+   * Tuned for serverless, where the maths is not per-process but per-container.
+   *
+   * Vercel runs each invocation in its own short-lived container, so a pool of
+   * ten across twenty warm containers is two hundred connections to a free-tier
+   * cluster that allows five hundred. Atlas responds by closing sockets, which
+   * surfaced as intermittent MongoServerSelectionError / ReplicaSetNoPrimary
+   * with a SystemOverloadedError label — pages 500ing at random while the
+   * cluster itself was perfectly healthy.
+   *
+   * A small pool per container is the standard fix: each one only ever handles
+   * a handful of concurrent requests, so five is ample and the total stays far
+   * below the cap.
+   */
   const client = new MongoClient(URI, {
-    // Atlas' default pool is 100; the admin panel is single-tenant and Hostinger
-    // is not generous with connections. Ten is plenty and leaves headroom.
-    maxPoolSize: 10,
+    maxPoolSize: 5,
+    minPoolSize: 0,
+    // Return a socket to the pool quickly rather than holding it for a
+    // container that may never serve another request.
+    maxIdleTimeMS: 15_000,
+    /**
+     * Fail fast instead of hanging the request. The default is 30s, which on a
+     * serverless function means the invocation times out before Mongo gives up
+     * — the user waits half a minute for a blank error rather than seeing the
+     * page's own fallback.
+     */
+    serverSelectionTimeoutMS: 8_000,
+    connectTimeoutMS: 8_000,
+    socketTimeoutMS: 20_000,
     retryWrites: true,
+    retryReads: true,
   });
 
   return client.connect();
@@ -49,7 +75,19 @@ function connect(): Promise<MongoClient> {
  */
 function clientPromise(): Promise<MongoClient> {
   if (!global._mongoClientPromise) {
-    global._mongoClientPromise = connect();
+    /**
+     * Clear the cached promise if the connection fails, so the next request
+     * retries instead of awaiting the same rejected promise forever.
+     *
+     * Without this, a single transient network blip — an Atlas failover, a
+     * cold container losing a race — poisoned that container for its whole
+     * lifetime: every subsequent request re-awaited the stored rejection and
+     * 500ed, even after the cluster recovered.
+     */
+    global._mongoClientPromise = connect().catch((err) => {
+      global._mongoClientPromise = undefined;
+      throw err;
+    });
   }
   return global._mongoClientPromise;
 }

@@ -1153,3 +1153,60 @@ body.adm-body [data-transition] {
 .adm-img__pathlabel {
   color: var(--faint);
 }
+
+/* ------------------------------------------------------------ error state -- */
+.adm-fail {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 24px;
+}
+
+.adm-fail__box {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  box-shadow: var(--shadow);
+  color: var(--muted);
+  max-width: 460px;
+  padding: 34px 30px;
+  text-align: center;
+}
+
+.adm-fail__box svg {
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+
+.adm-fail__box h1 {
+  color: var(--ink);
+  font-size: 19px;
+  font-weight: 640;
+  margin-bottom: 8px;
+}
+
+.adm-fail__box p {
+  font-size: 13.5px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.adm-fail__actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.adm-fail__digest {
+  border-top: 1px solid var(--line);
+  color: var(--faint);
+  font-size: 11.5px;
+  margin-top: 22px;
+  padding-top: 14px;
+}
+
+.adm-fail__digest code {
+  font-family: var(--font-mono), ui-monospace, monospace;
+}
