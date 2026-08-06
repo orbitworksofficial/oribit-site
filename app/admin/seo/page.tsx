@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { requireAdminPage } from "@/lib/auth";
+import { requireUserPage } from "@/lib/auth";
 import { listPageSeo } from "@/lib/seo-settings";
 import { deletePageSeoAction } from "../actions";
 
@@ -17,7 +17,7 @@ function completeness(d: {
 }
 
 export default async function SeoIndex() {
-  await requireAdminPage();
+  await requireUserPage();
   const pages = await listPageSeo();
 
   return (

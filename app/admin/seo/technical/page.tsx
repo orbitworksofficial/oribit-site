@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { requireAdminPage } from "@/lib/auth";
+import { requireUserPage } from "@/lib/auth";
 import { listPublishedBlogs } from "@/lib/blogs";
 import { listPageSeo } from "@/lib/seo-settings";
 import { INDEXABLE_ROUTES, NOINDEX_ROUTES, SITE_URL } from "@/lib/site";
@@ -17,7 +17,7 @@ export const dynamic = "force-dynamic";
  * served and where each part comes from.
  */
 export default async function TechnicalSeo() {
-  await requireAdminPage();
+  await requireUserPage();
 
   const [posts, seoPages] = await Promise.all([listPublishedBlogs(), listPageSeo()]);
   const urlCount = INDEXABLE_ROUTES.length + posts.length;

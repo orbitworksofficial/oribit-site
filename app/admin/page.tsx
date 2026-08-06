@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { getDashboardStats, listBlogs } from "@/lib/blogs";
 import { isDbConfigured } from "@/lib/db";
-import { requireUser } from "@/lib/auth";
+import { requireUserPage } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
@@ -16,7 +16,7 @@ function fmtDate(iso: string | null) {
 }
 
 export default async function AdminDashboard() {
-  const user = await requireUser();
+  const user = await requireUserPage();
 
   if (!isDbConfigured()) {
     return (

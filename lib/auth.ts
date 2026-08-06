@@ -116,6 +116,22 @@ export async function requireAdmin(): Promise<SafeUser> {
   return user;
 }
 
+/**
+ * Any signed-in user, for a page.
+ *
+ * The page-level counterpart to requireUser(): redirects to the login screen
+ * rather than throwing, because a signed-out visitor hitting an admin URL
+ * should see the login form, not an error boundary.
+ *
+ * Used by everything an author is allowed to reach — blogs, categories, tags
+ * and the whole SEO section. Only user management stays on requireAdminPage.
+ */
+export async function requireUserPage(): Promise<SafeUser> {
+  const user = await getSession();
+  if (!user) redirect("/admin/login");
+  return user;
+}
+
 /** Look a user up by email, for the login form. */
 export async function findUserByEmail(email: string): Promise<UserDoc | null> {
   const db = await getDb();

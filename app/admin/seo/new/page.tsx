@@ -1,4 +1,4 @@
-import { requireAdminPage } from "@/lib/auth";
+import { requireUserPage } from "@/lib/auth";
 import PageSeoForm from "../PageSeoForm";
 import type { SeoValues } from "../SeoFields";
 
@@ -22,7 +22,7 @@ const EMPTY: SeoValues = {
 };
 
 export default async function NewPageSeo() {
-  await requireAdminPage();
+  await requireUserPage();
 
   return (
     <>

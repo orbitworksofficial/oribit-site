@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 
 import { getBlogById, listCategories, listTags } from "@/lib/blogs";
-import { requireUser } from "@/lib/auth";
+import { requireUserPage } from "@/lib/auth";
 import { updateBlogAction } from "../../actions";
 import BlogForm, { type BlogFormValues } from "../BlogForm";
 
@@ -18,7 +18,7 @@ function toLocalInput(d?: Date | null): string {
 }
 
 export default async function EditBlog({ params }: { params: Promise<{ id: string }> }) {
-  await requireUser();
+  await requireUserPage();
   const { id } = await params;
 
   const [blog, categories, tags] = await Promise.all([

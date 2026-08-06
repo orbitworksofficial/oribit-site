@@ -234,7 +234,7 @@ export async function saveCategoryAction(
   _prev: ActionState,
   fd: FormData,
 ): Promise<ActionState> {
-  await requireAdmin();
+  await requireUser();
   const parsed = categorySchema.safeParse({
     name: str(fd, "name"),
     slug: str(fd, "slug"),
@@ -263,7 +263,7 @@ export async function saveCategoryAction(
 }
 
 export async function deleteCategoryAction(fd: FormData): Promise<void> {
-  await requireAdmin();
+  await requireUser();
   const id = str(fd, "id");
   if (!ObjectId.isValid(id)) return;
   const db = await getDb();
@@ -280,7 +280,7 @@ export async function saveTagAction(
   _prev: ActionState,
   fd: FormData,
 ): Promise<ActionState> {
-  await requireAdmin();
+  await requireUser();
   const parsed = tagSchema.safeParse({ name: str(fd, "name"), slug: str(fd, "slug") });
   if (!parsed.success) return { errors: fieldErrors(parsed.error) };
 
@@ -300,7 +300,7 @@ export async function saveTagAction(
 }
 
 export async function deleteTagAction(fd: FormData): Promise<void> {
-  await requireAdmin();
+  await requireUser();
   const id = str(fd, "id");
   if (!ObjectId.isValid(id)) return;
   const db = await getDb();
@@ -317,7 +317,7 @@ export async function savePageSeoAction(
   _prev: ActionState,
   fd: FormData,
 ): Promise<ActionState> {
-  await requireAdmin();
+  await requireUser();
   const parsed = pageSeoSchema.safeParse({
     ...seoFrom(fd),
     pageKey: str(fd, "pageKey"),
@@ -348,7 +348,7 @@ export async function savePageSeoAction(
 }
 
 export async function deletePageSeoAction(fd: FormData): Promise<void> {
-  await requireAdmin();
+  await requireUser();
   const id = str(fd, "id");
   if (!ObjectId.isValid(id)) return;
   const db = await getDb();

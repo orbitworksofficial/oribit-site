@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { listBlogs, listCategories } from "@/lib/blogs";
-import { requireUser } from "@/lib/auth";
+import { requireUserPage } from "@/lib/auth";
 import { deleteBlogAction } from "../actions";
 import type { BlogStatus } from "@/lib/models";
 
@@ -21,7 +21,7 @@ export default async function BlogsIndex({
 }: {
   searchParams: Promise<{ search?: string; status?: string; category?: string; page?: string }>;
 }) {
-  await requireUser();
+  await requireUserPage();
   const sp = await searchParams;
 
   const [{ items, total, page, perPage }, categories] = await Promise.all([

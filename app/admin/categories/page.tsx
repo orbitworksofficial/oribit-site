@@ -1,4 +1,4 @@
-import { requireUser } from "@/lib/auth";
+import { requireUserPage } from "@/lib/auth";
 import { listCategoriesWithCounts } from "@/lib/blogs";
 import { deleteCategoryAction, saveCategoryAction } from "../actions";
 import TaxonomyManager from "./TaxonomyManager";
@@ -6,7 +6,7 @@ import TaxonomyManager from "./TaxonomyManager";
 export const dynamic = "force-dynamic";
 
 export default async function CategoriesPage() {
-  await requireUser();
+  await requireUserPage();
   const items = await listCategoriesWithCounts();
 
   return (

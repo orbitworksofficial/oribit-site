@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 
-import { requireAdminPage } from "@/lib/auth";
+import { requireUserPage } from "@/lib/auth";
 import { getPageSeoById } from "@/lib/seo-settings";
 import PageSeoForm from "../PageSeoForm";
 import type { SeoValues } from "../SeoFields";
@@ -8,7 +8,7 @@ import type { SeoValues } from "../SeoFields";
 export const dynamic = "force-dynamic";
 
 export default async function EditPageSeo({ params }: { params: Promise<{ id: string }> }) {
-  await requireAdminPage();
+  await requireUserPage();
   const { id } = await params;
 
   const doc = await getPageSeoById(id);

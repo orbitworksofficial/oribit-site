@@ -1,4 +1,4 @@
-import { requireUser } from "@/lib/auth";
+import { requireUserPage } from "@/lib/auth";
 import { listTagsWithCounts } from "@/lib/blogs";
 import { deleteTagAction, saveTagAction } from "../actions";
 import TaxonomyManager from "../categories/TaxonomyManager";
@@ -6,7 +6,7 @@ import TaxonomyManager from "../categories/TaxonomyManager";
 export const dynamic = "force-dynamic";
 
 export default async function TagsPage() {
-  await requireUser();
+  await requireUserPage();
   const items = await listTagsWithCounts();
 
   return (

@@ -1,11 +1,11 @@
-import { requireUser } from "@/lib/auth";
+import { requireUserPage } from "@/lib/auth";
 import ProfileForm from "./ProfileForm";
 
 export const dynamic = "force-dynamic";
 
 export default async function ProfilePage() {
   // Any signed-in user, admin or author — everyone can manage their own account.
-  const me = await requireUser();
+  const me = await requireUserPage();
 
   return (
     <>

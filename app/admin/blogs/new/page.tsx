@@ -1,5 +1,5 @@
 import { listCategories, listTags } from "@/lib/blogs";
-import { requireUser } from "@/lib/auth";
+import { requireUserPage } from "@/lib/auth";
 import { createBlogAction } from "../../actions";
 import BlogForm, { type BlogFormValues } from "../BlogForm";
 
@@ -35,7 +35,7 @@ const EMPTY: BlogFormValues = {
 };
 
 export default async function NewBlog() {
-  await requireUser();
+  await requireUserPage();
   const [categories, tags] = await Promise.all([listCategories(), listTags()]);
 
   return (
