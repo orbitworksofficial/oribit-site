@@ -2,7 +2,16 @@ import "server-only";
 
 import type { Metadata } from "next";
 import { unstable_cache } from "next/cache";
-import DOMPurify from "isomorphic-dompurify";
+/**
+ * sanitize-html, not isomorphic-dompurify.
+ *
+ * DOMPurify needs a DOM, so on the server it pulls in jsdom — and jsdom's
+ * CommonJS/ESM layering crashed Vercel's serverless runtime outright
+ * (ERR_REQUIRE_ESM from html-encoding-sniffer), taking down every page that
+ * imports this file. sanitize-html parses with htmlparser2 instead: no DOM
+ * emulation, no jsdom, and it runs anywhere Node does.
+ */
+import sanitizeHtml from "sanitize-html";
 
 import { getDb, isDbConfigured } from "./db";
 import { COLLECTIONS, type BlogDoc, type CategoryDoc, type UserDoc } from "./models";
@@ -43,15 +52,25 @@ const REVALIDATE = 300;
  * The allow-list covers what the editor is actually used to write.
  */
 function sanitize(html: string): string {
-  const cleaned = DOMPurify.sanitize(html, {
-    ALLOWED_TAGS: [
+  const cleaned = sanitizeHtml(html, {
+    allowedTags: [
       "p", "br", "strong", "em", "b", "i", "u", "s", "blockquote", "code", "pre",
       "h2", "h3", "h4", "ul", "ol", "li", "a", "img", "figure", "figcaption", "hr", "table",
       "thead", "tbody", "tr", "th", "td",
     ],
-    ALLOWED_ATTR: ["href", "title", "target", "rel", "src", "alt", "width", "height"],
+    allowedAttributes: {
+      a: ["href", "title", "target", "rel"],
+      img: ["src", "alt", "title", "width", "height"],
+      "*": [],
+    },
     // javascript: and data: URIs in href/src are the other half of the problem.
-    ALLOWED_URI_REGEXP: /^(?:https?:|mailto:|tel:|\/|#)/i,
+    // Anything not listed here is stripped, so a `javascript:` link cannot ship.
+    allowedSchemes: ["http", "https", "mailto", "tel"],
+    // Site-relative paths (/uploads/…) and in-page anchors must survive.
+    allowProtocolRelative: false,
+    // Drop the contents of a disallowed tag as well as the tag itself: keeping
+    // the text inside <script> would render the payload as visible page copy.
+    nonTextTags: ["style", "script", "textarea", "option", "noscript"],
   });
 
   return (
