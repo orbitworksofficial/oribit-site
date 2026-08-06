@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { chromeFor } from "./routes";
-import { SITE_URL, NOINDEX_ROUTES } from "./site";
+import { SITE_URL, NOINDEX_ROUTES, absoluteUrl } from "./site";
 
 /**
  * The shared square share card, rendered by app/opengraph-image.tsx.
@@ -81,13 +81,13 @@ export function postMetadata(post: {
       description: post.excerpt,
       publishedTime: post.date,
       authors: [post.author],
-      images: [{ url: `${SITE_URL}${post.image}` }],
+      images: [{ url: absoluteUrl(post.image) }],
     },
     twitter: {
       card: "summary_large_image",
       title: post.title,
       description: post.excerpt,
-      images: [`${SITE_URL}${post.image}`],
+      images: [absoluteUrl(post.image)],
     },
   };
 }

@@ -12,6 +12,21 @@
 export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "https://orb-itworks.com";
 
+/**
+ * Absolute URL for an image that may already be absolute.
+ *
+ * Images used to be site-relative paths only, so `${SITE_URL}${post.image}` was
+ * safe. Cloudinary returns fully-qualified https URLs, and blindly prefixing
+ * one produced "https://orb-itworks.comhttps://res.cloudinary.com/…" — which
+ * silently broke every OpenGraph card, Twitter card and Article schema image
+ * while the page itself still looked fine.
+ */
+export function absoluteUrl(url: string): string {
+  if (!url) return "";
+  if (/^https?:\/\//i.test(url)) return url;
+  return `${SITE_URL}${url.startsWith("/") ? "" : "/"}${url}`;
+}
+
 /** Routes that should be indexed, in sitemap priority order. */
 export const INDEXABLE_ROUTES = [
   { path: "/", priority: 1.0, changeFrequency: "weekly" as const },

@@ -1,4 +1,4 @@
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, absoluteUrl } from "@/lib/site";
 import type { PublicPost } from "@/lib/public-blogs";
 
 /**
@@ -35,7 +35,7 @@ export default function ArticleSchema({ post }: { post: PublicPost }) {
       dateModified: post.date,
       author: { "@type": "Organization", name: post.author, url: SITE_URL },
       publisher: { "@id": `${SITE_URL}/#organization` },
-      image: [`${SITE_URL}${post.image}`],
+      image: [absoluteUrl(post.image)],
       mainEntityOfPage: { "@type": "WebPage", "@id": url },
       articleSection: post.kind,
       wordCount,

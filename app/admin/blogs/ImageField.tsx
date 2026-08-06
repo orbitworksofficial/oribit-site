@@ -142,9 +142,11 @@ export default function ImageField({ name, defaultValue, altName, altDefault }: 
           className="adm-input adm-input--sm"
           value={url}
           onChange={(e) => setUrl(e.target.value)}
-          placeholder="/uploads/2026-08/example.webp"
+          placeholder="Uploaded automatically, or paste a URL"
         />
-        <span className="adm-hint">Set automatically when you upload. Edit only if you know the path.</span>
+        <span className="adm-hint">
+          Filled in when you upload. Accepts a full URL or a path under /public.
+        </span>
       </label>
     </div>
   );

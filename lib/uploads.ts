@@ -11,15 +11,19 @@ import { ObjectId } from "mongodb";
 /**
  * Image uploads for the dashboard.
  *
- * Files are written to public/uploads and served as ordinary static assets.
+ * Two backends, chosen at runtime:
  *
- * IMPORTANT DEPLOYMENT NOTE: this only works on a host with a persistent,
- * writable filesystem — a VPS or a container with a mounted volume. On
- * serverless platforms (Vercel, Netlify, Hostinger's shared PHP tiers) the
- * filesystem is read-only or wiped between invocations, and uploads would
- * either fail outright or disappear at the next deploy. Everything below goes
- * through `store()` for exactly that reason: swapping to S3, R2 or Cloudinary
- * means reimplementing one function, not rewriting the callers.
+ *   Cloudinary  — used whenever CLOUDINARY_URL (or the three CLOUDINARY_*
+ *                 variables) is set. Required on serverless hosts: Vercel's
+ *                 filesystem is read-only, and anything written to public/
+ *                 would vanish at the next deploy anyway.
+ *   Local disk  — the fallback, writing to public/uploads. Keeps `npm run dev`
+ *                 working with no account or credentials, and remains correct
+ *                 on a VPS with a persistent volume.
+ *
+ * Both go through `store()`, so the validation, resizing and database record
+ * below are identical either way and nothing else in the app knows or cares
+ * which one ran.
  */
 
 /**
@@ -35,7 +39,44 @@ async function loadSharp() {
   return (await import("sharp")).default;
 }
 
-/** Where files land, relative to the project root. */
+/**
+ * Cloudinary is likewise loaded on first use.
+ *
+ * Same reasoning as sharp above: keeping it out of the module's top level means
+ * `next build` never pulls the SDK into a bundle that has no use for it.
+ */
+async function loadCloudinary() {
+  const { v2 } = await import("cloudinary");
+  // CLOUDINARY_URL is read automatically by the SDK. The explicit form is
+  // supported too, because some hosts' variable editors mangle the URL's
+  // credentials — Hostinger's panel wrapped one across two lines earlier.
+  if (!process.env.CLOUDINARY_URL) {
+    v2.config({
+      cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+      api_key: process.env.CLOUDINARY_API_KEY,
+      api_secret: process.env.CLOUDINARY_API_SECRET,
+      secure: true,
+    });
+  } else {
+    v2.config({ secure: true });
+  }
+  return v2;
+}
+
+/** True when Cloudinary credentials are present in the environment. */
+export function usingCloudinary(): boolean {
+  return Boolean(
+    process.env.CLOUDINARY_URL ||
+      (process.env.CLOUDINARY_CLOUD_NAME &&
+        process.env.CLOUDINARY_API_KEY &&
+        process.env.CLOUDINARY_API_SECRET),
+  );
+}
+
+/** Folder that uploads are filed under inside the Cloudinary account. */
+const CLOUDINARY_FOLDER = process.env.CLOUDINARY_FOLDER ?? "orbitworks/blog";
+
+/** Where files land locally, relative to the project root. */
 const UPLOAD_DIR = path.join(process.cwd(), "public", "uploads");
 
 /** Public URL prefix matching UPLOAD_DIR. */
@@ -73,17 +114,57 @@ function safeName(original: string, ext: string): string {
 }
 
 /**
- * Persist bytes and return the public URL. The single seam to replace when
- * moving off the local filesystem.
+ * Persist bytes and return the public URL, plus the provider's own handle for
+ * the asset so it can be deleted later.
+ *
+ * The only place that knows which backend is in use.
  */
-async function store(filename: string, data: Buffer): Promise<string> {
-  // Partitioned by month so a directory listing stays manageable over years.
+async function store(
+  filename: string,
+  data: Buffer,
+): Promise<{ url: string; storageId?: string }> {
+  // Partitioned by month so neither a directory listing nor a Cloudinary
+  // folder becomes unmanageable over years.
   const now = new Date();
   const sub = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+
+  if (usingCloudinary()) {
+    const cloudinary = await loadCloudinary();
+    // Strip the extension: Cloudinary appends its own based on the format, and
+    // a public_id ending in ".webp" produces "name.webp.webp" in the URL.
+    const publicId = filename.replace(/\.[^.]+$/, "");
+
+    const result = await new Promise<{ secure_url: string; public_id: string }>(
+      (resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          {
+            folder: `${CLOUDINARY_FOLDER}/${sub}`,
+            public_id: publicId,
+            resource_type: "image",
+            // The bytes are already validated, resized and re-encoded by sharp
+            // above, so Cloudinary should store them as-is rather than apply a
+            // second lossy pass.
+            overwrite: false,
+          },
+          (error, res) => {
+            if (error || !res) {
+              reject(error ?? new Error("Cloudinary returned no result."));
+              return;
+            }
+            resolve({ secure_url: res.secure_url, public_id: res.public_id });
+          },
+        );
+        stream.end(data);
+      },
+    );
+
+    return { url: result.secure_url, storageId: result.public_id };
+  }
+
   const dir = path.join(UPLOAD_DIR, sub);
   await mkdir(dir, { recursive: true });
   await writeFile(path.join(dir, filename), data);
-  return `${UPLOAD_URL}/${sub}/${filename}`;
+  return { url: `${UPLOAD_URL}/${sub}/${filename}` };
 }
 
 /**
@@ -142,11 +223,12 @@ export async function saveUpload(file: File, userId: string): Promise<UploadResu
     : await pipeline.webp({ quality: 82 }).toBuffer();
 
   const filename = safeName(file.name, ext);
-  const url = await store(filename, output);
+  const { url, storageId } = await store(filename, output);
 
   const doc: MediaDoc = {
     url,
     filename,
+    ...(storageId ? { storageId } : {}),
     mimeType: animated ? "image/gif" : "image/webp",
     bytes: output.byteLength,
     uploadedBy: new ObjectId(userId),
@@ -190,6 +272,14 @@ export async function deleteMedia(id: string): Promise<void> {
   if (!doc) return;
 
   await db.collection(COLLECTIONS.media).deleteOne({ _id: new ObjectId(id) });
+
+  // Cloudinary asset: keyed by the public_id recorded at upload. Without this
+  // the row would vanish from the library while the file kept billing storage.
+  if (doc.storageId) {
+    const cloudinary = await loadCloudinary();
+    await cloudinary.uploader.destroy(doc.storageId, { resource_type: "image" }).catch(() => {});
+    return;
+  }
 
   if (doc.url.startsWith(`${UPLOAD_URL}/`)) {
     const rel = doc.url.slice(UPLOAD_URL.length + 1);

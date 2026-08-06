@@ -118,9 +118,15 @@ export type PageSeoDoc = SeoFields & {
 
 export type MediaDoc = {
   _id?: ObjectId;
-  /** Public URL, e.g. /uploads/blogs/1234-hero.jpg */
+  /** Public URL — a local /uploads/… path, or an absolute Cloudinary URL. */
   url: string;
   filename: string;
+  /**
+   * The storage provider's own handle (Cloudinary's public_id), when the file
+   * does not live on our filesystem. Absent for local uploads, which are
+   * deleted by path instead.
+   */
+  storageId?: string;
   mimeType: string;
   bytes: number;
   uploadedBy: ObjectId;
