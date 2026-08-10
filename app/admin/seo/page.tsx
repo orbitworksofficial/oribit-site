@@ -87,12 +87,7 @@ export default async function SeoIndex() {
                         >
                           Edit
                         </Link>
-                        {/* <form action={deletePageSeoAction} style={{ display: "inline" }}>
-                          <input type="hidden" name="id" value={String(p._id)} />
-                          <button type="submit" className="adm-btn adm-btn--link">
-                            Delete
-                          </button>
-                        </form> */}
+                     
                       </td>
                     </tr>
                   );
