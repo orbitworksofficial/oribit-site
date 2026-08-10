@@ -4203,3 +4203,151 @@ footer.invert .footer > .inner {
     overflow-x: auto;
   }
 }
+
+/* ------------------------------------------------------- post sidebar --
+ * The reading column is capped at 68ch for legibility, which left roughly
+ * 470px of unused space to its right on a 1600px screen. Rather than widen the
+ * text past a comfortable measure, that space now carries somewhere to go next.
+ */
+/**
+ * NOT `align-items: start`.
+ *
+ * That shrank the <aside> to its own content height (169px), and a sticky child
+ * cannot travel further than its containing block — so the sidebar scrolled
+ * away after 169px. The default `stretch` makes the aside as tall as the
+ * article, giving the sticky inner the full column to travel down.
+ */
+.orbit-post__layout {
+  display: grid;
+  gap: 6rem;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media screen and (min-width: 1200px) {
+  .orbit-post__layout {
+    /* The article keeps its own max-width; the sidebar takes a fixed column so
+     * it cannot squeeze the text as the viewport grows. */
+    grid-template-columns: minmax(0, 1fr) 30rem;
+  }
+}
+
+.orbit-post__main {
+  min-width: 0;
+}
+
+.orbit-aside {
+  display: none;
+}
+
+@media screen and (min-width: 1200px) {
+  .orbit-aside {
+    display: block;
+  }
+}
+
+/**
+ * Sticky, so it follows the reader down a long article.
+ *
+ * The inner wrapper carries the sticky, not .orbit-aside itself: a grid item is
+ * stretched to its row by default, and an element cannot stick past the end of
+ * its own box — the same trap that broke the admin sidebar. `align-items: start`
+ * above plus this wrapper keeps the row taller than the item, which is the room
+ * sticky needs.
+ */
+.orbit-aside__inner {
+  max-height: calc(100dvh - 14rem);
+  overflow-y: auto;
+  position: sticky;
+  top: 12rem;
+}
+
+.orbit-aside__title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  margin: 0 0 2rem;
+  opacity: 0.55;
+  text-transform: uppercase;
+}
+
+.orbit-aside__list {
+  list-style: none;
+  margin: 0 0 2.4rem;
+  padding: 0;
+}
+
+.orbit-aside__list li + li {
+  border-top: 0.1rem solid rgba(127, 127, 127, 0.16);
+  margin-top: 1.8rem;
+  padding-top: 1.8rem;
+}
+
+/* theme.css leaves a plain <a> in browser blue-and-underline — it only ever
+ * styled its own arrow/CTA link classes. */
+.orbit-aside__list a {
+  align-items: flex-start;
+  color: inherit;
+  display: flex;
+  gap: 1.4rem;
+  text-decoration: none;
+}
+
+.orbit-aside__thumb {
+  border-radius: 0.6rem;
+  flex-shrink: 0;
+  height: 6.4rem;
+  overflow: hidden;
+  width: 6.4rem;
+}
+
+/* Square crop is deliberate here — a thumbnail is a visual anchor, not the
+ * image itself, and a ragged column of mixed ratios reads as broken. */
+.orbit-aside__thumb img {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.orbit-aside__text {
+  display: block;
+  min-width: 0;
+}
+
+.orbit-aside__kind {
+  display: block;
+  font-size: 1.2rem;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.5rem;
+  opacity: 0.55;
+  text-transform: uppercase;
+}
+
+.orbit-aside__name {
+  display: block;
+  font-size: 1.6rem;
+  font-weight: 500;
+  line-height: 1.35;
+  transition: color 0.15s;
+}
+
+.orbit-aside__list a:hover .orbit-aside__name {
+  color: var(--orbit);
+}
+
+.orbit-aside__meta {
+  display: block;
+  font-size: 1.3rem;
+  margin-top: 0.6rem;
+  opacity: 0.55;
+}
+
+.orbit-aside__all {
+  border-top: 0.1rem solid rgba(127, 127, 127, 0.16);
+  color: var(--orbit);
+  display: block;
+  font-size: 1.4rem;
+  font-weight: 500;
+  padding-top: 1.8rem;
+  text-decoration: none;
+}

@@ -103,10 +103,11 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
         )}
 
         <div
-          className="wp-block-kenza-column-constraint column-constraint cols-12"
+          className="wp-block-kenza-column-constraint column-constraint cols-12 orbit-post__layout"
           data-transition="slideup"
           data-transition-include="through"
         >
+          <div className="orbit-post__main">
           {/*
             Two shapes, one renderer. Posts from the database carry `html`
             written in the dashboard editor; the lib/content.ts fallback posts
@@ -164,6 +165,48 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
                 ),
               )}
             </div>
+          )}
+          </div>
+
+          {/*
+            Sidebar. The reading column is capped at 68ch for legibility, which
+            left ~470px of dead space on a wide screen. This fills it with
+            somewhere to go next rather than widening the text past a
+            comfortable measure.
+
+            Sticky, so it stays with the reader down a long article, and hidden
+            below 1200px where there is no room for a second column.
+          */}
+          {more.length > 0 && (
+            <aside className="orbit-aside" aria-label="More posts">
+              <div className="orbit-aside__inner">
+                <p className="orbit-aside__title">Recent posts</p>
+                <ul className="orbit-aside__list">
+                  {more.map((r) => (
+                    <li key={r.slug}>
+                      <Link href={`/blogs/${r.slug}`}>
+                        {r.image && (
+                          <span className="orbit-aside__thumb">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src={r.image} alt="" loading="lazy" decoding="async" />
+                          </span>
+                        )}
+                        <span className="orbit-aside__text">
+                          <span className="orbit-aside__kind">{r.kind}</span>
+                          <span className="orbit-aside__name">{r.title}</span>
+                          <span className="orbit-aside__meta">{r.readingMinutes} min read</span>
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+
+                <Link href="/blogs" className="orbit-aside__all">
+                  All posts
+                  <span aria-hidden="true"> →</span>
+                </Link>
+              </div>
+            </aside>
           )}
         </div>
       </article>
