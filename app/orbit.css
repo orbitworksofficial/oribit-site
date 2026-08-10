@@ -1896,9 +1896,22 @@ main h3.deco-l:before {
  * blocks — so measure, rhythm and subheads are set here.
  */
 
+/* The theme leaves a large gap under the fixed nav for hero blocks; an article
+ * does not need it. Negative margin pulls the header up without touching the
+ * shared constraint that every other page relies on. */
+.orbit-post__head {
+  margin-top: -6rem;
+}
+
+@media screen and (max-width: 743px) {
+  .orbit-post__head {
+    margin-top: -3rem;
+  }
+}
+
 .orbit-post__meta {
   color: var(--slate);
-  margin-bottom: 2rem;
+  margin-bottom: 1.6rem;
 }
 
 .orbit-post__meta a {
@@ -2166,124 +2179,154 @@ main h3.deco-l:before {
 }
 
 /**
- * Same measure as .orbit-post__body — the contents box sat 300px wider than the
- * article it belongs to, which read as a different column entirely.
+ * Contents list.
  *
  * The position/inset/z-index resets are load-bearing, not tidiness. theme.css
  * styles the bare element `nav:not(.social)` as `position: fixed` at full
- * viewport width for the site header, and this contents list is a <nav>. Left
- * alone it tore out of the document flow, pinned itself to the top-left corner
- * and printed its 1568px of links straight over the article. Same rule that
- * broke the admin sidebar twice; a <nav> anywhere in this codebase needs it
- * undone explicitly.
+ * viewport width for the site header, and this is a <nav>. Left alone it tore
+ * out of the document flow, pinned itself to the top-left corner and printed
+ * its links straight over the article. The selector is doubled to (0,2,0)
+ * because the theme rule is (0,1,1) and wins the tie otherwise.
  */
 nav.orbit-toc,
-.orbit-toc.orbit-toc,
-.orbit-toc.orbit-toc > nav {
+.orbit-toc.orbit-toc {
+  background: linear-gradient(180deg, rgba(254, 6, 59, 0.045), rgba(254, 6, 59, 0.012));
+  border: 0.1rem solid rgba(254, 6, 59, 0.18);
+  border-radius: 1.2rem;
   height: auto;
   inset: auto;
+  margin: 0 0 4.5rem;
+  max-width: 68ch;
+  padding: 2.8rem 3rem;
   position: static;
   transform: none;
   width: auto;
   z-index: auto;
-  background: rgba(127, 127, 127, 0.04);
-  border: 0.1rem solid rgba(127, 127, 127, 0.18);
-  border-left: 0.3rem solid var(--orbit);
-  border-radius: 0.8rem;
-  margin: 0 0 4.5rem;
-  max-width: 68ch;
-  padding: 2.4rem 2.8rem;
 }
 
 .orbit-toc__title {
-  align-items: center;
-  cursor: pointer;
-  display: flex;
-  font-size: 1.4rem;
+  border-bottom: 0.1rem solid rgba(254, 6, 59, 0.16);
+  display: block;
+  margin: 0 0 1.8rem;
+  padding-bottom: 1.6rem;
+}
+
+.orbit-toc__eyebrow {
+  color: var(--orbit);
+  display: block;
+  font-size: 1.2rem;
   font-weight: 600;
-  gap: 1.2rem;
-  justify-content: space-between;
-  letter-spacing: 0.09em;
-  list-style: none;
-  margin: 0;
-  opacity: 0.7;
+  letter-spacing: 0.12em;
+  margin-bottom: 0.8rem;
   text-transform: uppercase;
-  user-select: none;
 }
 
-/* Safari draws its own triangle unless this is cleared. */
-.orbit-toc__title::-webkit-details-marker {
-  display: none;
-}
-
-.orbit-toc__title:hover {
-  opacity: 1;
-}
-
-/* Chevron, rotated when open. */
-.orbit-toc__title::after {
-  border-bottom: 0.2rem solid currentColor;
-  border-right: 0.2rem solid currentColor;
-  content: "";
-  height: 0.7rem;
-  transform: rotate(45deg);
-  transition: transform 0.2s;
-  width: 0.7rem;
-}
-
-.orbit-toc[open] .orbit-toc__title::after {
-  transform: rotate(-135deg);
+.orbit-toc__lead {
+  display: block;
+  font-size: 2.1rem;
+  font-weight: 500;
+  line-height: 1.3;
 }
 
 .orbit-toc__count {
-  font-weight: 400;
-  letter-spacing: normal;
-  margin-left: auto;
-  margin-right: 0.4rem;
-  opacity: 0.7;
-  text-transform: none;
-}
-
-.orbit-toc[open] > nav {
-  margin-top: 1.8rem;
+  display: block;
+  font-size: 1.4rem;
+  font-weight: 300;
+  margin-top: 0.6rem;
+  opacity: 0.6;
 }
 
 .orbit-toc ol {
   counter-reset: toc;
-  font-size: 1.75rem;
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
+/* A very long list gets its own scroll rather than pushing the article down
+ * the page — visible, but never an obstacle. */
+.orbit-toc ol.is-scrollable {
+  max-height: 42rem;
+  overflow-y: auto;
+  padding-right: 1rem;
+}
+
 .orbit-toc li {
-  margin: 0 0 0.9rem;
+  counter-increment: toc;
+  margin: 0;
   padding: 0;
 }
 
-.orbit-toc li:last-child {
-  margin-bottom: 0;
-}
-
-/* Sub-headings indent so the document's shape is visible at a glance. */
 .orbit-toc li[data-level="3"] {
-  padding-left: 2rem;
+  padding-left: 2.2rem;
 }
 
 .orbit-toc li[data-level="4"] {
-  padding-left: 4rem;
+  padding-left: 4.4rem;
 }
 
 .orbit-toc a {
-  border-bottom: 0.1rem solid transparent;
+  align-items: baseline;
+  border-radius: 0.6rem;
+  color: inherit;
+  display: flex;
+  font-size: 1.7rem;
   font-weight: 300;
+  gap: 1.2rem;
+  line-height: 1.45;
+  padding: 0.9rem 1.2rem;
   text-decoration: none;
-  transition: border-color 0.15s, opacity 0.15s;
+  transition: background 0.15s, color 0.15s;
+}
+
+/* The number doubles as the affordance: it makes each row read as a target
+ * rather than as a line of text. */
+.orbit-toc a::before {
+  align-self: baseline;
+  color: var(--orbit);
+  content: counter(toc);
+  flex-shrink: 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+  min-width: 2.2rem;
+  opacity: 0.75;
+  text-align: right;
+}
+
+.orbit-toc__arrow {
+  align-self: center;
+  border-bottom: 0.15rem solid var(--orbit);
+  border-right: 0.15rem solid var(--orbit);
+  flex-shrink: 0;
+  height: 0.6rem;
+  opacity: 0;
+  transform: rotate(-45deg);
+  transition: opacity 0.15s, transform 0.15s;
+  width: 0.6rem;
 }
 
 .orbit-toc a:hover {
-  border-bottom-color: var(--orbit);
+  background: rgba(254, 6, 59, 0.07);
+  color: var(--orbit);
+}
+
+.orbit-toc a:hover .orbit-toc__arrow {
   opacity: 1;
+  transform: rotate(-45deg) translate(0.2rem, 0.2rem);
+}
+
+.orbit-toc a:focus-visible {
+  background: rgba(254, 6, 59, 0.09);
+  outline: 0.2rem solid var(--orbit);
+  outline-offset: 0.2rem;
+}
+
+.orbit-toc__text {
+  /* flex: 1 so the label owns the row's free space. Without it the arrow's
+   * `margin-left: auto` pushed the text hard right, stranding the number on
+   * the far left of a very wide gap. */
+  flex: 1;
+  min-width: 0;
 }
 
 @media screen and (max-width: 743px) {
@@ -4255,10 +4298,10 @@ footer.invert .footer > .inner {
  * sticky needs.
  */
 .orbit-aside__inner {
-  max-height: calc(100dvh - 14rem);
+  max-height: calc(100dvh - 16rem);
   overflow-y: auto;
   position: sticky;
-  top: 12rem;
+  top: 13rem;
 }
 
 .orbit-aside__title {

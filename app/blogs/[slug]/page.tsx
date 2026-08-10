@@ -45,10 +45,6 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
   // emitted as a broken script tag.
   const customSchema = await postSchema(slug);
 
-  // Open the contents list on a short post, collapsed on a long one — see the
-  // note at the <details> below.
-  const shortContents = (post.headings?.length ?? 0) <= 8;
-
   return (
     <main>
       <ArticleSchema post={post} />
@@ -59,55 +55,52 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
         />
       )}
       <article className="orbit-post">
-        <div
-          className="wp-block-kenza-column-constraint column-constraint cols-12"
-          data-transition="slideup"
-          data-transition-include="through"
-        >
-          <p className="label orbit-post__meta">
-            <Link href="/blogs">Blog</Link>
-            <span aria-hidden="true"> · </span>
-            {post.kind}
-            <span aria-hidden="true"> · </span>
-            {post.readingMinutes} min read
-          </p>
-
-          <h1 className="wp-block-heading orbit-post__title">{post.title}</h1>
-
-          {/*
-            Own class rather than the theme's `large-intro`, whose line-height
-            is tuned for a two-line marketing strapline — a three-line excerpt
-            rendered with a visible gap between every line.
-          */}
-          <p className="orbit-post__lead">{post.excerpt}</p>
-
-          <p className="label small orbit-post__byline">
-            {post.author}
-            <span aria-hidden="true"> · </span>
-            <time dateTime={post.date}>{formatPostDate(post.date)}</time>
-          </p>
-        </div>
-
-        {/* No hero at all rather than an empty <img>, which renders as a broken
-            icon and alt text where a picture should be. */}
-        {post.image && (
-          <div
-            className="wp-block-kenza-column-constraint column-constraint cols-12"
-            data-transition="slideup"
-          >
-            <figure className="orbit-post__hero">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={post.image} alt={post.title} loading="eager" decoding="async" />
-            </figure>
-          </div>
-        )}
-
+        {/*
+          One grid for the whole article, so the sidebar starts level with the
+          title rather than halfway down the page. Previously the header, hero
+          and body were three separate full-width blocks and the sidebar lived
+          inside the last of them — which is why it began below the fold.
+        */}
         <div
           className="wp-block-kenza-column-constraint column-constraint cols-12 orbit-post__layout"
           data-transition="slideup"
           data-transition-include="through"
         >
           <div className="orbit-post__main">
+          <header className="orbit-post__head">
+            <p className="label orbit-post__meta">
+              <Link href="/blogs">Blog</Link>
+              <span aria-hidden="true"> · </span>
+              {post.kind}
+              <span aria-hidden="true"> · </span>
+              {post.readingMinutes} min read
+            </p>
+
+            <h1 className="wp-block-heading orbit-post__title">{post.title}</h1>
+
+            {/*
+              Own class rather than the theme's `large-intro`, whose line-height
+              is tuned for a two-line marketing strapline — a three-line excerpt
+              rendered with a visible gap between every line.
+            */}
+            <p className="orbit-post__lead">{post.excerpt}</p>
+
+            <p className="label small orbit-post__byline">
+              {post.author}
+              <span aria-hidden="true"> · </span>
+              <time dateTime={post.date}>{formatPostDate(post.date)}</time>
+            </p>
+          </header>
+
+          {/* No hero at all rather than an empty <img>, which renders as a broken
+              icon and alt text where a picture should be. */}
+          {post.image && (
+            <figure className="orbit-post__hero">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={post.image} alt={post.title} loading="eager" decoding="async" />
+            </figure>
+          )}
+
           {/*
             Two shapes, one renderer. Posts from the database carry `html`
             written in the dashboard editor; the lib/content.ts fallback posts
@@ -124,30 +117,34 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
                 a real shareable URL.
               */}
               {/*
-                <details> rather than a plain list: a forty-heading post
-                rendered 1,594px of links the reader had to scroll past before
-                reaching a word of the article. Open by default on a short post,
-                collapsed once the list is long enough to be an obstacle — and
-                it works with no JavaScript.
+                Always open, and scrollable rather than collapsed. A 45-heading
+                post used to render 1,594px of links before the article, so this
+                was a <details>; but a contents list nobody can see is not doing
+                its job. Capped height with its own scroll keeps it short without
+                hiding it, and the numbering makes each row obviously clickable.
               */}
               {post.headings && post.headings.length >= 3 && (
-                <details className="orbit-toc" open={shortContents}>
-                  <summary className="orbit-toc__title">
-                    On this page
-                    <span className="orbit-toc__count">
-                      {post.headings.length} sections
+                <nav className="orbit-toc" aria-labelledby="orbit-toc-title">
+                  <p className="orbit-toc__title" id="orbit-toc-title">
+                    <span className="orbit-toc__eyebrow">In this article</span>
+                    <span className="orbit-toc__lead">
+                      Jump to any section
                     </span>
-                  </summary>
-                  <nav aria-label="Table of contents">
-                    <ol>
-                      {post.headings.map((h) => (
-                        <li key={h.id} data-level={h.level}>
-                          <a href={`#${h.id}`}>{h.text}</a>
-                        </li>
-                      ))}
-                    </ol>
-                  </nav>
-                </details>
+                    <span className="orbit-toc__count">
+                      {post.headings.length} sections · {post.readingMinutes} min
+                    </span>
+                  </p>
+                  <ol className={post.headings.length > 12 ? "is-scrollable" : undefined}>
+                    {post.headings.map((h) => (
+                      <li key={h.id} data-level={h.level}>
+                        <a href={`#${h.id}`}>
+                          <span className="orbit-toc__arrow" aria-hidden="true" />
+                          <span className="orbit-toc__text">{h.text}</span>
+                        </a>
+                      </li>
+                    ))}
+                  </ol>
+                </nav>
               )}
 
               <div
