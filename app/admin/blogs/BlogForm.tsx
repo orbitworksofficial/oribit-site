@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState, useState } from "react";
-import { useFormStatus } from "react-dom";
+import { useState, useTransition } from "react";
 
 import type { ActionState } from "../actions";
 import RichText from "./RichText";
@@ -40,8 +39,12 @@ export type BlogFormValues = {
 
 type Option = { id: string; name: string };
 
-function Submit({ label }: { label: string }) {
-  const { pending } = useFormStatus();
+/**
+ * Pending state comes from the parent's useTransition rather than
+ * useFormStatus, which only reports on a form driven by React's own action
+ * handling — the mechanism this form no longer uses.
+ */
+function Submit({ label, pending }: { label: string; pending: boolean }) {
   return (
     <button type="submit" className="adm-btn" disabled={pending}>
       {pending ? "Saving…" : label}
@@ -76,7 +79,34 @@ export default function BlogForm({
   tags: Option[];
   submitLabel: string;
 }) {
-  const [state, formAction] = useActionState<ActionState, FormData>(action, {});
+  /**
+   * Submitted through useTransition rather than useActionState.
+   *
+   * With useActionState, a validation error left the form permanently unable to
+   * submit again: the DOM stayed intact (all 33 inputs present, `content`
+   * holding the right value, the button enabled) but React's action handler
+   * stopped responding — even a direct form.requestSubmit() fired no request.
+   * The only recovery was reloading, which is why the same post "worked in
+   * another browser": a fresh tab is a fresh mount.
+   *
+   * Building the FormData in an explicit onSubmit gives us the same progressive
+   * behaviour with a lifecycle we control, and the transition cannot get stuck
+   * because each submit starts a new one.
+   */
+  const [state, setState] = useState<ActionState>({});
+  const [pending, startTransition] = useTransition();
+
+  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (pending) return;
+    const fd = new FormData(event.currentTarget);
+    startTransition(async () => {
+      // A successful save redirects inside the action, so nothing returns here.
+      const result = await action(state, fd);
+      if (result) setState(result);
+    });
+  };
+
 
   const [title, setTitle] = useState(values.title);
   const [slug, setSlug] = useState(values.slug);
@@ -102,7 +132,7 @@ export default function BlogForm({
   const err = (f: string) => state.errors?.[f];
 
   return (
-    <form action={formAction}>
+    <form onSubmit={onSubmit}>
       {values.id && <input type="hidden" name="id" value={values.id} />}
 
       {state.error && <div className="adm-banner adm-banner--error">{state.error}</div>}
@@ -401,7 +431,7 @@ export default function BlogForm({
       </details>
 
       <div className="adm-actions">
-        <Submit label={submitLabel} />
+        <Submit label={submitLabel} pending={pending} />
         <Link href="/admin/blogs" className="adm-btn adm-btn--ghost">
           Cancel
         </Link>

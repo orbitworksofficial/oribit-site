@@ -248,6 +248,19 @@ export default function RichText({ name, defaultValue }: Props) {
       StarterKit.configure({
         // Only the levels the post template styles, and never H1 — see above.
         heading: { levels: [2, 3, 4] },
+        /**
+         * StarterKit ships its own Link and Underline. Registering the
+         * standalone packages as well produced "Duplicate extension names
+         * found: ['link', 'underline']" and left the editor in a state where
+         * the surrounding form silently stopped submitting — a failed save
+         * could never be retried without reloading the page.
+         *
+         * Disabled here so the configured versions below are the only ones,
+         * rather than dropping ours: Link needs the protocol allow-list and the
+         * rel/target attributes that StarterKit's default does not set.
+         */
+        link: false,
+        underline: false,
       }),
       Link.configure({
         openOnClick: false,
@@ -300,12 +313,30 @@ export default function RichText({ name, defaultValue }: Props) {
   editorRef.current = editor;
 
   return (
-    <div className="adm-rt">
-      {editor && <Toolbar editor={editor} onPickImage={() => fileInput.current?.click()} />}
-      <EditorContent editor={editor} />
+    /**
+     * The hidden input and the file input are SIBLINGS of the editor box, not
+     * children of it.
+     *
+     * <EditorContent> hands its subtree to Tiptap, which mutates that DOM
+     * outside React's knowledge. When useActionState re-rendered the form after
+     * a validation error, reconciling around that foreign subtree detached the
+     * surrounding inputs from form.elements — measured at one surviving input
+     * out of a dozen, on an unchanged <form> node. The form then looked normal,
+     * showed the error, and submitted nothing at all: clicking Save fired no
+     * request, so a post could never be saved after one failed attempt without
+     * reloading. (That is why a second browser "worked" — it was a fresh mount.)
+     *
+     * Keeping the form-bearing inputs outside .adm-rt puts them beyond the
+     * subtree React struggles to reconcile, so they survive the re-render.
+     */
+    <>
+      <div className="adm-rt">
+        {editor && <Toolbar editor={editor} onPickImage={() => fileInput.current?.click()} />}
+        <EditorContent editor={editor} />
 
-      {uploading && <div className="adm-rt__status">Uploading image…</div>}
-      {uploadError && <div className="adm-error adm-rt__status">{uploadError}</div>}
+        {uploading && <div className="adm-rt__status">Uploading image…</div>}
+        {uploadError && <div className="adm-error adm-rt__status">{uploadError}</div>}
+      </div>
 
       <input
         ref={fileInput}
@@ -326,6 +357,6 @@ export default function RichText({ name, defaultValue }: Props) {
         server-side schema rejects it properly.
       */}
       <input type="hidden" name={name} value={isBlank(html) ? "" : html} />
-    </div>
+    </>
   );
 }
