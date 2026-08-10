@@ -123,8 +123,24 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
                 its job. Capped height with its own scroll keeps it short without
                 hiding it, and the numbering makes each row obviously clickable.
               */}
+              {/*
+                A <div role="navigation">, deliberately NOT a <nav>.
+                theme.css styles the bare element `nav:not(.social)` for the
+                site header — pointer-events:none, z-index:3, height:10rem,
+                position:fixed. Overriding those individually was not enough:
+                with that rule active the entire contents box was absent from
+                hit-testing (elementsFromPoint anywhere inside it returned the
+                parent div), and swapping the tag for a div restored clicking
+                instantly. The role attribute keeps the semantics for screen
+                readers without inheriting a header's styling.
+              */}
               {post.headings && post.headings.length >= 3 && (
-                <nav className="orbit-toc" aria-labelledby="orbit-toc-title">
+                <div
+                  className="orbit-toc"
+                  role="navigation"
+                  aria-labelledby="orbit-toc-title"
+                  data-no-transition
+                >
                   <p className="orbit-toc__title" id="orbit-toc-title">
                     <span className="orbit-toc__lead">Table of Contents</span>
                     <span className="orbit-toc__count">
@@ -141,7 +157,7 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
                       </li>
                     ))}
                   </ol>
-                </nav>
+                </div>
               )}
 
               <div

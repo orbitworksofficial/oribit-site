@@ -2208,15 +2208,6 @@ nav.orbit-toc,
    * browser.
    */
   pointer-events: auto;
-  /**
-   * `relative` + a z-index, NOT `static`.
-   *
-   * Playwright reported "<div class='orbit-post__main'> intercepts pointer
-   * events" and elementsFromPoint at the link's own centre returned the parent
-   * without the nav, ol, li or a appearing anywhere in the stack — the list
-   * painted correctly but was not hit-testable. Giving the contents box its own
-   * stacking context puts its subtree back in the hit-test order.
-   */
   position: relative;
   transform: none;
   width: auto;

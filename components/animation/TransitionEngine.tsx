@@ -56,6 +56,22 @@ export default function TransitionEngine() {
 
       if (subs.length && include === "through") {
         subs.forEach((sub) => {
+          /**
+           * Skip anything inside a [data-no-transition] region.
+           *
+           * SELECTED_SUB_ITEMS matches `li` (among others) anywhere in the
+           * subtree, so the table of contents' list items were being animated:
+           * theme.css slides them in from the right with a transform of about
+           * 4790px. Sampling a link's position showed it sitting at x:4881 on a
+           * 1500px viewport for more than half of every second — so a click
+           * landed on empty space and hit the parent div instead. The list
+           * looked perfectly normal because it settled back between frames.
+           *
+           * A contents list is navigation, not decoration; it should be
+           * immediately usable rather than staged in.
+           */
+          if (sub.closest("[data-no-transition]")) return;
+
           sub.classList.add("ahide");
           timers.push(
             window.setTimeout(() => sub.classList.add("aitem"), REVEAL_DELAY),
