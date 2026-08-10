@@ -174,9 +174,17 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
             Sticky, so it stays with the reader down a long article, and hidden
             below 1200px where there is no room for a second column.
           */}
-          {more.length > 0 && (
-            <aside className="orbit-aside" aria-label="More posts">
-              <div className="orbit-aside__inner">
+          {/*
+            Always rendered, never conditional on there being other posts.
+            Hiding it when `more` is empty meant a site with a single published
+            post showed no sidebar at all and the right column sat empty — which
+            is exactly the state this was built to fix. With no siblings to list
+            it still carries the call to action.
+          */}
+          <aside className="orbit-aside" aria-label="More posts">
+            <div className="orbit-aside__inner">
+              {more.length > 0 && (
+                <>
                 <p className="orbit-aside__title">Recent posts</p>
                 <ul className="orbit-aside__list">
                   {more.map((r) => (
@@ -197,17 +205,34 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
                     </li>
                   ))}
                 </ul>
+                </>
+              )}
 
-                <Link href="/blogs" className="orbit-aside__all">
-                  All posts
+              {/* A single-post site still gets a reason to stay. */}
+              <div className="orbit-aside__cta">
+                <p className="orbit-aside__cta-title">Every orbit begins with a conversation</p>
+                <p className="orbit-aside__cta-text">
+                  Tell us what isn&rsquo;t moving. The person who reads it is the person who
+                  can help.
+                </p>
+                <Link href="/contact" className="orbit-aside__cta-link">
+                  Book a discovery call
                   <span aria-hidden="true"> →</span>
                 </Link>
               </div>
-            </aside>
-          )}
+
+              <Link href="/blogs" className="orbit-aside__all">
+                All posts
+                <span aria-hidden="true"> →</span>
+              </Link>
+            </div>
+          </aside>
         </div>
       </article>
 
+      {/* Nothing to show when this is the only post — an empty "More" heading
+          above an empty list looks broken. */}
+      {more.length > 0 && (
       <div
         className="wp-block-kenza-column-constraint column-constraint cols-12"
         data-transition="slideup"
@@ -230,6 +255,7 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
           ))}
         </ul>
       </div>
+      )}
     </main>
   );
 }
