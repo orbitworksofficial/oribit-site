@@ -2198,10 +2198,29 @@ nav.orbit-toc,
   margin: 0 0 4.5rem;
   max-width: 68ch;
   padding: 2.8rem 3rem;
-  position: static;
+  /**
+   * The load-bearing line. That same theme rule also sets
+   * `pointer-events: none` — the site header lets clicks fall through to the
+   * hero and re-enables them on its own children. It INHERITS, so every entry
+   * in this list was visible, correctly styled, showed a pointer cursor, and
+   * was completely dead to a real mouse click. A scripted element.click()
+   * still worked, which is why this kept passing tests while failing in the
+   * browser.
+   */
+  pointer-events: auto;
+  /**
+   * `relative` + a z-index, NOT `static`.
+   *
+   * Playwright reported "<div class='orbit-post__main'> intercepts pointer
+   * events" and elementsFromPoint at the link's own centre returned the parent
+   * without the nav, ol, li or a appearing anywhere in the stack — the list
+   * painted correctly but was not hit-testable. Giving the contents box its own
+   * stacking context puts its subtree back in the hit-test order.
+   */
+  position: relative;
   transform: none;
   width: auto;
-  z-index: auto;
+  z-index: 1;
 }
 
 .orbit-toc__title {
@@ -2274,8 +2293,18 @@ nav.orbit-toc,
   padding-left: 4.4rem;
 }
 
+/**
+ * `align-items: center`, not `baseline`.
+ *
+ * With baseline alignment the anchor's box was 34px tall but its painted
+ * content — a 16px line of text — sat near the bottom of it. A click at the
+ * row's vertical centre landed in unpainted space INSIDE the anchor's own
+ * rectangle and hit the parent div instead, so the link never fired. The link
+ * was correctly sized, correctly stacked and had pointer-events: auto; it
+ * simply had nothing to hit at the point the pointer was over.
+ */
 .orbit-toc a {
-  align-items: baseline;
+  align-items: center;
   border-radius: 0.6rem;
   color: inherit;
   /* Explicit: theme.css sets `cursor` on some anchor states, and a contents
@@ -2294,7 +2323,6 @@ nav.orbit-toc,
 /* The number doubles as the affordance: it makes each row read as a target
  * rather than as a line of text. */
 .orbit-toc a::before {
-  align-self: baseline;
   color: var(--orbit);
   content: counter(toc);
   flex-shrink: 0;

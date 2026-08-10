@@ -176,7 +176,14 @@ export function withHeadingIds(html: string): { html: string; headings: Heading[
         if (seen > 0) id = `${id}-${seen + 1}`;
       }
 
-      headings.push({ id, text, level: Number(lvl) as 2 | 3 | 4 });
+      /**
+       * Every heading gets an id — a deep link to a sub-section must still
+       * work — but only H2s are collected for the contents list. Including
+       * H3 and H4 turned a thirteen-section article into a forty-seven-entry
+       * wall that was harder to scan than the article itself.
+       */
+      const level = Number(lvl) as 2 | 3 | 4;
+      if (level === 2) headings.push({ id, text, level });
       const rest = (attrs ?? "").replace(/\sid="[^"]*"/, "");
       return `<h${lvl}${rest} id="${id}">${inner}</h${lvl}>`;
     },

@@ -126,15 +126,12 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
               {post.headings && post.headings.length >= 3 && (
                 <nav className="orbit-toc" aria-labelledby="orbit-toc-title">
                   <p className="orbit-toc__title" id="orbit-toc-title">
-                    <span className="orbit-toc__eyebrow">In this article</span>
-                    <span className="orbit-toc__lead">
-                      Jump to any section
-                    </span>
+                    <span className="orbit-toc__lead">Table of Contents</span>
                     <span className="orbit-toc__count">
-                      {post.headings.length} sections · {post.readingMinutes} min
+                      {post.headings.length} sections · {post.readingMinutes} min read
                     </span>
                   </p>
-                  <ol className={post.headings.length > 12 ? "is-scrollable" : undefined}>
+                  <ol>
                     {post.headings.map((h) => (
                       <li key={h.id} data-level={h.level}>
                         <a href={`#${h.id}`}>
