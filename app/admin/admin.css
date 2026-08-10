@@ -1270,3 +1270,195 @@ body.adm-body [data-transition] {
     margin: 0 3px;
   }
 }
+
+/* ------------------------------------------------------- required marker -- */
+.adm-req {
+  color: var(--accent);
+  font-weight: 600;
+  margin-left: 2px;
+}
+
+/* Visually hidden but announced by screen readers — an asterisk alone is
+ * meaningless to anyone not looking at it. */
+.adm-sr {
+  border: 0;
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+/* -------------------------------------------------------------- dialog -- */
+.adm-dialog {
+  background: none;
+  border: 0;
+  max-height: 100dvh;
+  max-width: 100vw;
+  padding: 0;
+}
+
+.adm-dialog::backdrop {
+  backdrop-filter: blur(2px);
+  background: rgba(10, 14, 35, 0.45);
+}
+
+.adm-dialog__panel {
+  background: var(--surface, #fff);
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(16, 22, 60, 0.22);
+  color: var(--ink, #0f1330);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  max-width: 460px;
+  overflow: hidden;
+  width: calc(100vw - 32px);
+}
+
+.adm-dialog__head {
+  border-bottom: 1px solid var(--line, #e4e7f0);
+  display: flex;
+  gap: 14px;
+  padding: 22px 24px 18px;
+}
+
+.adm-dialog__icon {
+  align-items: center;
+  background: var(--accent-weak, rgba(254, 6, 59, 0.09));
+  border-radius: 50%;
+  color: var(--accent, #fe063b);
+  display: flex;
+  flex-shrink: 0;
+  height: 38px;
+  justify-content: center;
+  width: 38px;
+}
+
+.adm-dialog__head h2 {
+  font-size: 16px;
+  font-weight: 640;
+  margin: 0 0 4px;
+}
+
+.adm-dialog__head p {
+  color: var(--muted, #6a7290);
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.adm-dialog__list {
+  list-style: none;
+  margin: 0;
+  max-height: 46vh;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.adm-dialog__list li + li {
+  margin-top: 2px;
+}
+
+/* Each row is a button: clicking it closes the dialog and focuses the field. */
+.adm-dialog__list button {
+  background: none;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+  display: block;
+  font: inherit;
+  padding: 10px 14px;
+  text-align: left;
+  transition: background 0.12s;
+  width: 100%;
+}
+
+.adm-dialog__list button:hover {
+  background: var(--bg, #f5f6fa);
+}
+
+.adm-dialog__list strong {
+  color: var(--ink, #0f1330);
+  display: block;
+  font-size: 13.5px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.adm-dialog__list span {
+  color: var(--muted, #6a7290);
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+
+.adm-dialog__foot {
+  border-top: 1px solid var(--line, #e4e7f0);
+  display: flex;
+  justify-content: flex-end;
+  padding: 14px 20px;
+}
+
+/* ------------------------------------------------------------- outline -- */
+.adm-rt__outline {
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+  max-height: 260px;
+  overflow-y: auto;
+  padding: 14px 18px;
+}
+
+.adm-rt__outline-title {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  margin: 0 0 10px;
+  text-transform: uppercase;
+}
+
+.adm-rt__outline-empty {
+  color: var(--muted);
+  font-size: 12.5px;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.adm-rt__outline ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.adm-rt__outline li[data-level="3"] {
+  padding-left: 16px;
+}
+
+.adm-rt__outline li[data-level="4"] {
+  padding-left: 32px;
+}
+
+.adm-rt__outline button {
+  background: none;
+  border: 0;
+  border-radius: 5px;
+  color: var(--ink);
+  cursor: pointer;
+  display: block;
+  font: inherit;
+  font-size: 13px;
+  overflow: hidden;
+  padding: 5px 8px;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+}
+
+.adm-rt__outline button:hover {
+  background: #fff;
+  color: var(--accent);
+}
+
+.adm-rt__outline li[data-level="2"] button {
+  font-weight: 600;
+}

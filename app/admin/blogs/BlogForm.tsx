@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 
 import type { ActionState } from "../actions";
 import RichText from "./RichText";
@@ -52,6 +52,136 @@ function Submit({ label, pending }: { label: string; pending: boolean }) {
   );
 }
 
+/**
+ * Required-field marker.
+ *
+ * aria-hidden with a visually-hidden word beside it: a screen reader announcing
+ * "asterisk" tells the user nothing, and the `required` attribute alone is not
+ * visible to a sighted user scanning the form for what they must fill in.
+ */
+function Req() {
+  return (
+    <>
+      <span className="adm-req" aria-hidden="true">
+        *
+      </span>
+      <span className="adm-sr">(required)</span>
+    </>
+  );
+}
+
+/** Human label for a field key, for the error dialog. */
+const FIELD_LABELS: Record<string, string> = {
+  title: "Title",
+  slug: "Slug",
+  excerpt: "Excerpt",
+  content: "Content",
+  featuredImage: "Featured image",
+  featuredImageAlt: "Featured image alt text",
+  status: "Status",
+  publishedAt: "Publish date",
+  categoryId: "Category",
+  seoTitle: "SEO title",
+  seoDescription: "SEO description",
+  seoKeywords: "Keywords",
+  canonicalUrl: "Canonical URL",
+  robots: "Robots",
+  ogTitle: "Open Graph title",
+  ogDescription: "Open Graph description",
+  ogImage: "Open Graph image",
+  ogType: "Open Graph type",
+  twitterTitle: "Twitter title",
+  twitterDescription: "Twitter description",
+  twitterImage: "Twitter image",
+  twitterCard: "Twitter card",
+  schemaMarkup: "Schema markup",
+};
+
+/**
+ * Error dialog.
+ *
+ * The inline messages remain the source of truth, but on a form this long the
+ * failing field is often scrolled far out of view — the author saw a red banner
+ * and no indication of which of thirty fields was wrong. This names each one and
+ * jumps to it.
+ *
+ * A real <dialog> so Escape, the backdrop and focus trapping come from the
+ * platform rather than being reimplemented.
+ */
+function ErrorDialog({
+  errors,
+  onClose,
+}: {
+  errors: Record<string, string>;
+  onClose: () => void;
+}) {
+  const ref = useRef<HTMLDialogElement>(null);
+  const entries = Object.entries(errors);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (!el.open) el.showModal();
+    // `close` fires for Escape and the form-method close alike.
+    const done = () => onClose();
+    el.addEventListener("close", done);
+    return () => el.removeEventListener("close", done);
+  }, [onClose]);
+
+  /** Focus the offending field and bring it into view. */
+  const goTo = (field: string) => {
+    ref.current?.close();
+    const el = document.querySelector<HTMLElement>(
+      `[name="${field}"], [data-field="${field}"]`,
+    );
+    if (!el) return;
+    // The rich text body is a contenteditable div, not a named input.
+    const target =
+      field === "content" ? document.querySelector<HTMLElement>(".adm-rt__area") : el;
+    target?.scrollIntoView({ behavior: "smooth", block: "center" });
+    // Wait for the scroll before focusing, or the browser jumps twice.
+    window.setTimeout(() => target?.focus(), 320);
+  };
+
+  return (
+    <dialog ref={ref} className="adm-dialog" onClick={(e) => {
+      // Clicking the backdrop (the dialog element itself, not its panel) closes.
+      if (e.target === ref.current) ref.current?.close();
+    }}>
+      <div className="adm-dialog__panel">
+        <div className="adm-dialog__head">
+          <span className="adm-dialog__icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" />
+            </svg>
+          </span>
+          <div>
+            <h2>{entries.length === 1 ? "One field needs attention" : `${entries.length} fields need attention`}</h2>
+            <p>The post was not saved. Fix the following, then save again.</p>
+          </div>
+        </div>
+
+        <ul className="adm-dialog__list">
+          {entries.map(([field, message]) => (
+            <li key={field}>
+              <button type="button" onClick={() => goTo(field)}>
+                <strong>{FIELD_LABELS[field] ?? field}</strong>
+                <span>{message}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+
+        <div className="adm-dialog__foot">
+          <button type="button" className="adm-btn" onClick={() => ref.current?.close()}>
+            Got it
+          </button>
+        </div>
+      </div>
+    </dialog>
+  );
+}
+
 /** Character counter against the length search engines actually render. */
 function Counter({ value, max }: { value: string; max: number }) {
   const n = value.length;
@@ -95,6 +225,8 @@ export default function BlogForm({
    */
   const [state, setState] = useState<ActionState>({});
   const [pending, startTransition] = useTransition();
+  /** Errors currently shown in the dialog; null when it is closed. */
+  const [dialogErrors, setDialogErrors] = useState<Record<string, string> | null>(null);
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -103,7 +235,16 @@ export default function BlogForm({
     startTransition(async () => {
       // A successful save redirects inside the action, so nothing returns here.
       const result = await action(state, fd);
-      if (result) setState(result);
+      if (result) {
+        setState(result);
+        // Surface the failure immediately: on a form this long the offending
+        // field is usually scrolled out of sight.
+        if (result.errors && Object.keys(result.errors).length > 0) {
+          setDialogErrors(result.errors);
+        } else if (result.error) {
+          setDialogErrors({ _: result.error });
+        }
+      }
     });
   };
 
@@ -135,6 +276,12 @@ export default function BlogForm({
     <form onSubmit={onSubmit}>
       {values.id && <input type="hidden" name="id" value={values.id} />}
 
+      {/* The dialog is the loud signal; the banner below stays as the quiet
+          record of it once the dialog is dismissed. */}
+      {dialogErrors && (
+        <ErrorDialog errors={dialogErrors} onClose={() => setDialogErrors(null)} />
+      )}
+
       {state.error && <div className="adm-banner adm-banner--error">{state.error}</div>}
       {state.errors && (
         <div className="adm-banner adm-banner--error">
@@ -144,7 +291,7 @@ export default function BlogForm({
 
       <div className="adm-card">
         <label className="adm-field">
-          <span>Title</span>
+          <span>Title <Req /></span>
           <input
             className="adm-input"
             name="title"
@@ -172,7 +319,7 @@ export default function BlogForm({
         </label>
 
         <label className="adm-field">
-          <span>Excerpt</span>
+          <span>Excerpt <Req /></span>
           <textarea
             className="adm-textarea"
             name="excerpt"
@@ -191,7 +338,7 @@ export default function BlogForm({
           and collapse the selection.
         */}
         <div className="adm-field">
-          <span>Content</span>
+          <span>Content <Req /></span>
           <RichText name="content" defaultValue={values.content} />
           <span className="adm-hint">
             Select text to format it. Headings start at H2 — the post title is already the

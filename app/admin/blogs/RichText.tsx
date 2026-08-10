@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { EditorContent, useEditor, type Editor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
@@ -67,7 +67,17 @@ function Btn({
   );
 }
 
-function Toolbar({ editor, onPickImage }: { editor: Editor; onPickImage: () => void }) {
+function Toolbar({
+  editor,
+  onPickImage,
+  onToggleOutline,
+  outlineOpen,
+}: {
+  editor: Editor;
+  onPickImage: () => void;
+  onToggleOutline: () => void;
+  outlineOpen: boolean;
+}) {
   // Re-render the toolbar as the selection moves, so the active states track
   // the cursor rather than freezing at their first-paint values.
   const [, force] = useState(0);
@@ -188,6 +198,14 @@ function Toolbar({ editor, onPickImage }: { editor: Editor; onPickImage: () => v
       <Btn on={image} title="Insert image">
         Image
       </Btn>
+      {/*
+        The published post builds its own contents list from the headings, so
+        there is nothing to insert here — this shows what that list will contain
+        while writing, and jumps to a heading when clicked.
+      */}
+      <Btn on={onToggleOutline} active={outlineOpen} title="Show heading outline">
+        Outline
+      </Btn>
       <Btn
         on={() => editor.chain().focus().unsetAllMarks().clearNodes().run()}
         title="Clear formatting"
@@ -211,6 +229,7 @@ export default function RichText({ name, defaultValue }: Props) {
   const [html, setHtml] = useState(defaultValue);
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [outlineOpen, setOutlineOpen] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
   // Held in a ref so the ProseMirror event handlers below, which are created
   // once, always reach the live editor instance rather than a stale closure.
@@ -312,6 +331,33 @@ export default function RichText({ name, defaultValue }: Props) {
 
   editorRef.current = editor;
 
+  /**
+   * Headings as the author writes them, matching what the published post will
+   * build its contents list from.
+   *
+   * Derived from `html` rather than tracked separately so it cannot drift: the
+   * same string that gets submitted is the one parsed here.
+   */
+  const outline = useMemo(() => {
+    const out: { level: number; text: string; index: number }[] = [];
+    const re = /<h([234])[^>]*>([\s\S]*?)<\/h\1>/g;
+    let m: RegExpExecArray | null;
+    let i = 0;
+    while ((m = re.exec(html))) {
+      const text = m[2].replace(/<[^>]*>/g, "").replace(/&nbsp;/g, " ").trim();
+      if (text) out.push({ level: Number(m[1]), text, index: i });
+      i++;
+    }
+    return out;
+  }, [html]);
+
+  /** Scroll the nth heading in the editor into view. */
+  const jumpTo = (index: number) => {
+    const nodes = editorRef.current?.view.dom.querySelectorAll("h2, h3, h4");
+    const el = nodes?.[index] as HTMLElement | undefined;
+    el?.scrollIntoView({ behavior: "smooth", block: "center" });
+  };
+
   return (
     /**
      * The hidden input and the file input are SIBLINGS of the editor box, not
@@ -331,7 +377,40 @@ export default function RichText({ name, defaultValue }: Props) {
      */
     <>
       <div className="adm-rt">
-        {editor && <Toolbar editor={editor} onPickImage={() => fileInput.current?.click()} />}
+        {editor && (
+          <Toolbar
+            editor={editor}
+            onPickImage={() => fileInput.current?.click()}
+            onToggleOutline={() => setOutlineOpen((v) => !v)}
+            outlineOpen={outlineOpen}
+          />
+        )}
+
+        {outlineOpen && (
+          <div className="adm-rt__outline">
+            <p className="adm-rt__outline-title">
+              Contents ({outline.length} heading{outline.length === 1 ? "" : "s"})
+            </p>
+            {outline.length === 0 ? (
+              <p className="adm-rt__outline-empty">
+                No headings yet. Use H2, H3 and H4 to structure the post — the
+                published page turns them into a contents list automatically,
+                once there are three or more.
+              </p>
+            ) : (
+              <ol>
+                {outline.map((h) => (
+                  <li key={h.index} data-level={h.level}>
+                    <button type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => jumpTo(h.index)}>
+                      {h.text}
+                    </button>
+                  </li>
+                ))}
+              </ol>
+            )}
+          </div>
+        )}
+
         <EditorContent editor={editor} />
 
         {uploading && <div className="adm-rt__status">Uploading image…</div>}
