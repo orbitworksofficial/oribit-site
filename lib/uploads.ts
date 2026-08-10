@@ -161,6 +161,23 @@ async function store(
     return { url: result.secure_url, storageId: result.public_id };
   }
 
+  /**
+   * Local disk. Correct for `npm run dev` and for a VPS with a real volume, but
+   * silently wrong on a serverless host: the write succeeds, the URL works
+   * until the next deploy, and then every image 404s with nothing in the logs
+   * to explain it.
+   *
+   * VERCEL is set on Vercel builds and at runtime, so refuse there rather than
+   * accept an upload we know will be lost.
+   */
+  if (process.env.VERCEL) {
+    throw new Error(
+      "Image storage is not configured. Set CLOUDINARY_URL in the project's " +
+        "environment variables — this host has no persistent filesystem, so " +
+        "uploads written to disk are discarded on the next deploy.",
+    );
+  }
+
   const dir = path.join(UPLOAD_DIR, sub);
   await mkdir(dir, { recursive: true });
   await writeFile(path.join(dir, filename), data);

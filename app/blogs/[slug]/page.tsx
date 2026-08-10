@@ -45,6 +45,10 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
   // emitted as a broken script tag.
   const customSchema = await postSchema(slug);
 
+  // Open the contents list on a short post, collapsed on a long one — see the
+  // note at the <details> below.
+  const shortContents = (post.headings?.length ?? 0) <= 8;
+
   return (
     <main>
       <ArticleSchema post={post} />
@@ -70,9 +74,12 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
 
           <h1 className="wp-block-heading orbit-post__title">{post.title}</h1>
 
-          <p className="has-text-align-left large large-intro shorten shorten-70 wp-block-paragraph">
-            {post.excerpt}
-          </p>
+          {/*
+            Own class rather than the theme's `large-intro`, whose line-height
+            is tuned for a two-line marketing strapline — a three-line excerpt
+            rendered with a visible gap between every line.
+          */}
+          <p className="orbit-post__lead">{post.excerpt}</p>
 
           <p className="label small orbit-post__byline">
             {post.author}
@@ -81,15 +88,19 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
           </p>
         </div>
 
-        <div
-          className="wp-block-kenza-column-constraint column-constraint cols-12"
-          data-transition="slideup"
-        >
-          <figure className="orbit-post__hero">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={post.image} alt={post.title} loading="eager" decoding="async" />
-          </figure>
-        </div>
+        {/* No hero at all rather than an empty <img>, which renders as a broken
+            icon and alt text where a picture should be. */}
+        {post.image && (
+          <div
+            className="wp-block-kenza-column-constraint column-constraint cols-12"
+            data-transition="slideup"
+          >
+            <figure className="orbit-post__hero">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={post.image} alt={post.title} loading="eager" decoding="async" />
+            </figure>
+          </div>
+        )}
 
         <div
           className="wp-block-kenza-column-constraint column-constraint cols-12"
@@ -111,19 +122,31 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
                 Plain anchors, so it works without JavaScript and each entry is
                 a real shareable URL.
               */}
+              {/*
+                <details> rather than a plain list: a forty-heading post
+                rendered 1,594px of links the reader had to scroll past before
+                reaching a word of the article. Open by default on a short post,
+                collapsed once the list is long enough to be an obstacle — and
+                it works with no JavaScript.
+              */}
               {post.headings && post.headings.length >= 3 && (
-                <nav className="orbit-toc" aria-labelledby="orbit-toc-title">
-                  <p className="orbit-toc__title" id="orbit-toc-title">
+                <details className="orbit-toc" open={shortContents}>
+                  <summary className="orbit-toc__title">
                     On this page
-                  </p>
-                  <ol>
-                    {post.headings.map((h) => (
-                      <li key={h.id} data-level={h.level}>
-                        <a href={`#${h.id}`}>{h.text}</a>
-                      </li>
-                    ))}
-                  </ol>
-                </nav>
+                    <span className="orbit-toc__count">
+                      {post.headings.length} sections
+                    </span>
+                  </summary>
+                  <nav aria-label="Table of contents">
+                    <ol>
+                      {post.headings.map((h) => (
+                        <li key={h.id} data-level={h.level}>
+                          <a href={`#${h.id}`}>{h.text}</a>
+                        </li>
+                      ))}
+                    </ol>
+                  </nav>
+                </details>
               )}
 
               <div
@@ -154,10 +177,12 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
           {more.map((p) => (
             <li key={p.slug}>
               <Link href={`/blogs/${p.slug}`} className="orbit-card">
-                <figure>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={p.image} alt={p.title} loading="lazy" decoding="async" />
-                </figure>
+                {p.image && (
+                  <figure>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={p.image} alt={p.title} loading="lazy" decoding="async" />
+                  </figure>
+                )}
                 <span className="label">{p.kind}</span>
                 <h3>{p.title}</h3>
               </Link>

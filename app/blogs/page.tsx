@@ -53,10 +53,14 @@ export default async function Blogs() {
         data-transition="slideup"
       >
         <Link href={`/blogs/${lead.slug}`} className="orbit-card orbit-card--lead">
-          <figure>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={lead.image} alt={lead.title} loading="eager" decoding="async" />
-          </figure>
+          {/* Skip the figure entirely when a post has no image — an empty
+              <img> renders as a broken icon on the card. */}
+          {lead.image && (
+            <figure>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={lead.image} alt={lead.title} loading="eager" decoding="async" />
+            </figure>
+          )}
           <div>
             <span className="label">
               {lead.kind} · {lead.readingMinutes} min read
@@ -73,10 +77,12 @@ export default async function Blogs() {
           {rest.map((post) => (
             <li key={post.slug}>
               <Link href={`/blogs/${post.slug}`} className="orbit-card">
-                <figure>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={post.image} alt={post.title} loading="lazy" decoding="async" />
-                </figure>
+                {post.image && (
+                  <figure>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={post.image} alt={post.title} loading="lazy" decoding="async" />
+                  </figure>
+                )}
                 <span className="label">
                   {post.kind} · {post.readingMinutes} min read
                 </span>

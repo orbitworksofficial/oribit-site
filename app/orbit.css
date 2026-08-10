@@ -1911,23 +1911,49 @@ main h3.deco-l:before {
   max-width: 22ch;
 }
 
+/* Standfirst. Sized between the title and the body, on the same measure as the
+ * article so the column reads as one piece. */
+.orbit-post__lead {
+  font-size: 2.3rem;
+  font-weight: 300;
+  line-height: 1.5;
+  margin: 0 0 2rem;
+  max-width: 62ch;
+  opacity: 0.85;
+}
+
 .orbit-post__byline {
   border-top: 0.1rem solid var(--grey);
   color: var(--slate);
   margin-top: 3rem;
+  max-width: 68ch;
   padding-top: 2rem;
 }
 
+/**
+ * Hero image, shown whole.
+ *
+ * It used to force `aspect-ratio: 21/9` with `object-fit: cover`, which crops
+ * every image to an ultra-wide letterbox — fine for a landscape stock photo,
+ * destructive for anything else. A portrait screenshot lost most of its height,
+ * and the author had no way to tell from the editor that it would happen.
+ *
+ * The image now keeps its own proportions, bounded so a very tall one cannot
+ * take over the page. `contain` rather than `cover` so nothing is ever cut.
+ */
 .orbit-post__hero {
   margin: 2rem 0 6rem;
-  overflow: hidden;
 }
 
 .orbit-post__hero img {
-  aspect-ratio: 21 / 9;
+  border-radius: 1.2rem;
   display: block;
-  object-fit: cover;
-  width: 100%;
+  height: auto;
+  margin: 0 auto;
+  max-height: 70vh;
+  max-width: 100%;
+  object-fit: contain;
+  width: auto;
 }
 
 /* ~68ch is the readable measure; the theme's 12-col constraint is far wider. */
@@ -2139,20 +2165,87 @@ main h3.deco-l:before {
   }
 }
 
-.orbit-toc {
-  border: 0.1rem solid rgba(127, 127, 127, 0.22);
+/**
+ * Same measure as .orbit-post__body — the contents box sat 300px wider than the
+ * article it belongs to, which read as a different column entirely.
+ *
+ * The position/inset/z-index resets are load-bearing, not tidiness. theme.css
+ * styles the bare element `nav:not(.social)` as `position: fixed` at full
+ * viewport width for the site header, and this contents list is a <nav>. Left
+ * alone it tore out of the document flow, pinned itself to the top-left corner
+ * and printed its 1568px of links straight over the article. Same rule that
+ * broke the admin sidebar twice; a <nav> anywhere in this codebase needs it
+ * undone explicitly.
+ */
+nav.orbit-toc,
+.orbit-toc.orbit-toc,
+.orbit-toc.orbit-toc > nav {
+  height: auto;
+  inset: auto;
+  position: static;
+  transform: none;
+  width: auto;
+  z-index: auto;
+  background: rgba(127, 127, 127, 0.04);
+  border: 0.1rem solid rgba(127, 127, 127, 0.18);
+  border-left: 0.3rem solid var(--orbit);
   border-radius: 0.8rem;
-  margin: 0 0 4rem;
+  margin: 0 0 4.5rem;
+  max-width: 68ch;
   padding: 2.4rem 2.8rem;
 }
 
 .orbit-toc__title {
+  align-items: center;
+  cursor: pointer;
+  display: flex;
   font-size: 1.4rem;
   font-weight: 600;
+  gap: 1.2rem;
+  justify-content: space-between;
   letter-spacing: 0.09em;
-  margin: 0 0 1.4rem;
-  opacity: 0.65;
+  list-style: none;
+  margin: 0;
+  opacity: 0.7;
   text-transform: uppercase;
+  user-select: none;
+}
+
+/* Safari draws its own triangle unless this is cleared. */
+.orbit-toc__title::-webkit-details-marker {
+  display: none;
+}
+
+.orbit-toc__title:hover {
+  opacity: 1;
+}
+
+/* Chevron, rotated when open. */
+.orbit-toc__title::after {
+  border-bottom: 0.2rem solid currentColor;
+  border-right: 0.2rem solid currentColor;
+  content: "";
+  height: 0.7rem;
+  transform: rotate(45deg);
+  transition: transform 0.2s;
+  width: 0.7rem;
+}
+
+.orbit-toc[open] .orbit-toc__title::after {
+  transform: rotate(-135deg);
+}
+
+.orbit-toc__count {
+  font-weight: 400;
+  letter-spacing: normal;
+  margin-left: auto;
+  margin-right: 0.4rem;
+  opacity: 0.7;
+  text-transform: none;
+}
+
+.orbit-toc[open] > nav {
+  margin-top: 1.8rem;
 }
 
 .orbit-toc ol {

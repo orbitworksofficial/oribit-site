@@ -208,7 +208,13 @@ function toPost(
     excerpt: doc.excerpt,
     author: (doc.authorId && authors.get(String(doc.authorId))) || "OrbitWorks",
     readingMinutes: doc.readingMinutes || 1,
-    image: doc.featuredImage || "/blogs/seo-that-compounds.png",
+    /**
+     * Empty rather than a stand-in. This used to fall back to a seeded post's
+     * artwork, so a post with no featured image silently showed an unrelated
+     * picture — and the listing card gave no hint it was a placeholder. The
+     * post page and the card both skip the image entirely when this is blank.
+     */
+    image: doc.featuredImage ?? "",
     body: [],
     html,
     headings,
