@@ -5,6 +5,8 @@ import { EditorContent, useEditor, type Editor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
 import Image from "@tiptap/extension-image";
+import TextAlign from "@tiptap/extension-text-align";
+import Underline from "@tiptap/extension-underline";
 
 /**
  * Rich text editor for post content.
@@ -105,6 +107,9 @@ function Toolbar({ editor, onPickImage }: { editor: Editor; onPickImage: () => v
       <Btn on={() => editor.chain().focus().toggleItalic().run()} active={editor.isActive("italic")} title="Italic">
         <em>I</em>
       </Btn>
+      <Btn on={() => editor.chain().focus().toggleUnderline().run()} active={editor.isActive("underline")} title="Underline">
+        <u>U</u>
+      </Btn>
       <Btn on={() => editor.chain().focus().toggleStrike().run()} active={editor.isActive("strike")} title="Strikethrough">
         <s>S</s>
       </Btn>
@@ -125,6 +130,35 @@ function Toolbar({ editor, onPickImage }: { editor: Editor; onPickImage: () => v
           title={`Heading ${level}`}
         >
           H{level}
+        </Btn>
+      ))}
+
+      <span className="adm-rt__sep" />
+
+      {/* Alignment. Icons are drawn as stacked rules so the state is readable
+          at a glance rather than relying on a letter. */}
+      {(
+        [
+          ["left", "Align left", [16, 10, 16, 10]],
+          ["center", "Align centre", [16, 10, 16, 10]],
+          ["right", "Align right", [16, 10, 16, 10]],
+          ["justify", "Justify", [16, 16, 16, 16]],
+        ] as const
+      ).map(([align, label, widths]) => (
+        <Btn
+          key={align}
+          on={() => editor.chain().focus().setTextAlign(align).run()}
+          active={editor.isActive({ textAlign: align })}
+          title={label}
+        >
+          <svg width="15" height="15" viewBox="0 0 18 18" aria-hidden="true">
+            {widths.map((w, i) => {
+              const x = align === "right" ? 17 - w : align === "center" ? (18 - w) / 2 : 1;
+              return (
+                <rect key={i} x={x} y={2.5 + i * 3.4} width={w} height="1.5" rx="0.75" fill="currentColor" />
+              );
+            })}
+          </svg>
         </Btn>
       ))}
 
@@ -224,6 +258,14 @@ export default function RichText({ name, defaultValue }: Props) {
         HTMLAttributes: { rel: "noopener noreferrer nofollow", target: "_blank" },
       }),
       Image.configure({ inline: false }),
+      Underline,
+      /**
+       * Alignment writes `style="text-align:…"` onto the node. The sanitiser in
+       * lib/public-blogs.ts allow-lists exactly that declaration and those four
+       * values, so what an author sets here is what ships — offering a control
+       * whose output is stripped at render would be worse than not offering it.
+       */
+      TextAlign.configure({ types: ["heading", "paragraph"] }),
     ],
     content: defaultValue,
     onUpdate: ({ editor }) => setHtml(editor.getHTML()),

@@ -35,6 +35,8 @@ import { SITE_URL } from "./site";
 export type PublicPost = Post & {
   /** Sanitised HTML from the dashboard. When set, render this instead of body. */
   html?: string;
+  /** Headings found in `html`, in document order, for the contents list. */
+  headings?: Heading[];
   categoryName?: string;
 };
 
@@ -61,7 +63,30 @@ function sanitize(html: string): string {
     allowedAttributes: {
       a: ["href", "title", "target", "rel"],
       img: ["src", "alt", "title", "width", "height"],
+      /**
+       * Text alignment is emitted by the editor as `style="text-align:…"`, and
+       * headings carry an id for the contents list. Both are allow-listed by
+       * name and, for style, further constrained by allowedStyles below — a
+       * bare `style` attribute would otherwise let an author position an
+       * element over the page or load a remote url via CSS.
+       */
+      p: ["style", "id"],
+      h2: ["style", "id"],
+      h3: ["style", "id"],
+      h4: ["style", "id"],
+      blockquote: ["style"],
+      li: ["style"],
       "*": [],
+    },
+    /**
+     * Only these declarations survive, and only with these values. Anything
+     * else in a style attribute — position, background-image, url(...) — is
+     * dropped rather than passed through.
+     */
+    allowedStyles: {
+      "*": {
+        "text-align": [/^(left|right|center|justify)$/],
+      },
     },
     // javascript: and data: URIs in href/src are the other half of the problem.
     // Anything not listed here is stripped, so a `javascript:` link cannot ship.
@@ -93,6 +118,73 @@ function sanitize(html: string): string {
   );
 }
 
+/** A heading in the post body, for the table of contents. */
+export type Heading = { id: string; text: string; level: 2 | 3 | 4 };
+
+/** Strip tags and decode the handful of entities the sanitiser emits. */
+function plainText(html: string): string {
+  return html
+    .replace(/<[^>]*>/g, "")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(Number(n)))
+    .replace(/&nbsp;/g, " ")
+    .trim();
+}
+
+/** URL-safe slug for a heading anchor. */
+function headingSlug(text: string): string {
+  return (
+    text
+      .toLowerCase()
+      // Keep unicode letters and digits so a non-English heading still slugs.
+      .replace(/[^\p{L}\p{N}]+/gu, "-")
+      .replace(/^-+|-+$/g, "")
+      .slice(0, 70) || "section"
+  );
+}
+
+/**
+ * Give every heading a stable id and collect them for the contents list.
+ *
+ * Done here rather than in the browser so the ids are present in the server-
+ * rendered HTML: a link shared as `/blogs/post#a-heading` must land correctly
+ * on first paint, and a client-side pass would run too late for that. It also
+ * keeps the anchors visible to search engines.
+ *
+ * Duplicate headings get -2, -3 … so two sections called "Overview" do not
+ * both answer to the same anchor.
+ */
+export function withHeadingIds(html: string): { html: string; headings: Heading[] } {
+  const headings: Heading[] = [];
+  const used = new Map<string, number>();
+
+  const out = html.replace(
+    /<h([234])(\s[^>]*)?>([\s\S]*?)<\/h\1>/g,
+    (match, lvl: string, attrs: string | undefined, inner: string) => {
+      // Respect an id the author set by hand rather than overwriting it.
+      const existing = attrs?.match(/\sid="([^"]+)"/)?.[1];
+      const text = plainText(inner);
+      if (!text) return match;
+
+      let id = existing ?? headingSlug(text);
+      if (!existing) {
+        const seen = used.get(id) ?? 0;
+        used.set(id, seen + 1);
+        if (seen > 0) id = `${id}-${seen + 1}`;
+      }
+
+      headings.push({ id, text, level: Number(lvl) as 2 | 3 | 4 });
+      const rest = (attrs ?? "").replace(/\sid="[^"]*"/, "");
+      return `<h${lvl}${rest} id="${id}">${inner}</h${lvl}>`;
+    },
+  );
+
+  return { html: out, headings };
+}
+
 /** ISO date (YYYY-MM-DD) for the existing `date` field. */
 function isoDate(d: Date | null | undefined): string {
   return (d ?? new Date()).toISOString().slice(0, 10);
@@ -104,6 +196,8 @@ function toPost(
   categories: Map<string, string>,
 ): PublicPost {
   const categoryName = doc.categoryId ? categories.get(String(doc.categoryId)) : undefined;
+  // Anchors are injected after sanitising, so an author cannot inject an id.
+  const { html, headings } = withHeadingIds(sanitize(doc.content ?? ""));
   return {
     slug: doc.slug,
     title: doc.title,
@@ -116,7 +210,8 @@ function toPost(
     readingMinutes: doc.readingMinutes || 1,
     image: doc.featuredImage || "/blogs/seo-that-compounds.png",
     body: [],
-    html: sanitize(doc.content ?? ""),
+    html,
+    headings,
     categoryName,
   };
 }

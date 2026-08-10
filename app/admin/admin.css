@@ -307,7 +307,19 @@ body.adm-body [data-transition] {
  * that was breaking sticky. */
 .adm__main {
   min-width: 0;
-  overflow-x: hidden;
+  /**
+   * `clip`, NOT `hidden` — the same trap that broke the sidebar.
+   *
+   * `overflow-x: hidden` computes overflow-y to `auto`, making this element a
+   * scroll container. The editor toolbar then stuck to the top of .adm__main
+   * instead of the viewport, so it scrolled away with the page and the author
+   * had to scroll back up to reach the formatting buttons.
+   *
+   * `clip` contains wide content without establishing a scroll container, so
+   * overflow-y stays `visible` and sticky descendants resolve against the
+   * viewport as intended.
+   */
+  overflow-x: clip;
   padding: 28px 32px 64px;
 }
 
@@ -898,7 +910,13 @@ body.adm-body [data-transition] {
   background: #fff;
   border: 1px solid var(--line);
   border-radius: 8px;
-  overflow: hidden;
+  /**
+   * NOT `overflow: hidden`. That clipped the sticky toolbar to the container's
+   * own box, so it could never leave the top of the editor. `clip` on the
+   * horizontal axis alone still contains wide content (code blocks, tables)
+   * while leaving the vertical axis `visible`, which is what sticky needs.
+   */
+  overflow-x: clip;
   transition: border-color 0.15s, box-shadow 0.15s;
 }
 
@@ -907,17 +925,32 @@ body.adm-body [data-transition] {
   box-shadow: 0 0 0 3px var(--accent-weak);
 }
 
+/**
+ * Toolbar pinned to the top of the viewport while the editor is in view.
+ *
+ * It was already `sticky`, but its containing block is .adm-rt — so it stuck
+ * to the top of the EDITOR, which itself scrolls off the page. Writing a
+ * heading near the foot of a long post meant selecting the text, scrolling back
+ * up to reach the buttons, and losing your place.
+ *
+ * .adm-rt must not create a new scroll or clipping context for this to work,
+ * hence `overflow: clip visible` below rather than the plain `hidden` it had:
+ * `hidden` on one axis computes the other to `auto`, which would make the
+ * editor itself the scroll container and re-break the sticking.
+ */
 .adm-rt__bar {
   align-items: center;
+  /* Opaque: content scrolls underneath, and var(--bg) is the page colour. */
   background: var(--bg);
   border-bottom: 1px solid var(--line);
+  border-radius: 8px 8px 0 0;
   display: flex;
   flex-wrap: wrap;
   gap: 2px;
   padding: 6px 8px;
   position: sticky;
   top: 0;
-  z-index: 2;
+  z-index: 5;
 }
 
 .adm-rt__btn {
@@ -1209,4 +1242,31 @@ body.adm-body [data-transition] {
 
 .adm-fail__digest code {
   font-family: var(--font-mono), ui-monospace, monospace;
+}
+
+/* Alignment set in the editor must be visible in the editor, not only after
+ * publishing — otherwise the author cannot tell whether the button worked. */
+.adm-rt__area :is(p, h2, h3, h4)[style*="text-align"] {
+  /* The inline style wins; this exists so the declaration is not stripped by a
+   * more specific rule elsewhere in the sheet. */
+  text-align: revert-layer;
+}
+
+.adm-rt__area u {
+  text-decoration: underline;
+}
+
+/* The toolbar wraps to two rows on a narrow screen; keep it usable there. */
+@media (max-width: 700px) {
+  .adm-rt__bar {
+    gap: 1px;
+    padding: 5px 6px;
+  }
+  .adm-rt__btn {
+    min-width: 28px;
+    padding: 6px;
+  }
+  .adm-rt__sep {
+    margin: 0 3px;
+  }
 }

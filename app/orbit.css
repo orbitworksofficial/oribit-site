@@ -1958,9 +1958,239 @@ main h3.deco-l:before {
   width: 4rem;
 }
 
+/**
+ * H3 and H4.
+ *
+ * These were never styled here, so they fell through to theme.css's bare `h3`
+ * rule at 6.2rem — a page-hero size. An H3 rendered more than twice the size of
+ * the H2 above it, which is why a subheading looked enormous. Now they step down
+ * from the H2 (2.8rem) as a heading hierarchy should.
+ */
+.orbit-post__body h3 {
+  font-size: 2.2rem;
+  font-weight: 500;
+  letter-spacing: normal;
+  line-height: 1.3;
+  margin: 3.6rem 0 1.4rem;
+  text-align: left;
+}
+
+.orbit-post__body h4 {
+  font-size: 1.9rem;
+  font-weight: 600;
+  letter-spacing: normal;
+  line-height: 1.35;
+  margin: 3rem 0 1.2rem;
+  text-align: left;
+}
+
+/* The first heading of a post should not push a large gap below the meta. */
+.orbit-post__body > :is(h2, h3, h4):first-child {
+  margin-top: 0;
+}
+
+/* ------------------------------------------------------- body furniture --
+ * The editor can now emit lists, quotes, code, tables, images and dividers.
+ * Without these they inherit theme.css rules written for marketing blocks:
+ * centred text, oversized type and no list markers at all.
+ */
+.orbit-post__body :is(ul, ol) {
+  font-size: 2rem;
+  font-weight: 300;
+  line-height: 1.65;
+  margin: 0 0 2.6rem;
+  padding-left: 2.6rem;
+}
+
+.orbit-post__body ul {
+  list-style: disc;
+}
+
+.orbit-post__body ol {
+  list-style: decimal;
+}
+
+.orbit-post__body li {
+  margin-bottom: 0.8rem;
+  padding-left: 0.4rem;
+  text-align: left;
+}
+
+/* Nested lists tighten up rather than repeating the full block spacing. */
+.orbit-post__body li :is(ul, ol) {
+  margin: 0.8rem 0 0;
+}
+
+.orbit-post__body blockquote {
+  border-left: 0.3rem solid var(--orbit);
+  font-size: 2.1rem;
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1.6;
+  margin: 3.4rem 0;
+  padding: 0.4rem 0 0.4rem 2.4rem;
+}
+
+.orbit-post__body blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+.orbit-post__body code {
+  background: rgba(127, 127, 127, 0.12);
+  border-radius: 0.4rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.88em;
+  padding: 0.2rem 0.6rem;
+}
+
+.orbit-post__body pre {
+  background: #10132c;
+  border-radius: 0.8rem;
+  color: #e8eaf6;
+  font-size: 1.5rem;
+  line-height: 1.6;
+  margin: 0 0 2.6rem;
+  overflow-x: auto;
+  padding: 2rem 2.2rem;
+}
+
+.orbit-post__body pre code {
+  background: none;
+  color: inherit;
+  font-size: inherit;
+  padding: 0;
+}
+
+.orbit-post__body :is(img, figure img) {
+  border-radius: 0.8rem;
+  display: block;
+  height: auto;
+  margin: 3rem 0;
+  max-width: 100%;
+}
+
+.orbit-post__body figure {
+  margin: 3rem 0;
+}
+
+.orbit-post__body figure img {
+  margin: 0;
+}
+
+.orbit-post__body figcaption {
+  font-size: 1.5rem;
+  font-weight: 300;
+  margin-top: 1.2rem;
+  opacity: 0.7;
+  text-align: center;
+}
+
+.orbit-post__body hr {
+  border: 0;
+  border-top: 0.1rem solid currentColor;
+  margin: 4rem 0;
+  opacity: 0.16;
+}
+
+/* Wide tables scroll inside the column instead of stretching the page. */
+.orbit-post__body table {
+  border-collapse: collapse;
+  display: block;
+  font-size: 1.7rem;
+  margin: 0 0 2.6rem;
+  overflow-x: auto;
+  width: 100%;
+}
+
+.orbit-post__body :is(th, td) {
+  border-bottom: 0.1rem solid rgba(127, 127, 127, 0.25);
+  padding: 1.2rem 1.4rem;
+  text-align: left;
+}
+
+.orbit-post__body th {
+  font-weight: 600;
+}
+
 /* Opening paragraph carries the eye in. */
 .orbit-post__body > p:first-child {
   font-size: 2.3rem;
+}
+
+/* ------------------------------------------------- table of contents --
+ * Anchored headings. The offset stops a jumped-to heading hiding under the
+ * fixed site nav, and the target flash confirms the jump landed.
+ */
+.orbit-post__body :is(h2, h3, h4)[id] {
+  scroll-margin-top: 11rem;
+}
+
+.orbit-post__body :is(h2, h3, h4):target {
+  animation: orbit-toc-flash 1.6s ease-out;
+}
+
+@keyframes orbit-toc-flash {
+  0%,
+  40% {
+    background: rgba(254, 6, 59, 0.12);
+  }
+  100% {
+    background: transparent;
+  }
+}
+
+.orbit-toc {
+  border: 0.1rem solid rgba(127, 127, 127, 0.22);
+  border-radius: 0.8rem;
+  margin: 0 0 4rem;
+  padding: 2.4rem 2.8rem;
+}
+
+.orbit-toc__title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  margin: 0 0 1.4rem;
+  opacity: 0.65;
+  text-transform: uppercase;
+}
+
+.orbit-toc ol {
+  counter-reset: toc;
+  font-size: 1.75rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.orbit-toc li {
+  margin: 0 0 0.9rem;
+  padding: 0;
+}
+
+.orbit-toc li:last-child {
+  margin-bottom: 0;
+}
+
+/* Sub-headings indent so the document's shape is visible at a glance. */
+.orbit-toc li[data-level="3"] {
+  padding-left: 2rem;
+}
+
+.orbit-toc li[data-level="4"] {
+  padding-left: 4rem;
+}
+
+.orbit-toc a {
+  border-bottom: 0.1rem solid transparent;
+  font-weight: 300;
+  text-decoration: none;
+  transition: border-color 0.15s, opacity 0.15s;
+}
+
+.orbit-toc a:hover {
+  border-bottom-color: var(--orbit);
+  opacity: 1;
 }
 
 @media screen and (max-width: 743px) {
@@ -1975,6 +2205,21 @@ main h3.deco-l:before {
   }
   .orbit-post__body h2 {
     font-size: 2.2rem;
+  }
+  .orbit-post__body h3 {
+    font-size: 1.95rem;
+  }
+  .orbit-post__body h4 {
+    font-size: 1.75rem;
+  }
+  .orbit-post__body :is(ul, ol) {
+    font-size: 1.8rem;
+  }
+  .orbit-post__body blockquote {
+    font-size: 1.9rem;
+  }
+  .orbit-toc {
+    padding: 2rem;
   }
 }
 

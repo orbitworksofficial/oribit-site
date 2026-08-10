@@ -104,10 +104,33 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
             author-supplied markup that has not been through that allow-list.
           */}
           {post.html ? (
-            <div
-              className="orbit-post__body"
-              dangerouslySetInnerHTML={{ __html: post.html }}
-            />
+            <>
+              {/*
+                Contents list. Shown only when there is enough structure to be
+                worth one — on a two-heading post it is noise, not navigation.
+                Plain anchors, so it works without JavaScript and each entry is
+                a real shareable URL.
+              */}
+              {post.headings && post.headings.length >= 3 && (
+                <nav className="orbit-toc" aria-labelledby="orbit-toc-title">
+                  <p className="orbit-toc__title" id="orbit-toc-title">
+                    On this page
+                  </p>
+                  <ol>
+                    {post.headings.map((h) => (
+                      <li key={h.id} data-level={h.level}>
+                        <a href={`#${h.id}`}>{h.text}</a>
+                      </li>
+                    ))}
+                  </ol>
+                </nav>
+              )}
+
+              <div
+                className="orbit-post__body"
+                dangerouslySetInnerHTML={{ __html: post.html }}
+              />
+            </>
           ) : (
             <div className="orbit-post__body">
               {post.body.map((para, i) =>
