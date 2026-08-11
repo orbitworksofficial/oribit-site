@@ -5,6 +5,7 @@ import { useEffect, useRef, useState, useTransition } from "react";
 
 import type { ActionState } from "../actions";
 import RichText from "./RichText";
+import { useFormDraft } from "./useFormDraft";
 import ImageField from "./ImageField";
 
 export type BlogFormValues = {
@@ -228,14 +229,72 @@ export default function BlogForm({
   /** Errors currently shown in the dialog; null when it is closed. */
   const [dialogErrors, setDialogErrors] = useState<Record<string, string> | null>(null);
 
+  const formRef = useRef<HTMLFormElement>(null);
+  const { draft, savedTick, restore, discard, clearOnSubmit, reopenDraft } = useFormDraft(
+    formRef,
+    values.id,
+  );
+
+  /**
+   * Content lives in React state inside RichText, and the editor is built once
+   * from `defaultValue`. Restoring a draft therefore has to remount it, which
+   * this key does — bumping it is the only way to get new content into Tiptap
+   * without reaching into its internals.
+   */
+  const [contentKey, setContentKey] = useState(0);
+  const [contentValue, setContentValue] = useState(values.content);
+
+  /** Put a saved draft back into every field. */
+  const applyDraft = () => {
+    const data = restore();
+    const form = formRef.current;
+    if (!data || !form) return;
+
+    for (const [name, value] of Object.entries(data)) {
+      if (name === "content") {
+        setContentValue(String(value));
+        setContentKey((k) => k + 1);
+        continue;
+      }
+      // Controlled fields need their state updated, not just the DOM node.
+      if (name === "title") { setTitle(String(value)); continue; }
+      if (name === "slug") { setSlug(String(value)); setSlugTouched(true); continue; }
+      if (name === "seoTitle") { setSeoTitle(String(value)); continue; }
+      if (name === "seoDescription") { setSeoDescription(String(value)); continue; }
+
+      const values_ = Array.isArray(value) ? value : [value];
+      const nodes = form.querySelectorAll<HTMLInputElement>(`[name="${name}"]`);
+      nodes.forEach((node) => {
+        if (node.type === "checkbox") {
+          node.checked = values_.includes(node.value) || value === "on";
+        } else {
+          node.value = values_[0] ?? "";
+          // Hidden inputs owned by a component (the image field) need an event
+          // for that component's state to follow.
+          node.dispatchEvent(new Event("input", { bubbles: true }));
+        }
+      });
+    }
+  };
+
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (pending) return;
     const fd = new FormData(event.currentTarget);
     startTransition(async () => {
-      // A successful save redirects inside the action, so nothing returns here.
+      /**
+       * Clear the local draft up front, and put it back if the save fails.
+       *
+       * A successful save ends in redirect(), which throws NEXT_REDIRECT — so
+       * nothing after the await runs, and clearing there never happened. The
+       * post saved, the draft stayed behind, and the next visit offered to
+       * restore stale text over freshly saved content.
+       */
+      clearOnSubmit();
       const result = await action(state, fd);
       if (result) {
+        // The save did not go through, so the draft is worth keeping after all.
+        reopenDraft();
         setState(result);
         // Surface the failure immediately: on a form this long the offending
         // field is usually scrolled out of sight.
@@ -273,8 +332,40 @@ export default function BlogForm({
   const err = (f: string) => state.errors?.[f];
 
   return (
-    <form onSubmit={onSubmit}>
+    <form ref={formRef} onSubmit={onSubmit}>
       {values.id && <input type="hidden" name="id" value={values.id} />}
+
+      {/*
+        Offered, never applied automatically. Silently replacing what is on
+        screen with older text would be worse than losing it — the author has
+        no way to tell which version they are looking at.
+      */}
+      {draft.found && (
+        <div className="adm-banner adm-banner--draft">
+          <span>
+            You have unsaved changes from{" "}
+            {draft.savedAt
+              ? draft.savedAt.toLocaleString(undefined, {
+                  dateStyle: "medium",
+                  timeStyle: "short",
+                })
+              : "an earlier session"}
+            .
+          </span>
+          <span className="adm-banner__actions">
+            <button type="button" className="adm-btn adm-btn--sm" onClick={applyDraft}>
+              Restore
+            </button>
+            <button
+              type="button"
+              className="adm-btn adm-btn--ghost adm-btn--sm"
+              onClick={discard}
+            >
+              Discard
+            </button>
+          </span>
+        </div>
+      )}
 
       {/* The dialog is the loud signal; the banner below stays as the quiet
           record of it once the dialog is dismissed. */}
@@ -339,7 +430,7 @@ export default function BlogForm({
         */}
         <div className="adm-field">
           <span>Content <Req /></span>
-          <RichText name="content" defaultValue={values.content} />
+          <RichText key={contentKey} name="content" defaultValue={contentValue} />
           <span className="adm-hint">
             Select text to format it. Headings start at H2 — the post title is already the
             page&rsquo;s H1.
@@ -583,6 +674,17 @@ export default function BlogForm({
         <Link href="/admin/blogs" className="adm-btn adm-btn--ghost">
           Cancel
         </Link>
+
+        {/* Quiet confirmation that the work is being kept locally. */}
+        {savedTick && (
+          <span className="adm-autosave" aria-live="polite">
+            Draft saved locally at{" "}
+            {savedTick.toLocaleTimeString(undefined, {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </span>
+        )}
       </div>
     </form>
   );

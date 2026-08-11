@@ -1462,3 +1462,28 @@ body.adm-body [data-transition] {
 .adm-rt__outline li[data-level="2"] button {
   font-weight: 600;
 }
+
+/* ------------------------------------------------------ local draft -- */
+.adm-banner--draft {
+  align-items: center;
+  background: var(--warn-weak);
+  border: 1px solid rgba(154, 100, 0, 0.28);
+  color: var(--warn);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.adm-banner__actions {
+  display: flex;
+  flex-shrink: 0;
+  gap: 8px;
+}
+
+.adm-autosave {
+  color: var(--faint);
+  font-size: 12.5px;
+  margin-left: auto;
+  align-self: center;
+}
