@@ -570,7 +570,8 @@ export default function BlogForm({
             />
             <span className="adm-hint">
               Rendered as an extra ld+json block on the post, in addition to the Article schema
-              generated automatically. Must be valid JSON.
+              generated automatically. Paste the block as-is — a wrapping &lt;script&gt; tag and
+              paragraph breaks inside the text are handled for you.
             </span>
             {err("schemaMarkup") && <div className="adm-error">{err("schemaMarkup")}</div>}
           </label>

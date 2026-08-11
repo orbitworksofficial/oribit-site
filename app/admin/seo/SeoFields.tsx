@@ -209,8 +209,9 @@ export default function SeoFields({
               style={{ minHeight: 180 }}
             />
             <span className="adm-hint">
-              Added to this page in addition to the site-wide Organization graph. Must be valid
-              JSON.
+              Added to this page in addition to the site-wide Organization graph. Paste the
+              block as-is — a wrapping &lt;script&gt; tag and paragraph breaks inside the text
+              are handled for you.
             </span>
             {err("schemaMarkup") && <div className="adm-error">{err("schemaMarkup")}</div>}
           </label>

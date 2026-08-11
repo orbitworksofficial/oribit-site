@@ -20,6 +20,66 @@ export const slugSchema = optionalText.pipe(
     .optional(),
 );
 
+/**
+ * Make a pasted JSON-LD block parseable.
+ *
+ * Authors paste from Google's Structured Data helper, an AI, or another page's
+ * source, and two things reliably break it — neither of which is a mistake
+ * about *intent*, so rejecting the paste and asking them to hand-edit JSON is
+ * the wrong trade:
+ *
+ *   1. The surrounding <script type="application/ld+json"> … </script> tag.
+ *      The field wants the object; the tag is added at render time.
+ *
+ *   2. Real line breaks inside string values. JSON forbids them — a multi-
+ *      paragraph FAQ answer fails with "Bad control character in string
+ *      literal" — but they are exactly what you get from writing prose in any
+ *      editor. They become \n, which is what the author meant.
+ *
+ * The scan below tracks whether it is inside a string so it never touches the
+ * newlines that format the JSON itself, and honours backslash escaping so a
+ * legitimate \" does not end the string early.
+ */
+export function normaliseSchema(input: string): string {
+  // Strip a wrapping <script …> … </script>, keeping only its contents.
+  const unwrapped = input
+    .replace(/^\s*<script\b[^>]*>/i, "")
+    .replace(/<\/script>\s*$/i, "")
+    .trim();
+
+  let out = "";
+  let inString = false;
+  let escaped = false;
+
+  for (const ch of unwrapped) {
+    if (escaped) {
+      out += ch;
+      escaped = false;
+      continue;
+    }
+    if (ch === "\\") {
+      out += ch;
+      escaped = true;
+      continue;
+    }
+    if (ch === '"') {
+      inString = !inString;
+      out += ch;
+      continue;
+    }
+    if (inString && (ch === "\n" || ch === "\r" || ch === "\t")) {
+      // \r is dropped rather than encoded: CRLF would otherwise become \r\n
+      // and render as a double break.
+      if (ch === "\n") out += "\\n";
+      else if (ch === "\t") out += "\\t";
+      continue;
+    }
+    out += ch;
+  }
+
+  return out;
+}
+
 export const seoSchema = z.object({
   seoTitle: optionalText.pipe(z.string().max(70).optional()),
   seoDescription: optionalText.pipe(z.string().max(200).optional()),
@@ -38,19 +98,30 @@ export const seoSchema = z.object({
    * Parsed before saving. Vivacity stored this as free text and never rendered
    * it; here it goes straight into a <script type="application/ld+json">, so
    * invalid JSON would break the tag on every page that uses it.
+   *
+   * Normalised first, because the two things that break a paste from a schema
+   * generator are both mechanical and both fixable without guessing at intent:
+   * the surrounding <script> tag, and real line breaks inside string values.
    */
-  schemaMarkup: optionalText.refine(
-    (v) => {
-      if (!v) return true;
-      try {
-        JSON.parse(v);
-        return true;
-      } catch {
-        return false;
-      }
-    },
-    { message: "Must be valid JSON" },
-  ),
+  schemaMarkup: optionalText
+    // Normalise before validating — see normaliseSchema for what and why.
+    .transform((v) => (v ? normaliseSchema(v) : v))
+    .refine(
+      (v) => {
+        if (!v) return true;
+        try {
+          JSON.parse(v);
+          return true;
+        } catch {
+          return false;
+        }
+      },
+      {
+        message:
+          "Must be valid JSON. Check for unescaped quotes — paragraph breaks " +
+          "and <script> tags are handled automatically.",
+      },
+    ),
 });
 
 export const blogSchema = seoSchema.extend({
