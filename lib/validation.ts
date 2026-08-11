@@ -56,7 +56,17 @@ export const seoSchema = z.object({
 export const blogSchema = seoSchema.extend({
   title: trimmed.min(1, "Title is required").max(255),
   slug: slugSchema,
-  excerpt: trimmed.min(1, "Excerpt is required").max(500),
+  /**
+   * No upper bound.
+   *
+   * The 500-character cap rejected the save outright with no hint in the UI —
+   * there is no maxLength on the field, so an author only discovered it after
+   * writing. Length here is an editorial judgement, not a correctness one: a
+   * long excerpt reads badly on the index and gets truncated by Google when it
+   * stands in as the meta description, but neither is a reason for the server
+   * to refuse the post.
+   */
+  excerpt: trimmed.min(1, "Excerpt is required"),
   content: trimmed.min(1, "Content is required"),
   featuredImage: optionalText,
   featuredImageAlt: optionalText.pipe(z.string().max(255).optional()),
