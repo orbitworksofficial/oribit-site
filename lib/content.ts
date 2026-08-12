@@ -615,7 +615,7 @@ export const OFFICES: Office[] = [
     countryCode: "US",
     city: "Baltimore",
     region: "MD",
-    address: "Baltimore, MD, USA",
+    address: "2100 Autumn Haze Ct, Gambrills, MD 21054, USA",
   },
   {
     country: "Canada",
@@ -623,7 +623,7 @@ export const OFFICES: Office[] = [
     city: "Beechville",
     region: "ON",
     postalCode: "M5X 1A9",
-    street: "1213 States Ln,  Beechville, NS B3T 2J3, Canada",
+    street: "213 States Ln,  Beechville, NS B3T 2J3, Canada",
     address: "213 States Ln,  Beechville, NS B3T 2J3, Canada",
   },
 ];
