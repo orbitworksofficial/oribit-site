@@ -43,11 +43,21 @@ const nextConfig: NextConfig = {
    * 30 days, not `immutable`: these filenames are not content-hashed, so a
    * replaced asset still needs to reach returning visitors within a sane
    * window. If you swap an image and need it live immediately, rename it.
+   *
+   * The trailing extension group is load-bearing. `/:dir(…|services)/:path*`
+   * alone also matched the /services PAGE, so the HTML was served with a
+   * 30-day cache: visitors and crawlers kept the first response they ever got,
+   * and every SEO edit made in the dashboard appeared to be ignored. /services
+   * was the only route affected, because it is the only page whose name
+   * collides with a folder in public/. Matching on the asset extension keeps
+   * the header on the files in public/services/ without ever touching a
+   * document.
    */
   async headers() {
     return [
       {
-        source: "/:dir(video|media|brand|services)/:path*",
+        source:
+          "/:dir(video|media|brand|services)/:path*.:ext(avif|gif|ico|jpeg|jpg|mp4|png|svg|webm|webp|woff|woff2)",
         headers: [{ key: "Cache-Control", value: "public, max-age=2592000" }],
       },
     ];
