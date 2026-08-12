@@ -160,12 +160,42 @@ export const tagSchema = z.object({
   slug: slugSchema,
 });
 
+/**
+ * FAQs for a page, as edited in the repeatable rows on the Page SEO screen.
+ *
+ * Rows arrive positionally from the form, so a blank pair is a row the editor
+ * added and did not fill in, or one they cleared to delete — both mean "drop
+ * it", not "reject the save". A row with only one half filled is a genuine
+ * mistake, because a question with no answer produces invalid FAQPage markup,
+ * so that one is reported rather than silently discarded.
+ */
+const faqsSchema = z
+  .array(z.object({ question: trimmed.max(300), answer: trimmed.max(2000) }))
+  .max(50)
+  .default([])
+  // Validated before filtering, so an issue's path index still refers to the
+  // row the editor is looking at rather than to its position after the blanks
+  // have been dropped.
+  .superRefine((rows, ctx) => {
+    rows.forEach((r, i) => {
+      if (Boolean(r.question) !== Boolean(r.answer)) {
+        ctx.addIssue({
+          code: "custom",
+          path: [i],
+          message: "A FAQ needs both a question and an answer.",
+        });
+      }
+    });
+  })
+  .transform((rows) => rows.filter((r) => r.question && r.answer));
+
 export const pageSeoSchema = seoSchema.extend({
   pageKey: trimmed
     .min(1, "Path is required")
     .regex(/^\//, "Must start with a slash, e.g. /services")
     .max(200),
   pageName: trimmed.min(1, "Name is required").max(120),
+  faqs: faqsSchema,
 });
 
 export const loginSchema = z.object({

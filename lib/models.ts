@@ -106,12 +106,22 @@ export type TagDoc = {
   updatedAt: Date;
 };
 
+/** One question/answer pair, editable in the dashboard. */
+export type FaqItem = { question: string; answer: string };
+
 /** Per-page SEO overrides, keyed by route path (e.g. "/services"). */
 export type PageSeoDoc = SeoFields & {
   _id?: ObjectId;
   /** Route path this applies to, with a leading slash. */
   pageKey: string;
   pageName: string;
+  /**
+   * FAQs for this route. Rendered on the page *and* serialised into FAQPage
+   * JSON-LD, which is why they are stored structured rather than as pasted
+   * markup: Google only credits FAQ schema whose answers are visible on the
+   * page, so one editor writing both keeps them from drifting apart.
+   */
+  faqs?: FaqItem[];
   createdAt: Date;
   updatedAt: Date;
 };

@@ -4,7 +4,9 @@ import Link from "next/link";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 
+import type { FaqItem } from "@/lib/models";
 import { savePageSeoAction, type ActionState } from "../actions";
+import FaqFields from "./FaqFields";
 import SeoFields, { type SeoValues } from "./SeoFields";
 
 function Submit() {
@@ -18,11 +20,13 @@ function Submit() {
 
 export default function PageSeoForm({
   values,
+  faqs,
   pageKey,
   pageName,
   isNew,
 }: {
   values: SeoValues;
+  faqs: FaqItem[];
   pageKey: string;
   pageName: string;
   isNew: boolean;
@@ -72,6 +76,8 @@ export default function PageSeoForm({
       </div>
 
       <SeoFields values={values} errors={state.errors} />
+
+      <FaqFields faqs={faqs} errors={state.errors} />
 
       <div className="adm-actions">
         <Submit />

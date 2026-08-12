@@ -1,8 +1,9 @@
 import "server-only";
 
 import type { Metadata } from "next";
-import { unstable_cache } from "next/cache";
+import { cache } from "react";
 
+import type { FaqItem } from "./models";
 import { getPageSeo } from "./seo-settings";
 import { pageMetadata } from "./seo";
 import { SITE_URL } from "./site";
@@ -18,17 +19,18 @@ import { SITE_URL } from "./site";
  * cause one. Every DB value below is treated as an override of a working
  * default, never as a replacement for it.
  *
- * Cached with unstable_cache so this costs one Atlas round-trip per route per
- * revalidation window rather than one per request, which keeps the pages
- * effectively static. Saving from the dashboard calls revalidateSeo() to clear
- * it immediately, so an edit is live without waiting for the window to lapse.
+ * Reads are deduplicated per request (see readRow below) rather than cached
+ * across requests, so a save in the dashboard is live on the very next request.
  */
 
-/** Shared cache tag, so one save can flush every page at once. */
+/**
+ * Shared cache tag for the route-level revalidation the save action performs.
+ *
+ * This no longer gates the row read itself — readRow() is per-request — but the
+ * page shells are still cached by Next, so the save action tags and revalidates
+ * them to push an edit out immediately.
+ */
 export const SEO_TAG = "page-seo";
-
-/** Seconds before a cached row is refetched even without an explicit purge. */
-const REVALIDATE = 3600;
 
 /** Treat whitespace-only admin input as "not set" rather than as an override. */
 function clean(v: string | undefined | null): string | undefined {
@@ -46,7 +48,26 @@ function parseRobots(v: string | undefined) {
   return { index: !s.includes("noindex"), follow: !s.includes("nofollow") };
 }
 
-const readRow = unstable_cache(
+/**
+ * Read one page's overrides, deduplicated per request.
+ *
+ * React's cache(), not unstable_cache(), and the difference is a bug fix rather
+ * than a preference. unstable_cache belongs to the legacy cache system, which
+ * updateTag()/revalidateTag() no longer reach in Next 16 — those functions
+ * target the 'use cache' store. Tagging the entry therefore bought nothing: a
+ * save wrote to Atlas, called updateTag(SEO_TAG), and the page kept serving the
+ * previous title and description until the hour-long window lapsed. Verified
+ * directly — purging the tag left the stale value in place.
+ *
+ * The alternative, 'use cache' + cacheTag, needs the project-wide
+ * cacheComponents flag, which changes rendering semantics for every route; that
+ * is not something an SEO override should require. cache() instead scopes
+ * deduplication to a single render, so a page whose metadata and body both read
+ * the row still costs one query, and an edit is live on the next request.
+ * Stale metadata is an SEO regression that persists in the index long after the
+ * cache expires, so correctness wins over the saved round-trip here.
+ */
+const readRow = cache(
   async (pageKey: string) => {
     try {
       const doc = await getPageSeo(pageKey);
@@ -68,6 +89,9 @@ const readRow = unstable_cache(
         twitterImage: clean(doc.twitterImage),
         twitterCard: clean(doc.twitterCard),
         schemaMarkup: clean(doc.schemaMarkup),
+        faqs: (doc.faqs ?? [])
+          .map((f) => ({ question: f.question?.trim() ?? "", answer: f.answer?.trim() ?? "" }))
+          .filter((f) => f.question && f.answer),
       };
     } catch {
       // Swallowed on purpose — see the note above about outages. The hardcoded
@@ -75,8 +99,6 @@ const readRow = unstable_cache(
       return null;
     }
   },
-  ["page-seo-row"],
-  { revalidate: REVALIDATE, tags: [SEO_TAG] },
 );
 
 /** Absolute URL for an admin-supplied image, which may be a site-relative path. */
@@ -161,7 +183,42 @@ export async function metadataFromDb(path: string, base: Metadata): Promise<Meta
   };
 }
 
-/** JSON-LD authored in the dashboard, for a page to render in a script tag. */
+/**
+ * FAQs stored for a route, or null when the dashboard has none — in which case
+ * the caller falls back to the page's own hardcoded list, on the same
+ * database-first principle as the metadata above.
+ *
+ * An empty array from the dashboard is *not* treated as an override: the row
+ * exists for the metadata fields, and an editor who has never opened the FAQ
+ * block should not thereby delete the FAQs the page ships with.
+ */
+export async function pageFaqs(path: string): Promise<FaqItem[] | null> {
+  const row = await readRow(path);
+  return row?.faqs?.length ? row.faqs : null;
+}
+
+/** FAQPage JSON-LD for a list of question/answer pairs. */
+export function faqSchema(faqs: FaqItem[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((f) => ({
+      "@type": "Question",
+      name: f.question,
+      acceptedAnswer: { "@type": "Answer", text: f.answer },
+    })),
+  };
+}
+
+/**
+ * JSON-LD authored in the dashboard's free-form Schema markup field.
+ *
+ * FAQ markup is deliberately not added here. It is emitted by <FaqSection>
+ * instead, next to the answers it describes, because that component is also
+ * what decides whether the dashboard's FAQs or the page's hardcoded ones are
+ * the ones on screen — and FAQPage markup that does not match the visible text
+ * is a manual action risk, not just a missed rich result.
+ */
 export async function pageSchema(path: string): Promise<string | null> {
   const row = await readRow(path);
   if (!row?.schemaMarkup) return null;

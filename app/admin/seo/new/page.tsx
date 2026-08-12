@@ -33,7 +33,7 @@ export default async function NewPageSeo() {
         </div>
       </div>
 
-      <PageSeoForm values={EMPTY} pageKey="" pageName="" isNew />
+      <PageSeoForm values={EMPTY} faqs={[]} pageKey="" pageName="" isNew />
     </>
   );
 }

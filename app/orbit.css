@@ -4461,3 +4461,113 @@ footer.invert .footer > .inner {
 .orbit-aside__cta-link:hover {
   text-decoration: underline;
 }
+
+/* -------------------------------------------------------------- faqs --
+ * The FAQ accordion (FaqSection). Native <details>, so it opens without JS and
+ * crawlers see every answer whether or not a row is expanded. Rows sit in a
+ * single centred column rather than the 12-col grid — long prose across the
+ * full constraint is unreadable.
+ */
+.orbit-faqs {
+  margin-top: 12rem;
+  text-align: center;
+}
+
+.orbit-faqs > h3 {
+  margin-bottom: 1rem;
+}
+
+.orbit-faqs > p {
+  margin: 0 auto 1rem;
+  max-width: 60ch;
+}
+
+.orbit-faq-list {
+  margin: 4rem auto 0;
+  max-width: 90rem;
+  text-align: left;
+  width: 100%;
+}
+
+.orbit-faq {
+  border-top: 1px solid rgba(11, 14, 40, 0.12);
+}
+
+.orbit-faq:last-child {
+  border-bottom: 1px solid rgba(11, 14, 40, 0.12);
+}
+
+.orbit-faq > summary {
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  font-size: 1.9rem;
+  font-weight: 400;
+  gap: 2rem;
+  justify-content: space-between;
+  /* Hides the native disclosure triangle; ::after below replaces it. */
+  list-style: none;
+  padding: 2.6rem 0;
+  transition: color 0.3s var(--ease);
+}
+
+.orbit-faq > summary::-webkit-details-marker {
+  display: none;
+}
+
+.orbit-faq > summary:hover {
+  color: var(--orbit);
+}
+
+/* Plus sign, rotating to a minus when the row opens. */
+.orbit-faq > summary::after {
+  border: 1px solid rgba(11, 14, 40, 0.18);
+  border-radius: 50%;
+  content: "+";
+  display: grid;
+  flex: 0 0 auto;
+  font-size: 2rem;
+  font-weight: 300;
+  height: 3.6rem;
+  place-items: center;
+  transition: transform 0.35s var(--ease), background 0.3s var(--ease),
+    border-color 0.3s var(--ease), color 0.3s var(--ease);
+  width: 3.6rem;
+}
+
+.orbit-faq[open] > summary::after {
+  background: var(--orbit);
+  border-color: var(--orbit);
+  color: #fff;
+  content: "−";
+  transform: rotate(180deg);
+}
+
+.orbit-faq__body {
+  padding: 0 6rem 2.8rem 0;
+}
+
+.orbit-faq__body p {
+  font-size: 1.6rem;
+  font-weight: 300;
+  line-height: 1.7;
+  margin: 0;
+  max-width: 75ch;
+  opacity: 0.78;
+}
+
+@media screen and (max-width: 743px) {
+  .orbit-faqs {
+    margin-top: 8rem;
+  }
+
+  .orbit-faq > summary {
+    font-size: 1.7rem;
+    gap: 1.4rem;
+    padding: 2.2rem 0;
+  }
+
+  .orbit-faq__body {
+    padding-right: 0;
+  }
+}

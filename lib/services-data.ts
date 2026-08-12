@@ -62,6 +62,51 @@ export const SERVICES_HUB = {
   ctaSecondary: "Or explore individual services above",
 } as const;
 
+export type Faq = { question: string; answer: string };
+
+/**
+ * Hub-page FAQs, and the fallback for the FAQPage JSON-LD.
+ *
+ * Same database-first / hardcoded-second rule as the rest of the page SEO: the
+ * dashboard (Page SEO -> /services -> FAQs) overrides this list, and these
+ * entries ship whenever no override is stored or Atlas is unreachable. The
+ * answers are rendered on the page as well as serialised into the schema —
+ * Google only credits FAQ markup whose text is visible to the visitor, so the
+ * two must never be allowed to diverge.
+ */
+export const SERVICES_FAQS: Faq[] = [
+  {
+    question: "What are the top-rated IT service providers for small businesses?",
+    answer:
+      "Top-rated providers are typically those with strong customer satisfaction, 24/7 support, and proven experience serving small to mid-sized businesses. Look for providers that appear on industry-recognized performance lists and offer scalable, customised solutions. The best choice depends on your specific industry, budget, and security requirements.",
+  },
+  {
+    question: "How much do monthly IT support services cost per user?",
+    answer:
+      "Monthly IT support costs generally range from $75 to $165 per user for standard services like help desk and monitoring, and can go up to $150–$400 per user for comprehensive plans with advanced security and compliance. Per-device pricing is also common, typically $30–$75 per device per month. Actual costs vary based on location, service level, and the number of users.",
+  },
+  {
+    question: "What is AI digital marketing?",
+    answer:
+      "AI digital marketing applies artificial intelligence — such as machine learning, natural language processing, and predictive analytics — to automate, personalise, and optimise marketing campaigns across digital channels. It enables real-time bidding, audience segmentation, content generation, and performance tuning with minimal manual intervention. Essentially, AI handles data-driven tasks that were previously done by marketing teams.",
+  },
+  {
+    question: "How much does digital marketing cost?",
+    answer:
+      "Digital marketing costs vary widely: agency fees average around $100–$150 per hour, with full-service projects typically starting from $10,000–$25,000. Monthly retainers for paid search or social ads often range from £1,000 to £5,000 (or equivalent), while the average cost per action is roughly $50 for search ads and $75 for display ads. Actual costs depend on your goals, industry competition, and campaign complexity.",
+  },
+  {
+    question: "How to improve cybersecurity for remote employees?",
+    answer:
+      "Start by enforcing multi-factor authentication on all accounts and adopting a Zero Trust approach to network access. Secure every endpoint with encryption, regular patching, and mobile device management, and provide ongoing security awareness training with simulated phishing exercises. Finally, implement continuous monitoring of user activity and network traffic to detect anomalies in real time.",
+  },
+  {
+    question: "How do you price your IT services?",
+    answer:
+      "Common pricing models include per-user (a fixed monthly rate per employee), per-device (a flat fee per workstation or server), and tiered packages that bundle different service levels. The industry is increasingly moving toward value-based or outcome-based pricing, where fees are tied to business results like uptime, compliance, or response times rather than hours worked. Your final price should reflect the scope of support, security needs, and service-level agreements.",
+  },
+];
+
 export const SERVICE_BUCKETS: ServiceBucket[] = [
   {
     slug: "ai-automation",

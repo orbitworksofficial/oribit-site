@@ -1,7 +1,7 @@
 import "server-only";
 
 import type { Metadata } from "next";
-import { unstable_cache } from "next/cache";
+import { cache } from "react";
 /**
  * sanitize-html, not isomorphic-dompurify.
  *
@@ -40,10 +40,14 @@ export type PublicPost = Post & {
   categoryName?: string;
 };
 
-/** Shared cache tag so publishing a post can flush the whole public blog. */
+/**
+ * Shared cache tag for the route-level revalidation the save action performs.
+ *
+ * The post reads themselves are per-request (see readAll), so this no longer
+ * gates the data; it still flushes the cached page shells so a publish appears
+ * without waiting.
+ */
 export const BLOG_TAG = "public-blogs";
-
-const REVALIDATE = 300;
 
 /**
  * Author-supplied HTML is sanitised before it can reach dangerouslySetInnerHTML.
@@ -253,7 +257,17 @@ async function decorate(docs: BlogDoc[]) {
   };
 }
 
-const readAll = unstable_cache(
+/**
+ * Deduplicated per request rather than cached across requests.
+ *
+ * See the note on readRow in lib/page-seo.ts: unstable_cache is the legacy
+ * cache system, and the updateTag(BLOG_TAG) call in the save action does not
+ * reach it in Next 16 — so a publish stayed invisible until the revalidate
+ * window lapsed, which is the same bug that hid SEO edits. cache() keeps one
+ * query per render (the list page reads this repeatedly) while making a publish
+ * live on the next request.
+ */
+const readAll = cache(
   async (): Promise<PublicPost[] | null> => {
     if (!isDbConfigured()) return null;
     try {
@@ -271,8 +285,6 @@ const readAll = unstable_cache(
       return null;
     }
   },
-  ["public-blogs-all"],
-  { revalidate: REVALIDATE, tags: [BLOG_TAG] },
 );
 
 /** Every published post, newest first. Falls back to lib/content.ts. */
@@ -286,8 +298,8 @@ export async function getPost(slug: string): Promise<PublicPost | null> {
   return posts.find((p) => p.slug === slug) ?? null;
 }
 
-/** The raw SEO block for a post, cached alongside the posts themselves. */
-const readSeo = unstable_cache(
+/** The raw SEO block for a post, deduplicated alongside the posts themselves. */
+const readSeo = cache(
   async (slug: string) => {
     if (!isDbConfigured()) return null;
     try {
@@ -319,8 +331,6 @@ const readSeo = unstable_cache(
       return null;
     }
   },
-  ["public-blog-seo"],
-  { revalidate: REVALIDATE, tags: [BLOG_TAG] },
 );
 
 function absolute(url: string | undefined): string | undefined {

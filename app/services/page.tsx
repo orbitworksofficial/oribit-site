@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import FaqSection from "@/components/blocks/FaqSection";
 import PageHero from "@/components/blocks/PageHero";
 import ServiceExplorer from "@/components/blocks/ServiceExplorer";
 import Testimonials from "@/components/blocks/Testimonials";
-import { SERVICES_HUB } from "@/lib/services-data";
+import { SERVICES_FAQS, SERVICES_HUB } from "@/lib/services-data";
 import { pageMetadataFromDb } from "@/lib/page-seo";
 
 /**
@@ -40,6 +41,17 @@ export default function Services() {
       </div>
 
       <Testimonials limit={3} />
+
+      {/*
+        Editable from the dashboard (Page SEO -> /services -> FAQs), falling
+        back to SERVICES_FAQS. Emits its own FAQPage JSON-LD.
+      */}
+      <FaqSection
+        path="/services"
+        fallback={SERVICES_FAQS}
+        heading="What businesses ask before they start."
+        lead="Straight answers on cost, coverage, and how we price the work."
+      />
 
       {/* Bottom CTA (brief) */}
       <div

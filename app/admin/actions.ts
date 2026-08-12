@@ -70,11 +70,30 @@ function seoFrom(fd: FormData) {
 }
 
 /**
+ * Pull the repeatable FAQ rows out of a form.
+ *
+ * The two fields are posted as parallel lists (every row contributes one
+ * faqQuestion and one faqAnswer, blank or not), so index i of one lines up with
+ * index i of the other. Zipping on the longer list means a row whose answer is
+ * missing still reaches the schema as a half-filled pair and is reported,
+ * rather than being silently truncated away.
+ */
+function faqsFrom(fd: FormData) {
+  const questions = fd.getAll("faqQuestion").map(String);
+  const answers = fd.getAll("faqAnswer").map(String);
+  const rows = Math.max(questions.length, answers.length);
+  return Array.from({ length: rows }, (_, i) => ({
+    question: questions[i] ?? "",
+    answer: answers[i] ?? "",
+  }));
+}
+
+/**
  * Revalidate everything a post appears on, so a publish is visible at once.
  *
- * updateTag is the load-bearing call: the public blog reads through
- * unstable_cache in lib/public-blogs.ts, so revalidatePath alone would leave a
- * newly published post invisible until the cache window lapsed.
+ * The post data itself is read per-request (lib/public-blogs.ts), so freshness
+ * no longer depends on the tag; these calls flush the cached page shells so the
+ * new post shows up without waiting for a natural revalidation.
  */
 function revalidateBlog(slug?: string) {
   updateTag(BLOG_TAG);
@@ -322,6 +341,7 @@ export async function savePageSeoAction(
     ...seoFrom(fd),
     pageKey: str(fd, "pageKey"),
     pageName: str(fd, "pageName"),
+    faqs: faqsFrom(fd),
   });
   if (!parsed.success) return { errors: fieldErrors(parsed.error) };
 
@@ -336,10 +356,11 @@ export async function savePageSeoAction(
   );
 
   /**
-   * The page's own metadata is generated from this row. revalidatePath alone is
-   * not enough: the row is read through unstable_cache in lib/page-seo.ts,
-   * which is keyed by tag, so without revalidateTag the edit would not appear
-   * until the hour-long window lapsed.
+   * The page's own metadata is generated from this row, which lib/page-seo.ts
+   * now reads per-request — so the edit is already live for the next visitor.
+   * These calls drop the cached page shells as well, so a route Next had
+   * rendered ahead of time is rebuilt with the new title rather than served
+   * from the prerender.
    */
   updateTag(SEO_TAG);
   revalidatePath(pageKey);
