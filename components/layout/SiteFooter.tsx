@@ -1,5 +1,6 @@
 import Link from "next/link";
 import NewsletterForm from "./NewsletterForm";
+import SocialIcon from "./SocialIcon";
 import { SOCIAL, BRAND, OFFICES } from "@/lib/content";
 import { SERVICE_BUCKETS } from "@/lib/services-data";
 import { LEGAL_DOCS } from "@/lib/legal-data";
@@ -41,6 +42,32 @@ export default function SiteFooter() {
           />
           <p className="orbit-footer__about">{BRAND.footerAbout}</p>
           <NewsletterForm />
+
+          {/* Driven by SOCIAL in lib/content.ts, which also feeds the sameAs
+            * list in StructuredData — so the footer and the schema can never
+            * disagree about which profiles are ours. No heading: the marks are
+            * self-explanatory, and each link carries its own aria-label so the
+            * row is still labelled for a screen reader. */}
+          {SOCIAL.length > 0 && (
+            <ul className="orbit-footer__social">
+              {SOCIAL.map((s) => (
+                <li key={s.href}>
+                  <a
+                    className={`orbit-social orbit-social--${s.cls}`}
+                    target="_blank"
+                    rel="noopener noreferrer me"
+                    href={s.href}
+                    /* The mark is aria-hidden, so the link needs its own name —
+                       without this the row reads as six blank links. */
+                    aria-label={s.label}
+                    title={s.label}
+                  >
+                    <SocialIcon name={s.cls} />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
         </section>
 
         <section className="col orbit-footer__links">
@@ -99,18 +126,6 @@ export default function SiteFooter() {
             </p>
           ))}
 
-          {/* Hidden until real handles exist — see SOCIAL in lib/content.ts. */}
-          {SOCIAL.length > 0 && (
-            <ul className="orbit-footer__social">
-              {SOCIAL.map((s) => (
-                <li key={s.href}>
-                  <a target="_blank" rel="noopener noreferrer" href={s.href}>
-                    {s.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          )}
         </section>
       </div>
 

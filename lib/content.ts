@@ -213,12 +213,51 @@ export const CASE_RESULTS = [
 /**
  * Social accounts.
  *
- * EMPTY ON PURPOSE. The theme shipped with Kenza's own Instagram/LinkedIn
- * hard-coded; pointing those at OrbitWorks' footer would send your visitors to
- * a different agency. The footer hides the block while this is empty — add the
- * real handles and it reappears.
+ * The theme shipped with Kenza's own Instagram/LinkedIn hard-coded; these are
+ * OrbitWorks' real handles, replacing them. The footer renders this list, and
+ * StructuredData feeds the same URLs to Organization.sameAs — which is how
+ * Google ties these profiles to the brand's knowledge panel, so the two must
+ * stay in step. Add an account here and it appears in both places.
+ *
+ * URLs are stored canonically, without the `?igsh=` / `?si=` / `is_from_webapp`
+ * tracking parameters the share buttons append. Those identify the session that
+ * generated the link rather than the profile, so they are noise in a footer
+ * href and actively unhelpful in sameAs, where Google matches on the URL.
  */
-export const SOCIAL: { label: string; href: string; cls: string }[] = [];
+export const SOCIAL: { label: string; href: string; cls: string }[] = [
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/company/orbitworksofficial/",
+    cls: "linkedin",
+  },
+  {
+    label: "Instagram",
+    href: "https://www.instagram.com/orbitworks_official",
+    cls: "instagram",
+  },
+  {
+    /**
+     * The canonical profile URL, not the /share/19JVgirfMn/ link that was
+     * supplied: that one is a redirect wrapper which resolves here anyway, and
+     * sameAs wants the stable destination rather than a short link that
+     * Facebook is free to retire.
+     */
+    label: "Facebook",
+    href: "https://www.facebook.com/people/OrbitWorks/61591943518688/",
+    cls: "facebook",
+  },
+  {
+    label: "YouTube",
+    href: "https://www.youtube.com/@orbitworks_official",
+    cls: "youtube",
+  },
+  {
+    label: "TikTok",
+    href: "https://www.tiktok.com/@orbitworks_official",
+    cls: "tiktok",
+  },
+  { label: "X", href: "https://x.com/orbitworks_offi", cls: "x" },
+];
 
 export type Service = {
   slug: string;

@@ -4571,3 +4571,80 @@ footer.invert .footer > .inner {
     padding-right: 0;
   }
 }
+
+/* ----------------------------------------------------------- socials --
+ * Footer social row (SOCIAL in lib/content.ts), sitting under the newsletter
+ * signup in the brand column. Circular icon buttons on a single line — six
+ * text pills wrapped to two rows and unbalanced the column.
+ *
+ * Scoped to __brand rather than __contact: the row used to live in the contact
+ * column, and the styles must follow it or the buttons fall back to bare
+ * inline links.
+ *
+ * nowrap is deliberate: the row is sized so all six fit even on a narrow
+ * column, and a lone icon dropping to its own line looks like a mistake
+ * rather than a wrap.
+ */
+.orbit-footer__social {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 1rem;
+  list-style: none;
+  margin: 2.6rem 0 0;
+  padding: 0;
+}
+
+.orbit-footer__social li {
+  margin-bottom: 0;
+}
+
+.orbit-footer__brand .orbit-social {
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 50%;
+  color: var(--grey);
+  display: flex;
+  height: 3.8rem;
+  justify-content: center;
+  transition: color 0.35s var(--ease), border-color 0.35s var(--ease),
+    background 0.35s var(--ease), transform 0.35s var(--ease);
+  width: 3.8rem;
+}
+
+.orbit-footer__brand .orbit-social svg {
+  display: block;
+}
+
+.orbit-footer__brand .orbit-social:hover {
+  background: var(--orbit);
+  border-color: var(--orbit);
+  color: #fff;
+  transform: translateY(-3px);
+}
+
+/* Keyboard parity with :hover — the row is six links with no visible text. */
+.orbit-footer__brand .orbit-social:focus-visible {
+  background: var(--orbit);
+  border-color: var(--orbit);
+  color: #fff;
+  outline: 2px solid var(--orbit-paper);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbit-footer__brand .orbit-social:hover {
+    transform: none;
+  }
+}
+
+@media screen and (max-width: 743px) {
+  .orbit-footer__social {
+    gap: 0.8rem;
+    margin-top: 2.2rem;
+  }
+
+  .orbit-footer__brand .orbit-social {
+    height: 3.6rem;
+    width: 3.6rem;
+  }
+}

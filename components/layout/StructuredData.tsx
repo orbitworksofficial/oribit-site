@@ -1,4 +1,4 @@
-import { BRAND, OFFICES, SERVICES_JSONLD_AREA } from "@/lib/content";
+import { BRAND, OFFICES, SERVICES_JSONLD_AREA, SOCIAL } from "@/lib/content";
 import { SITE_URL } from "@/lib/site";
 import { SERVICE_BUCKETS } from "@/lib/services-data";
 
@@ -40,6 +40,14 @@ export default function StructuredData() {
       })),
       areaServed: SERVICES_JSONLD_AREA,
       knowsAbout: SERVICE_BUCKETS.map((b) => b.name),
+      /**
+       * The official profiles for this brand. sameAs is what lets Google
+       * connect the accounts to the Organization rather than treating them as
+       * unrelated pages, which is what feeds the knowledge panel. Read from the
+       * same SOCIAL constant the footer renders, so the markup cannot claim a
+       * profile the site does not actually link to.
+       */
+      ...(SOCIAL.length > 0 ? { sameAs: SOCIAL.map((s) => s.href) } : {}),
     },
     {
       "@type": "WebSite",
