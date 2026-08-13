@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
+import Script from "next/script";
 
 /*
  * CSS order mirrors the original <head> and is load-bearing:
@@ -127,14 +128,45 @@ export default async function RootLayout({
    */
   const isAdmin = pathname.startsWith("/admin");
 
+  /**
+   * The AEO/GEO landing page is a self-contained campaign page opened in its own
+   * tab from the Products dropdown. It ships its own header, hero and footer on
+   * a dark canvas, so the marketing chrome would duplicate the nav and bolt a
+   * light footer onto the bottom of a black page. It keeps the JSON-LD and
+   * analytics above — unlike /admin, this one is a public, indexable page.
+   */
+  const isBareLanding = pathname.startsWith("/products/aeo-geo");
+
   return (
     <html
       lang="en"
       className={outfit.variable}
       suppressHydrationWarning
     >
-      <head>
-        {!isAdmin && <script dangerouslySetInnerHTML={{ __html: BOOT }} />}
+      {/*
+        No hand-written <head>. The App Router builds and owns that element, and
+        hoists <script>/<link>/JSON-LD rendered anywhere in the tree into it. A
+        manual <head> made React's client tree disagree with the server's about
+        which node came first, which surfaced as a hydration mismatch pointing at
+        the first <body> child (ParticleBackground vs <meta charset>).
+
+        next/script with beforeInteractive rather than a raw <script> tag for the
+        same reason the docs give: React never executes a script rendered as a
+        child component on the client. beforeInteractive is the supported way to
+        run something in the root layout ahead of hydration — see BOOT above.
+      */}
+      <body className={isAdmin ? "adm-body" : isBareLanding ? "aeo-body" : body}>
+        {!isAdmin && (
+          <Script id="orbit-boot" strategy="beforeInteractive">
+            {BOOT}
+          </Script>
+        )}
+        {/*
+          JSON-LD lives in the body, which is what the Next docs recommend for
+          the App Router ("render structured data as a <script> tag in your
+          layout.js or page.js"). Google reads ld+json from either <head> or
+          <body>, so nothing is lost by not forcing it upward.
+        */}
         {!isAdmin && <StructuredData />}
         {/*
           Per-page JSON-LD authored in the dashboard (Page SEO -> Schema
@@ -144,10 +176,12 @@ export default async function RootLayout({
           their own, added in app/blogs/[slug]/page.tsx.
         */}
         {!isAdmin && !pathname.startsWith("/blogs/") && <PageSchema path={pathname} />}
-      </head>
-      <body className={isAdmin ? "adm-body" : body}>
-        {isAdmin ? (
-          children
+
+        {isAdmin || isBareLanding ? (
+          <>
+            {children}
+            {!isAdmin && <Analytics />}
+          </>
         ) : (
           <>
             <ParticleBackground />

@@ -1,0 +1,1791 @@
+/* ==========================================================================
+ * AEO + GEO landing page (/products/aeo-geo).
+ *
+ * Scoped under .aeo-body / .aeo so none of it can reach the rest of the site.
+ * This page is deliberately its own visual world — dark canvas, its own header
+ * and footer — because it opens in a new tab as a standalone campaign page.
+ *
+ * It reuses the site's real brand colour (--orbit #f3124e) and the Outfit
+ * family loaded in the root layout, so it still reads as OrbitWorks rather than
+ * as a page from somewhere else.
+ * ========================================================================== */
+
+.aeo-body {
+  background: #070b14;
+  color: #fff;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  /*
+   * NOT overflow-x here. Setting any overflow on <body> makes it a scroll
+   * container in its own right, and since <html> already scrolls the page you
+   * get two vertical scrollbars side by side. `clip` constrains the horizontal
+   * axis without ever producing a scrollport, so the stray-pixel guard stays
+   * but the second bar does not appear.
+   */
+  overflow-x: clip;
+  overflow-y: visible;
+}
+
+/*
+ * theme.css pads <body> by 20rem to clear its own 10rem fixed nav, via
+ * `body:not(:has(.wp-block-kenza-video-loop-header, …))` — which this page
+ * matches, and which outranks a plain `.aeo-body`. The page uses its own 67px
+ * header instead, so that gutter was pure dead space stacked on top of the
+ * hero's own padding. Qualified with body to win the specificity contest.
+ */
+body.aeo-body {
+  padding-top: 0;
+}
+
+.aeo {
+  --aeo-crimson: #f3124e;
+  --aeo-cyan: #00d4ff;
+  --aeo-ink: #070b14;
+  --aeo-panel: #0a0f1e;
+  --aeo-muted: #8b91a3;
+  --aeo-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  isolation: isolate;
+  position: relative;
+}
+
+.aeo *,
+.aeo *::before,
+.aeo *::after {
+  box-sizing: border-box;
+}
+
+.aeo a {
+  color: var(--aeo-cyan);
+  text-decoration: none;
+}
+
+.aeo ::selection {
+  background: rgba(243, 18, 78, 0.35);
+}
+
+/* ------------------------------------------------------------ motion -- */
+@keyframes aeoBlink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes aeoDot {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 212, 255, 0.5);
+    opacity: 1;
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(0, 212, 255, 0);
+    opacity: 0.35;
+  }
+}
+
+@keyframes aeoFloat {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -18px, 0);
+  }
+}
+
+@keyframes aeoAurora {
+  0% {
+    transform: translate3d(-6%, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(6%, -4%, 0) scale(1.15);
+  }
+  100% {
+    transform: translate3d(-6%, 0, 0) scale(1);
+  }
+}
+
+@keyframes aeoGlow {
+  0%,
+  100% {
+    box-shadow: 0 6px 30px rgba(243, 18, 78, 0.28);
+  }
+  50% {
+    box-shadow: 0 10px 60px rgba(243, 18, 78, 0.6);
+  }
+}
+
+@keyframes aeoSweep {
+  0% {
+    transform: translateX(-120%) skewX(-18deg);
+  }
+  60%,
+  100% {
+    transform: translateX(220%) skewX(-18deg);
+  }
+}
+
+@keyframes aeoRing {
+  0%,
+  100% {
+    opacity: 0.32;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 0.05;
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+}
+
+@keyframes aeoMarquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes aeoShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+@keyframes aeoBounce {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 0.9;
+    transform: translateY(9px);
+  }
+}
+
+@keyframes aeoScan {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(700%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aeo *,
+  .aeo-body * {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ------------------------------------------------------------ header -- */
+.aeo-body .aeo-header {
+  align-items: center;
+  background: rgba(7, 11, 20, 0);
+  border-bottom: 1px solid transparent;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  left: 0;
+  padding: 14px clamp(16px, 4vw, 40px);
+  position: fixed;
+  right: 0;
+  top: 0;
+  transition: background 0.45s ease, backdrop-filter 0.45s ease, border-color 0.45s ease;
+  z-index: 200;
+}
+
+.aeo-header[data-stuck="1"] {
+  backdrop-filter: blur(18px);
+  background: rgba(7, 11, 20, 0.82);
+  border-bottom-color: rgba(255, 255, 255, 0.07);
+}
+
+.aeo-header__brand {
+  align-items: center;
+  display: flex;
+  gap: 11px;
+}
+
+.aeo-header__brand img {
+  display: block;
+  height: 30px;
+  width: auto;
+}
+
+/*
+ * Beats theme.css's `nav.social` block, which sets its own layout. The margin
+ * and float resets matter as much as the position ones: without them the theme
+ * pushes this nav onto its own row, so the CTA dropped below the logo on narrow
+ * screens and the header grew tall enough to sit on the hero's eyebrow chip.
+ */
+.aeo-body nav.aeo-header__nav {
+  align-items: center;
+  bottom: auto;
+  display: flex;
+  flex: 0 0 auto;
+  float: none;
+  gap: 26px;
+  height: auto;
+  left: auto;
+  margin: 0;
+  opacity: 1;
+  padding: 0;
+  pointer-events: auto;
+  position: static;
+  right: auto;
+  top: auto;
+  width: auto;
+}
+
+.aeo-body .aeo-header__brand {
+  flex: 0 0 auto;
+  margin: 0;
+}
+
+.aeo-header__nav a {
+  color: var(--aeo-muted);
+  font-size: 13px;
+  transition: color 0.2s;
+}
+
+.aeo-header__nav a:hover {
+  color: #fff;
+}
+
+@media screen and (max-width: 719px) {
+  /* Section links go; only the brand and the CTA stay, on one row. */
+  .aeo-header__nav a:not(.aeo-btn) {
+    display: none;
+  }
+
+  .aeo-body .aeo-header {
+    flex-wrap: nowrap;
+    gap: 10px;
+    padding: 10px 16px;
+  }
+
+  .aeo-header__brand img {
+    height: 24px;
+  }
+
+  .aeo-body .aeo-header .aeo-btn--sm {
+    font-size: 11.5px;
+    padding: 9px 15px;
+  }
+}
+
+/* ------------------------------------------------------------ button -- */
+.aeo-btn {
+  animation: aeoGlow 3.6s ease-in-out infinite;
+  background: var(--aeo-crimson);
+  border-radius: 999px;
+  color: #fff;
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 600;
+  overflow: hidden;
+  padding: 14px 28px;
+  position: relative;
+  transition: transform 0.22s ease;
+  white-space: nowrap;
+}
+
+.aeo-btn:hover {
+  color: #fff;
+  transform: translateY(-3px);
+}
+
+.aeo-btn--sm {
+  animation: none;
+  box-shadow: 0 6px 24px rgba(243, 18, 78, 0.3);
+  font-size: 13px;
+  padding: 10px 22px;
+}
+
+.aeo-btn--sm:hover {
+  box-shadow: 0 10px 34px rgba(243, 18, 78, 0.55);
+  transform: translateY(-2px);
+}
+
+.aeo-btn--lg {
+  font-size: 16.5px;
+  padding: 18px 42px;
+}
+
+.aeo-btn__sheen {
+  animation: aeoSweep 4s ease-in-out infinite;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 38%;
+}
+
+/* theme.css colours every <a>; the label sits inside one, so the white has to
+ * be reasserted or the CTA text renders in the link colour. */
+.aeo-body a.aeo-btn,
+.aeo-body a.aeo-btn:hover,
+.aeo-body .aeo-btn__label {
+  color: #fff;
+}
+
+.aeo-btn__label {
+  position: relative;
+}
+
+.aeo-btn--ghost {
+  animation: none;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--aeo-muted);
+  font-weight: 500;
+  padding: 14px 26px;
+  transition: border-color 0.25s, color 0.25s, background 0.25s;
+}
+
+.aeo-btn--ghost:hover {
+  background: rgba(0, 212, 255, 0.06);
+  border-color: rgba(0, 212, 255, 0.45);
+  color: #fff;
+  transform: none;
+}
+
+/* -------------------------------------------------------------- hero -- */
+.aeo-hero {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100svh;
+  overflow: hidden;
+  /* Just enough to clear the 67px fixed header, not a second full gutter. */
+  padding: 96px 24px 88px;
+  position: relative;
+}
+
+/*
+ * On narrow screens the header wraps to two rows (brand above the CTA), so the
+ * fixed chrome is taller than the desktop 67px and the hero's top padding has
+ * to grow with it — otherwise the CTA lands on top of the eyebrow chip.
+ */
+@media screen and (max-width: 719px) {
+  .aeo-hero {
+    padding-top: 132px;
+  }
+}
+
+.aeo-hero__canvas {
+  height: 100%;
+  inset: 0;
+  opacity: 0.5;
+  position: absolute;
+  width: 100%;
+  z-index: 0;
+}
+
+.aeo-hero__grid {
+  background-image: linear-gradient(rgba(0, 212, 255, 0.028) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 212, 255, 0.028) 1px, transparent 1px);
+  background-size: 54px 54px;
+  inset: 0;
+  mask-image: radial-gradient(ellipse 90% 70% at 50% 45%, #000 35%, transparent 100%);
+  pointer-events: none;
+  position: absolute;
+  z-index: 1;
+}
+
+.aeo-hero__aurora {
+  animation: aeoAurora 18s ease-in-out infinite;
+  background: radial-gradient(circle at 38% 40%, rgba(243, 18, 78, 0.2), transparent 58%),
+    radial-gradient(circle at 66% 62%, rgba(0, 212, 255, 0.16), transparent 60%);
+  filter: blur(30px);
+  height: 70vw;
+  left: 50%;
+  max-height: 900px;
+  max-width: 900px;
+  pointer-events: none;
+  position: absolute;
+  top: 42%;
+  transform: translate(-50%, -50%);
+  width: 70vw;
+  z-index: 1;
+}
+
+.aeo-hero__inner {
+  align-items: center;
+  display: grid;
+  gap: clamp(36px, 5vw, 72px);
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  max-width: 1180px;
+  position: relative;
+  width: 100%;
+  z-index: 5;
+}
+
+.aeo-hero__copy {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  max-width: 580px;
+}
+
+.aeo-chip {
+  align-items: center;
+  background: rgba(0, 212, 255, 0.05);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: 999px;
+  color: var(--aeo-cyan);
+  display: inline-flex;
+  font-size: 10.5px;
+  font-weight: 600;
+  gap: 9px;
+  letter-spacing: 0.15em;
+  padding: 6px 15px 6px 11px;
+  text-transform: uppercase;
+}
+
+.aeo-chip__dot {
+  animation: aeoDot 2.2s ease-in-out infinite;
+  background: var(--aeo-cyan);
+  border-radius: 50%;
+  height: 6px;
+  width: 6px;
+}
+
+.aeo-hero__title {
+  font-size: clamp(29px, 3.9vw, 50px);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1.1;
+  margin: clamp(22px, 3vw, 32px) 0 0;
+  text-wrap: balance;
+}
+
+.aeo-hero__rotator {
+  animation: aeoShift 9s linear infinite;
+  background: linear-gradient(100deg, #f3124e, #ff6e90, #00d4ff, #f3124e);
+  background-clip: text;
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.aeo-caret {
+  animation: aeoBlink 0.75s step-end infinite;
+  background: var(--aeo-crimson);
+  box-shadow: 0 0 14px rgba(243, 18, 78, 0.8);
+  display: inline-block;
+  height: 0.82em;
+  vertical-align: -0.08em;
+  width: 2.5px;
+}
+
+.aeo-hero__lead {
+  color: #9aa0b2;
+  font-size: clamp(14.5px, 1.15vw, 16.5px);
+  line-height: 1.75;
+  margin: 20px 0 0;
+  max-width: 470px;
+  text-wrap: pretty;
+}
+
+.aeo-hero__lead em {
+  color: #fff;
+  font-style: normal;
+  font-weight: 600;
+}
+
+.aeo-hero__ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 11px;
+  margin-top: clamp(26px, 3.5vw, 36px);
+}
+
+.aeo-hero__stats {
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 26px;
+  margin-top: clamp(30px, 4vw, 42px);
+  max-width: 470px;
+  padding-top: 22px;
+  width: 100%;
+}
+
+.aeo-hero__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.aeo-hero__stat b {
+  font-size: 19px;
+  font-weight: 700;
+}
+
+/* Same auto-margin guard as .aeo-stat — see the note there. */
+.aeo-body .aeo-hero__stat b span {
+  color: var(--aeo-cyan);
+  display: inline;
+  font-size: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+.aeo-hero__stat span {
+  color: var(--aeo-muted);
+  font-size: 11px;
+}
+
+/* ------------------------------------------------- hero answer panel -- */
+.aeo-answer {
+  justify-self: center;
+  max-width: 470px;
+  position: relative;
+  width: 100%;
+}
+
+.aeo-answer__halo {
+  background: linear-gradient(140deg, rgba(0, 212, 255, 0.18), rgba(243, 18, 78, 0.16));
+  border-radius: 26px;
+  filter: blur(26px);
+  inset: -14px;
+  pointer-events: none;
+  position: absolute;
+}
+
+.aeo-answer__card {
+  animation: aeoFloat 9s ease-in-out infinite;
+  backdrop-filter: blur(16px);
+  background: linear-gradient(180deg, rgba(16, 24, 44, 0.95), rgba(9, 13, 26, 0.95));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  box-shadow: 0 34px 90px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+  position: relative;
+}
+
+.aeo-answer__card::before {
+  background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.7), transparent);
+  content: "";
+  height: 1px;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.aeo-win {
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  display: flex;
+  gap: 9px;
+  padding: 14px 18px;
+}
+
+.aeo-win__dots {
+  display: flex;
+  gap: 5px;
+}
+
+.aeo-win__dots i {
+  border-radius: 50%;
+  height: 8px;
+  width: 8px;
+}
+
+.aeo-win__label {
+  color: var(--aeo-muted);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  margin-left: 4px;
+  text-transform: uppercase;
+}
+
+.aeo-win__live {
+  align-items: center;
+  color: var(--aeo-cyan);
+  display: flex;
+  font-size: 10.5px;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.aeo-prompt {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  color: rgba(255, 255, 255, 0.62);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11.5px;
+  min-height: 38px;
+  padding: 11px 13px;
+}
+
+.aeo-answer__body {
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 12.5px;
+  line-height: 1.9;
+  margin-top: 16px;
+}
+
+.aeo-mark {
+  background: linear-gradient(90deg, rgba(0, 212, 255, 0.22), rgba(0, 212, 255, 0.06));
+  border-radius: 5px;
+  box-shadow: 0 0 0 1px rgba(0, 212, 255, 0.3);
+  color: #fff;
+  font-weight: 600;
+  padding: 1.5px 6px;
+}
+
+.aeo-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 18px;
+}
+
+.aeo-tag {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 10.5px;
+  padding: 4px 10px;
+}
+
+.aeo-tag--cyan {
+  background: rgba(0, 212, 255, 0.06);
+  border-color: rgba(0, 212, 255, 0.24);
+  color: var(--aeo-cyan);
+}
+
+.aeo-tag--crimson {
+  background: rgba(243, 18, 78, 0.06);
+  border-color: rgba(243, 18, 78, 0.26);
+  color: #ff5c82;
+}
+
+.aeo-score {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.02);
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  display: flex;
+  gap: 14px;
+  padding: 16px 18px;
+}
+
+.aeo-score__ring {
+  align-items: center;
+  background: conic-gradient(var(--aeo-cyan) 0deg, rgba(255, 255, 255, 0.07) 0deg);
+  border-radius: 50%;
+  display: flex;
+  flex-shrink: 0;
+  height: 52px;
+  justify-content: center;
+  position: relative;
+  transition: background 0.2s linear;
+  width: 52px;
+}
+
+.aeo-score__ring i {
+  align-items: center;
+  background: var(--aeo-panel);
+  border-radius: 50%;
+  display: flex;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  inset: 5px;
+  justify-content: center;
+  position: absolute;
+}
+
+.aeo-body .aeo-score__ring i span {
+  display: inline;
+  font-size: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+/* ------------------------------------------------------------ scroll -- */
+.aeo-scroll {
+  align-items: center;
+  bottom: 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  left: 50%;
+  position: absolute;
+  transform: translateX(-50%);
+  z-index: 5;
+}
+
+.aeo-scroll span {
+  color: var(--aeo-muted);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.aeo-scroll i {
+  animation: aeoBounce 2.4s ease-in-out infinite;
+  background: linear-gradient(var(--aeo-cyan), transparent);
+  display: block;
+  height: 34px;
+  width: 1px;
+}
+
+/* ----------------------------------------------------------- marquee -- */
+.aeo-marquee {
+  background: rgba(12, 18, 34, 0.55);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  overflow: hidden;
+  padding: 16px 0;
+  position: relative;
+  z-index: 5;
+}
+
+.aeo-marquee__track {
+  animation: aeoMarquee 30s linear infinite;
+  display: flex;
+  width: max-content;
+}
+
+.aeo-marquee__row {
+  align-items: center;
+  display: flex;
+  gap: 44px;
+  padding-right: 44px;
+}
+
+.aeo-marquee__row b {
+  color: rgba(255, 255, 255, 0.42);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.aeo-marquee__row i {
+  border-radius: 50%;
+  height: 5px;
+  width: 5px;
+}
+
+/* ---------------------------------------------------------- sections -- */
+.aeo-section {
+  overflow: hidden;
+  padding: clamp(84px, 10vw, 140px) 24px;
+  position: relative;
+}
+
+.aeo-section--panel {
+  background: var(--aeo-panel);
+}
+
+.aeo-section--ink {
+  background: var(--aeo-ink);
+}
+
+.aeo-shell {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  max-width: 1120px;
+  position: relative;
+}
+
+.aeo-eyebrow {
+  color: var(--aeo-crimson);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.17em;
+  margin-bottom: 18px;
+  text-transform: uppercase;
+}
+
+.aeo-eyebrow--cyan {
+  color: var(--aeo-cyan);
+}
+
+.aeo-h2 {
+  font-size: clamp(26px, 4vw, 46px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.14;
+  margin: 0;
+  text-align: center;
+  text-wrap: balance;
+}
+
+.aeo-sub {
+  color: var(--aeo-muted);
+  font-size: 16px;
+  line-height: 1.65;
+  margin: 18px 0 clamp(44px, 6vw, 64px);
+  max-width: 560px;
+  text-align: center;
+}
+
+.aeo-grid {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  width: 100%;
+}
+
+.aeo-grid--4 {
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+}
+
+.aeo-grid--3 {
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+/* ------------------------------------------------------------- cards -- */
+.aeo-card {
+  backdrop-filter: blur(10px);
+  background: linear-gradient(180deg, rgba(18, 27, 48, 0.9), rgba(10, 15, 30, 0.85));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  overflow: hidden;
+  padding: 22px;
+  position: relative;
+  transition: border-color 0.3s, box-shadow 0.4s, transform 0.5s var(--aeo-ease);
+}
+
+.aeo-card:hover {
+  border-color: rgba(0, 212, 255, 0.3);
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.55);
+}
+
+.aeo-card__blob {
+  background: radial-gradient(circle, rgba(0, 212, 255, 0.12), transparent 70%);
+  border-radius: 50%;
+  height: 150px;
+  pointer-events: none;
+  position: absolute;
+  right: -50px;
+  top: -50px;
+  width: 150px;
+}
+
+.aeo-card__blob--crimson {
+  background: radial-gradient(circle, rgba(243, 18, 78, 0.12), transparent 70%);
+}
+
+.aeo-card__head {
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+}
+
+.aeo-card__head b {
+  color: var(--aeo-muted);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.aeo-card__query {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 9px;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  margin-bottom: 15px;
+  padding: 11px 13px;
+}
+
+.aeo-card__body {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 12.5px;
+  line-height: 1.85;
+}
+
+.aeo-cite {
+  background: rgba(0, 212, 255, 0.09);
+  border-radius: 4px;
+  color: var(--aeo-cyan);
+  font-weight: 600;
+  padding: 1px 5px;
+}
+
+.aeo-miss {
+  background: rgba(243, 18, 78, 0.1);
+  border-radius: 4px;
+  color: var(--aeo-crimson);
+  font-weight: 600;
+  padding: 1px 5px;
+  text-decoration: line-through;
+  text-decoration-color: var(--aeo-crimson);
+}
+
+.aeo-punch {
+  font-size: clamp(17px, 2.4vw, 26px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.4;
+  margin: clamp(40px, 5vw, 60px) 0 0;
+  text-align: center;
+}
+
+.aeo-punch span {
+  color: var(--aeo-crimson);
+}
+
+/* --------------------------------------------------------- split now -- */
+.aeo-split {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 22px;
+  display: grid;
+  gap: 1px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  overflow: hidden;
+  width: 100%;
+}
+
+.aeo-split__pane {
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+}
+
+.aeo-split__pane--old {
+  background: rgba(14, 20, 36, 0.7);
+}
+
+.aeo-split__pane--new {
+  background: rgba(7, 11, 20, 0.85);
+  overflow: hidden;
+  position: relative;
+  transition: background 1.6s ease;
+}
+
+.aeo-split__pane--new[data-lit="1"] {
+  background: rgba(0, 22, 44, 0.92);
+}
+
+.aeo-split__ring {
+  background: radial-gradient(circle, rgba(0, 212, 255, 0.14), transparent 70%);
+  border-radius: 50%;
+  height: 260px;
+  left: 50%;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  transition: opacity 1.6s ease;
+  width: 260px;
+}
+
+.aeo-split__pane--new[data-lit="1"] .aeo-split__ring {
+  opacity: 1;
+}
+
+.aeo-pill {
+  align-self: flex-start;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 6px;
+  color: var(--aeo-muted);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  margin-bottom: 20px;
+  padding: 5px 11px;
+  position: relative;
+  text-transform: uppercase;
+}
+
+.aeo-pill--cyan {
+  background: rgba(0, 212, 255, 0.14);
+  color: var(--aeo-cyan);
+}
+
+.aeo-serp {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: opacity 1.6s ease, filter 1.6s ease;
+}
+
+.aeo-serp[data-dim="1"] {
+  filter: blur(1px);
+  opacity: 0.22;
+}
+
+.aeo-serp__row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.aeo-serp__url {
+  color: #10b981;
+  font-size: 11px;
+}
+
+.aeo-serp__title {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 13.5px;
+  font-weight: 500;
+}
+
+.aeo-serp__desc {
+  color: var(--aeo-muted);
+  font-size: 11.5px;
+  line-height: 1.5;
+}
+
+.aeo-serp__row--faded .aeo-serp__url {
+  color: rgba(16, 185, 129, 0.4);
+}
+
+.aeo-serp__row--faded .aeo-serp__title {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.aeo-serp__row--faded .aeo-serp__desc {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+.aeo-aibox {
+  background: rgba(0, 30, 60, 0.45);
+  border: 1px solid rgba(0, 212, 255, 0.22);
+  border-radius: 14px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.4);
+  padding: 20px;
+  position: relative;
+}
+
+.aeo-aibox__label {
+  align-items: center;
+  color: var(--aeo-cyan);
+  display: flex;
+  font-size: 10px;
+  font-weight: 700;
+  gap: 7px;
+  letter-spacing: 0.1em;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.aeo-aibox__label i {
+  border: 1px solid var(--aeo-cyan);
+  border-radius: 2px;
+  display: inline-block;
+  height: 8px;
+  transform: rotate(45deg);
+  width: 8px;
+}
+
+.aeo-aibox__body {
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 12.5px;
+  line-height: 1.85;
+}
+
+.aeo-aibox__body b {
+  color: var(--aeo-cyan);
+  font-weight: 600;
+}
+
+.aeo-aibox__warn {
+  color: var(--aeo-crimson);
+  font-size: 11.5px;
+}
+
+/* --------------------------------------------------------- big stats -- */
+.aeo-stats {
+  align-items: start;
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  margin-top: clamp(44px, 6vw, 68px);
+  width: 100%;
+}
+
+.aeo-stat {
+  text-align: center;
+}
+
+/* The theme sizes bare <b>/<i>, so both halves are pinned here explicitly —
+ * otherwise the digits render small beside an oversized unit glyph. */
+.aeo-body .aeo-stat b {
+  align-items: baseline;
+  display: flex;
+  font-size: clamp(46px, 7vw, 78px);
+  font-weight: 700;
+  justify-content: center;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+/* theme.css hands nested spans a ~129px auto side-margin, which split the
+ * digits from their unit; zeroed here so "60" and "%" read as one number. */
+.aeo-body .aeo-stat b span,
+.aeo-body .aeo-stat b i {
+  display: inline;
+  font-size: inherit;
+  font-style: normal;
+  font-weight: inherit;
+  line-height: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+.aeo-body .aeo-stat b i {
+  color: var(--aeo-crimson);
+}
+
+.aeo-stat span {
+  color: var(--aeo-muted);
+  display: block;
+  font-size: 13px;
+  line-height: 1.55;
+  margin: 12px auto 0;
+  max-width: 210px;
+}
+
+/* ------------------------------------------------------ three routes -- */
+.aeo-lede {
+  font-size: clamp(21px, 3.2vw, 38px);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.45;
+  margin: 0 0 clamp(48px, 6vw, 72px);
+  text-align: center;
+  text-wrap: balance;
+}
+
+.aeo-lede em {
+  color: var(--aeo-cyan);
+  font-style: normal;
+}
+
+.aeo-lede strong {
+  color: var(--aeo-crimson);
+  font-weight: 600;
+}
+
+.aeo-route {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.03);
+  overflow: hidden;
+  padding: 30px 24px;
+  position: relative;
+  text-align: center;
+  transition: box-shadow 0.4s, transform 0.5s var(--aeo-ease);
+}
+
+.aeo-route:hover {
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.5);
+}
+
+.aeo-route--cyan {
+  background: linear-gradient(180deg, rgba(0, 212, 255, 0.07), rgba(0, 212, 255, 0.02));
+  border-color: rgba(0, 212, 255, 0.22);
+}
+
+.aeo-route--cyan:hover {
+  box-shadow: 0 24px 70px rgba(0, 212, 255, 0.14);
+}
+
+.aeo-route--crimson {
+  background: linear-gradient(180deg, rgba(243, 18, 78, 0.08), rgba(243, 18, 78, 0.02));
+  border-color: rgba(243, 18, 78, 0.24);
+}
+
+.aeo-route--crimson:hover {
+  box-shadow: 0 24px 70px rgba(243, 18, 78, 0.16);
+}
+
+.aeo-route__wash {
+  background: radial-gradient(ellipse, rgba(0, 212, 255, 0.22), transparent 70%);
+  filter: blur(8px);
+  height: 160px;
+  left: 50%;
+  pointer-events: none;
+  position: absolute;
+  top: -60px;
+  transform: translateX(-50%);
+  width: 200px;
+}
+
+.aeo-route__wash--crimson {
+  background: radial-gradient(ellipse, rgba(243, 18, 78, 0.24), transparent 70%);
+}
+
+.aeo-route__badge {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  color: var(--aeo-muted);
+  display: inline-block;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  padding: 5px 13px;
+  position: relative;
+  text-transform: uppercase;
+}
+
+.aeo-route__badge--cyan {
+  background: rgba(0, 212, 255, 0.14);
+  color: var(--aeo-cyan);
+}
+
+.aeo-route__badge--crimson {
+  background: rgba(243, 18, 78, 0.14);
+  color: var(--aeo-crimson);
+}
+
+.aeo-route__num {
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 50%;
+  color: rgba(255, 255, 255, 0.5);
+  display: flex;
+  font-size: 13px;
+  font-weight: 700;
+  height: 46px;
+  justify-content: center;
+  margin: 22px auto 16px;
+  position: relative;
+  width: 46px;
+}
+
+.aeo-route__num--cyan {
+  border-color: rgba(0, 212, 255, 0.35);
+  box-shadow: inset 0 0 30px rgba(0, 212, 255, 0.25);
+  color: var(--aeo-cyan);
+}
+
+.aeo-route__num--crimson {
+  border-color: rgba(243, 18, 78, 0.4);
+  color: var(--aeo-crimson);
+}
+
+.aeo-route__name {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-bottom: 6px;
+  position: relative;
+}
+
+.aeo-route__name--cyan {
+  color: var(--aeo-cyan);
+}
+
+.aeo-route__name--crimson {
+  color: var(--aeo-crimson);
+}
+
+.aeo-route__full {
+  color: var(--aeo-muted);
+  font-size: 12px;
+  margin-bottom: 14px;
+  position: relative;
+}
+
+.aeo-route__desc {
+  color: var(--aeo-muted);
+  font-size: 12.5px;
+  line-height: 1.7;
+  margin: 0 0 18px;
+  position: relative;
+}
+
+.aeo-route__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  justify-content: center;
+  position: relative;
+}
+
+.aeo-note {
+  background: rgba(0, 212, 255, 0.03);
+  border: 1px solid rgba(0, 212, 255, 0.14);
+  border-radius: 14px;
+  color: var(--aeo-muted);
+  font-size: 13.5px;
+  line-height: 1.7;
+  margin-top: clamp(36px, 4vw, 52px);
+  max-width: 620px;
+  padding: 22px 26px;
+  text-align: center;
+}
+
+.aeo-note strong {
+  color: #fff;
+  font-weight: 600;
+}
+
+/* ----------------------------------------------------------- scanner -- */
+.aeo-scanner {
+  backdrop-filter: blur(20px);
+  background: rgba(12, 21, 38, 0.85);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: 22px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  padding: clamp(24px, 3vw, 36px);
+  position: relative;
+  width: 100%;
+}
+
+.aeo-scanner__beam {
+  animation: aeoScan 6s linear infinite;
+  background: linear-gradient(90deg, transparent, var(--aeo-cyan), var(--aeo-crimson), transparent);
+  height: 2px;
+  left: 0;
+  opacity: 0.7;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.aeo-scanner__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.aeo-scanner__row input {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 12px;
+  color: #fff;
+  flex: 1 1 240px;
+  font-family: inherit;
+  font-size: 14px;
+  min-width: 0;
+  outline: none;
+  padding: 15px 18px;
+  transition: border-color 0.25s, background 0.25s;
+}
+
+.aeo-scanner__row input:focus {
+  background: rgba(0, 212, 255, 0.06);
+  border-color: rgba(0, 212, 255, 0.5);
+}
+
+.aeo-scanner__row button {
+  background: rgba(243, 18, 78, 0.22);
+  border: 1px solid rgba(243, 18, 78, 0.35);
+  border-radius: 12px;
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  padding: 15px 26px;
+  transition: background 0.25s, transform 0.2s;
+  white-space: nowrap;
+}
+
+.aeo-scanner__row button:hover {
+  background: rgba(243, 18, 78, 0.4);
+  transform: translateY(-1px);
+}
+
+.aeo-scanner__hint {
+  align-items: center;
+  color: rgba(0, 212, 255, 0.7);
+  display: flex;
+  font-size: 12px;
+  gap: 8px;
+  justify-content: center;
+}
+
+.aeo-scanner__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 22px;
+}
+
+.aeo-scanner__tags span {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  color: var(--aeo-muted);
+  font-size: 11.5px;
+  padding: 6px 13px;
+}
+
+.aeo-scanner__tags span:last-child {
+  background: rgba(0, 212, 255, 0.06);
+  border-color: rgba(0, 212, 255, 0.22);
+  color: var(--aeo-cyan);
+}
+
+/* ------------------------------------------------------------ method -- */
+.aeo-step {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  overflow: hidden;
+  padding: 28px 22px;
+  position: relative;
+  transition: border-color 0.3s, box-shadow 0.4s, transform 0.5s var(--aeo-ease);
+}
+
+.aeo-step:hover {
+  border-color: rgba(0, 212, 255, 0.28);
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.5);
+}
+
+.aeo-step::before {
+  background: linear-gradient(90deg, var(--aeo-cyan), var(--aeo-crimson));
+  content: "";
+  height: 2px;
+  left: 0;
+  opacity: 0.5;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.aeo-step__num {
+  color: rgba(0, 212, 255, 0.18);
+  font-size: 42px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 16px;
+}
+
+.aeo-step__name {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 9px;
+}
+
+.aeo-step__desc {
+  color: var(--aeo-muted);
+  font-size: 12.5px;
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* ------------------------------------------------------------ timing -- */
+.aeo-curve {
+  background: rgba(12, 18, 34, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 20px;
+  padding: 26px 20px;
+  width: 100%;
+}
+
+.aeo-curve svg {
+  display: block;
+  height: clamp(150px, 22vw, 210px);
+  width: 100%;
+}
+
+.aeo-verdict {
+  border-radius: 16px;
+  padding: 26px;
+  transition: box-shadow 0.4s;
+}
+
+.aeo-verdict--now {
+  background: rgba(0, 212, 255, 0.04);
+  border: 1px solid rgba(0, 212, 255, 0.16);
+}
+
+.aeo-verdict--now:hover {
+  box-shadow: 0 20px 50px rgba(0, 212, 255, 0.1);
+}
+
+.aeo-verdict--wait {
+  background: rgba(243, 18, 78, 0.04);
+  border: 1px solid rgba(243, 18, 78, 0.18);
+}
+
+.aeo-verdict--wait:hover {
+  box-shadow: 0 20px 50px rgba(243, 18, 78, 0.12);
+}
+
+.aeo-verdict b {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.aeo-verdict--now b {
+  color: var(--aeo-cyan);
+}
+
+.aeo-verdict--wait b {
+  color: var(--aeo-crimson);
+}
+
+.aeo-verdict p {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 13.5px;
+  line-height: 1.75;
+  margin: 0;
+}
+
+/* -------------------------------------------------------------- quote -- */
+.aeo-quote {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  padding: 26px;
+  transition: border-color 0.3s, box-shadow 0.4s, transform 0.5s var(--aeo-ease);
+}
+
+.aeo-quote:hover {
+  border-color: rgba(0, 212, 255, 0.22);
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.5);
+}
+
+.aeo-quote__text {
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 13.5px;
+  font-style: italic;
+  line-height: 1.8;
+  margin: 0 0 22px;
+}
+
+.aeo-quote__who {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+}
+
+.aeo-quote__av {
+  align-items: center;
+  background: linear-gradient(135deg, var(--aeo-cyan), var(--aeo-crimson));
+  border-radius: 50%;
+  color: #fff;
+  display: flex;
+  flex-shrink: 0;
+  font-size: 13px;
+  font-weight: 700;
+  height: 38px;
+  justify-content: center;
+  width: 38px;
+}
+
+.aeo-quote__name {
+  display: flex;
+  flex-direction: column;
+}
+
+.aeo-quote__name b {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.aeo-quote__name span {
+  color: var(--aeo-muted);
+  font-size: 11.5px;
+}
+
+.aeo-quote__metric {
+  align-items: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+  padding-top: 16px;
+}
+
+.aeo-quote__metric b {
+  color: var(--aeo-cyan);
+  font-size: 21px;
+  font-weight: 700;
+}
+
+.aeo-quote__metric span {
+  color: var(--aeo-muted);
+  font-size: 11.5px;
+  line-height: 1.45;
+}
+
+.aeo-sectors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-top: clamp(34px, 4vw, 48px);
+  opacity: 0.55;
+}
+
+.aeo-sectors span {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 9px;
+  color: var(--aeo-muted);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 9px 20px;
+}
+
+/* ---------------------------------------------------------- final CTA -- */
+.aeo-final {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100svh;
+  overflow: hidden;
+  padding: clamp(90px, 10vw, 140px) 24px;
+  position: relative;
+  text-align: center;
+}
+
+.aeo-final__rings {
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+}
+
+.aeo-final__rings i {
+  animation: aeoRing 5s ease-in-out infinite;
+  border-radius: 50%;
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.aeo-final__glow {
+  animation: aeoAurora 16s ease-in-out infinite;
+  background: radial-gradient(circle, rgba(243, 18, 78, 0.12), transparent 68%);
+  border-radius: 50%;
+  filter: blur(20px);
+  height: 680px;
+  left: 50%;
+  max-width: 96vw;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 680px;
+}
+
+.aeo-final__inner {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  max-width: 760px;
+  position: relative;
+  z-index: 3;
+}
+
+.aeo-final__title {
+  font-size: clamp(28px, 5.4vw, 62px);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1.1;
+  margin: 0;
+  text-wrap: balance;
+}
+
+.aeo-final__title span {
+  color: var(--aeo-crimson);
+}
+
+.aeo-final__lead {
+  color: var(--aeo-muted);
+  font-size: 16px;
+  line-height: 1.7;
+  margin: 24px 0 clamp(30px, 4vw, 42px);
+  max-width: 480px;
+}
+
+.aeo-final__assure {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.aeo-final__assure span {
+  align-items: center;
+  color: rgba(255, 255, 255, 0.42);
+  display: flex;
+  font-size: 12px;
+  gap: 7px;
+}
+
+.aeo-final__assure i {
+  background: var(--aeo-cyan);
+  border-radius: 50%;
+  height: 5px;
+  width: 5px;
+}
+
+/* ------------------------------------------------------------ footer -- */
+.aeo-footer {
+  align-items: center;
+  background: var(--aeo-ink);
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: space-between;
+  padding: 26px clamp(16px, 4vw, 40px);
+}
+
+.aeo-footer span,
+.aeo-footer a {
+  color: var(--aeo-muted);
+  font-size: 12px;
+}
+
+.aeo-footer a:hover {
+  color: #fff;
+}
+
+.aeo-footer__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px;
+}
+
+/* ----------------------------------------------------------- reveals -- */
+.aeo-rv {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.9s var(--aeo-ease), transform 0.9s var(--aeo-ease);
+}
+
+.aeo-rv[data-shown="1"] {
+  opacity: 1;
+  transform: translateY(0);
+}

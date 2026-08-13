@@ -80,6 +80,31 @@ export default function Home() {
                 </Link>
               </li>
             ))}
+
+            {/*
+              AEO + GEO sits alongside the four service buckets but is not one of
+              them: it is pre-launch, and it points at the standalone campaign
+              page rather than a /services anchor. Opened in a new tab for the
+              same reason the Products dropdown does — that page carries its own
+              chrome and is a destination in its own right.
+            */}
+            <li>
+              <Link
+                href="/products/aeo-geo"
+                className="orbit-intro__soon"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span className="orbit-intro__no">
+                  {String(SERVICE_BUCKETS.length + 1).padStart(2, "0")}
+                </span>
+                <span className="orbit-intro__name">
+                  AEO and GEO
+                  <span className="orbit-intro__badge">Coming soon</span>
+                </span>
+                <span className="orbit-intro__arrow" aria-hidden="true">↗</span>
+              </Link>
+            </li>
           </ul>
         </aside>
       </div>

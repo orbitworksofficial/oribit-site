@@ -602,6 +602,26 @@ main h3.deco-l:before {
   font-weight: 500;
 }
 
+/*
+ * "Coming soon" marker on the AEO + GEO row. Inline with the name rather than a
+ * separate column so the row keeps the same three-part rhythm as the four
+ * service buckets above it.
+ */
+.orbit-intro__badge {
+  background: rgba(243, 18, 78, 0.1);
+  border-radius: 999px;
+  color: var(--orbit);
+  display: inline-block;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.05rem;
+  margin-left: 0.9rem;
+  padding: 0.3rem 0.9rem;
+  text-transform: uppercase;
+  vertical-align: 0.15rem;
+  white-space: nowrap;
+}
+
 .orbit-intro__arrow {
   color: var(--grey);
   font-size: 1.6rem;
@@ -4646,5 +4666,219 @@ footer.invert .footer > .inner {
   .orbit-footer__brand .orbit-social {
     height: 3.6rem;
     width: 3.6rem;
+  }
+}
+
+/* ------------------------------------------------------ nav dropdown --
+ * "Products" submenu: a single child link, tucked close under its parent, with
+ * a hand-drawn arrow curving down to it.
+ *
+ * Selectors are over-qualified on purpose. theme.css styles the nav's own <ul>
+ * (`nav:not(.social) ul`, `.fake-nav ... ul`) with its own position/opacity, and
+ * a plain `.orbit-nav-sub` loses to it — the menu rendered permanently open, in
+ * flow, over the page. NavList also renders twice (real header + the hero's
+ * .fake-nav clone), so both copies need the same treatment.
+ */
+.orbit-nav-has-sub {
+  position: relative;
+}
+
+/*
+ * The "Products" trigger — an <a> with no href, so it inherits every one of the
+ * theme's `nav ul li a` rules and matches its siblings exactly. Only the cursor
+ * needs setting: browsers show the text caret on a hrefless anchor.
+ */
+nav .orbit-nav-trigger,
+.fake-nav .orbit-nav-trigger {
+  cursor: pointer;
+}
+
+nav .orbit-nav-has-sub > ul.orbit-nav-sub,
+.fake-nav .orbit-nav-has-sub > ul.orbit-nav-sub {
+  background: none;
+  border: 0;
+  box-shadow: none;
+  /*
+   * Offset from the CENTRE of the row, not its bottom. The theme's nav items are
+   * 10rem tall with the label sitting mid-box, so anything keyed to `100%` left
+   * a ~90px void between "Products" and its child.
+   *
+   * Sits to the RIGHT of the arrow, level with where its head points — the pill
+   * is the arrow's destination, so hanging it centred underneath read as two
+   * unrelated marks stacked on top of each other.
+   */
+  left: 50%;
+  list-style: none;
+  margin: 0;
+  min-width: max-content;
+  opacity: 0;
+  padding: 0;
+  pointer-events: none;
+  position: absolute;
+  top: calc(50% + 3.2rem);
+  transform: translate(-14%, 4px);
+  transition: opacity 0.28s var(--ease), transform 0.28s var(--ease);
+  visibility: hidden;
+  z-index: 60;
+}
+
+nav .orbit-nav-has-sub:hover > ul.orbit-nav-sub,
+nav .orbit-nav-has-sub:focus-within > ul.orbit-nav-sub,
+.fake-nav .orbit-nav-has-sub:hover > ul.orbit-nav-sub,
+.fake-nav .orbit-nav-has-sub:focus-within > ul.orbit-nav-sub {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-14%, 0);
+  visibility: visible;
+}
+
+/*
+ * theme.css pads nav <li>s (37px/33px/42px) to build its tall header rows. The
+ * submenu inherits that, which wrapped the 30px pill in ~110px of invisible
+ * box — it caught hovers far away from the visible lozenge and pushed the pill
+ * off-centre from the arrow. Only the pill itself should occupy space.
+ */
+nav:not(.social) ul li.orbit-nav-sub__item,
+nav.header ul li.orbit-nav-sub__item,
+.fake-nav:not(.social) ul li.orbit-nav-sub__item,
+.fake-nav.header ul li.orbit-nav-sub__item {
+  display: block;
+  line-height: 0;
+  margin: 0;
+  padding: 0;
+}
+
+nav .orbit-nav-sub > li,
+.fake-nav .orbit-nav-sub > li {
+  display: block;
+  line-height: 0;
+  margin: 0;
+  opacity: 1;
+  padding: 0;
+  transform: none;
+}
+
+/*
+ * A small frosted lozenge, sized to the label — enough to lift the text off the
+ * hero video without becoming the white card this replaced.
+ */
+nav .orbit-nav-sub a,
+.fake-nav .orbit-nav-sub a {
+  backdrop-filter: blur(6px);
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 999px;
+  box-shadow: 0 4px 18px rgba(11, 14, 40, 0.14);
+  color: var(--ink, #0b0e28);
+  display: inline-block;
+  font-size: 0.5em;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1.35;
+  padding: 0.7rem 1.6rem;
+  position: relative;
+  text-decoration: none;
+  text-transform: none;
+  transition: background 0.22s var(--ease), color 0.22s var(--ease),
+    box-shadow 0.22s var(--ease), transform 0.22s var(--ease);
+  white-space: nowrap;
+}
+
+nav .orbit-nav-sub a:hover,
+nav .orbit-nav-sub a:focus-visible,
+.fake-nav .orbit-nav-sub a:hover,
+.fake-nav .orbit-nav-sub a:focus-visible {
+  background: var(--orbit);
+  box-shadow: 0 6px 22px rgba(243, 18, 78, 0.4);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+/*
+ * Hand-drawn arrow from "Products" down to the link. Two strokes on one SVG —
+ * a wobbly curve plus a separate head — drawn with round caps and a slight
+ * imperfection in the path so it reads as sketched rather than generated.
+ *
+ * stroke-dasharray/offset animate it as if being drawn on hover. It is purely
+ * decorative: aria-hidden in the markup, and pointer-events:none so it never
+ * eats a click meant for the link behind it.
+ */
+.orbit-nav-arrow {
+  height: 4.2rem;
+  left: 50%;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  /*
+   * Tail lands just under the "P" of the label. Measured rather than guessed:
+   * the SVG's tail point sits at 7/52 across its own box, so the box is offset
+   * to put that point at the label's left edge.
+   */
+  top: calc(50% + 1.6rem);
+  transform: translateX(-121%);
+  transition: opacity 0.3s var(--ease);
+  width: 4.6rem;
+  z-index: 59;
+}
+
+.orbit-nav-has-sub:hover .orbit-nav-arrow,
+.orbit-nav-has-sub:focus-within .orbit-nav-arrow {
+  opacity: 0.9;
+}
+
+.orbit-nav-arrow path {
+  fill: none;
+  stroke: var(--orbit);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.1;
+}
+
+.orbit-nav-arrow__line {
+  stroke-dasharray: 78;
+  stroke-dashoffset: 78;
+  transition: stroke-dashoffset 0.5s var(--ease);
+}
+
+.orbit-nav-arrow__head {
+  opacity: 0;
+  transition: opacity 0.2s var(--ease) 0.42s;
+}
+
+.orbit-nav-has-sub:hover .orbit-nav-arrow__line,
+.orbit-nav-has-sub:focus-within .orbit-nav-arrow__line {
+  stroke-dashoffset: 0;
+}
+
+.orbit-nav-has-sub:hover .orbit-nav-arrow__head,
+.orbit-nav-has-sub:focus-within .orbit-nav-arrow__head {
+  opacity: 1;
+}
+
+/* The drawer is a stacked list — no hover, no arrow, plain indented text. */
+@media screen and (max-width: 979px) {
+  nav .orbit-nav-has-sub > ul.orbit-nav-sub,
+  .fake-nav .orbit-nav-has-sub > ul.orbit-nav-sub {
+    left: auto;
+    opacity: 1;
+    padding: 0 0 0 1.6rem;
+    pointer-events: auto;
+    position: static;
+    transform: none;
+    visibility: visible;
+  }
+
+  nav .orbit-nav-sub a,
+  .fake-nav .orbit-nav-sub a {
+    backdrop-filter: none;
+    background: none;
+    box-shadow: none;
+    color: inherit;
+    font-size: 0.6em;
+    opacity: 0.8;
+    padding: 0.4rem 0;
+  }
+
+  .orbit-nav-arrow {
+    display: none;
   }
 }

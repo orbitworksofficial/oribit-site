@@ -61,6 +61,20 @@ export const ROUTES: Record<string, RouteChrome> = {
     title: "Vivalex and Vivalid: IT Products in Build | Orbit Works",
     description: "Vivalex and Vivalid: products in development at OrbitWorks.",
   },
+  /**
+   * The AEO/GEO campaign page renders its own chrome on a dark canvas (see the
+   * isBareLanding branch in app/layout.tsx), so the body class here only has to
+   * keep chromeFor() off FALLBACK — which would otherwise tag a live marketing
+   * page with the error404 template.
+   */
+  "/products/aeo-geo": {
+    body: `${THEME} classic nav-black`,
+    nav: "black",
+    selected: "Products",
+    title: "AEO + GEO: Be the Answer in AI Search | Orbit Works",
+    description:
+      "60% of searches now end without a click. Orbit Works puts your business inside the answers ChatGPT, Perplexity and Google AI give — cited by name, in 60 days.",
+  },
   "/industries": {
     body: `${THEME} classic nav-black`,
     nav: "black",

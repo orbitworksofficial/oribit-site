@@ -36,6 +36,7 @@ export const INDEXABLE_ROUTES = [
   { path: "/case-studies", priority: 0.7, changeFrequency: "monthly" as const },
   { path: "/blogs", priority: 0.7, changeFrequency: "weekly" as const },
   { path: "/products", priority: 0.6, changeFrequency: "monthly" as const },
+  { path: "/products/aeo-geo", priority: 0.8, changeFrequency: "monthly" as const },
   { path: "/resources", priority: 0.6, changeFrequency: "monthly" as const },
   { path: "/contact", priority: 0.6, changeFrequency: "yearly" as const },
 ];
