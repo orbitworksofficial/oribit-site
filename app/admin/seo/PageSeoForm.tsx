@@ -21,12 +21,14 @@ function Submit() {
 export default function PageSeoForm({
   values,
   faqs,
+  faqSchema,
   pageKey,
   pageName,
   isNew,
 }: {
   values: SeoValues;
   faqs: FaqItem[];
+  faqSchema: string;
   pageKey: string;
   pageName: string;
   isNew: boolean;
@@ -77,7 +79,7 @@ export default function PageSeoForm({
 
       <SeoFields values={values} errors={state.errors} />
 
-      <FaqFields faqs={faqs} errors={state.errors} />
+      <FaqFields faqs={faqs} faqSchema={faqSchema} errors={state.errors} />
 
       <div className="adm-actions">
         <Submit />

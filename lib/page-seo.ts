@@ -92,6 +92,7 @@ const readRow = cache(
         faqs: (doc.faqs ?? [])
           .map((f) => ({ question: f.question?.trim() ?? "", answer: f.answer?.trim() ?? "" }))
           .filter((f) => f.question && f.answer),
+        faqSchema: clean(doc.faqSchema),
       };
     } catch {
       // Swallowed on purpose — see the note above about outages. The hardcoded
@@ -208,6 +209,24 @@ export function faqSchema(faqs: FaqItem[]) {
       acceptedAnswer: { "@type": "Answer", text: f.answer },
     })),
   };
+}
+
+/**
+ * The hand-written FAQ graph for a route, if the dashboard has one.
+ *
+ * Returned as a serialised string ready for a script tag, re-stringified from
+ * the parse so malformed JSON can never reach the page as raw text. Null when
+ * unset or unparseable, which is the signal for the caller to fall back to the
+ * generated block.
+ */
+export async function faqSchemaOverride(path: string): Promise<string | null> {
+  const row = await readRow(path);
+  if (!row?.faqSchema) return null;
+  try {
+    return JSON.stringify(JSON.parse(row.faqSchema));
+  } catch {
+    return null;
+  }
 }
 
 /**

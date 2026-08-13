@@ -24,9 +24,11 @@ const blank = (key: number): Row => ({ key, question: "", answer: "" });
 
 export default function FaqFields({
   faqs,
+  faqSchema,
   errors,
 }: {
   faqs: FaqItem[];
+  faqSchema: string;
   errors?: Record<string, string>;
 }) {
   const [rows, setRows] = useState<Row[]>(
@@ -104,6 +106,25 @@ export default function FaqFields({
         <button type="button" className="adm-btn adm-btn--ghost" onClick={add}>
           Add FAQ
         </button>
+
+        <label className="adm-field" style={{ marginTop: 22 }}>
+          <span>FAQ schema (JSON-LD) — optional</span>
+          <textarea
+            className="adm-textarea adm-textarea--code"
+            name="faqSchema"
+            defaultValue={faqSchema}
+            placeholder={'{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[…]}'}
+            style={{ minHeight: 150 }}
+          />
+          <span className="adm-hint">
+            Leave blank and the FAQPage markup is generated from the questions above — that is
+            the safer default, because it can never disagree with what the page shows. Fill this
+            in only to publish a hand-written graph instead; it <strong>replaces</strong> the
+            generated one rather than adding to it, so the page never declares its FAQs twice.
+            Separate from the Schema markup field below, which is for everything else.
+          </span>
+          {errors?.faqSchema && <div className="adm-error">{errors.faqSchema}</div>}
+        </label>
       </div>
     </details>
   );

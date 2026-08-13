@@ -80,6 +80,33 @@ export function normaliseSchema(input: string): string {
   return out;
 }
 
+/**
+ * A pasted JSON-LD block: normalised, then rejected unless it parses.
+ *
+ * Shared by the free-form Schema markup field and the FAQ schema override, so
+ * both accept the same conveniences (a wrapping <script> tag, real line breaks
+ * inside strings) and fail the same way on genuinely broken JSON.
+ */
+const jsonLdField = optionalText
+  // Normalise before validating — see normaliseSchema for what and why.
+  .transform((v) => (v ? normaliseSchema(v) : v))
+  .refine(
+    (v) => {
+      if (!v) return true;
+      try {
+        JSON.parse(v);
+        return true;
+      } catch {
+        return false;
+      }
+    },
+    {
+      message:
+        "Must be valid JSON. Check for unescaped quotes — paragraph breaks " +
+        "and <script> tags are handled automatically.",
+    },
+  );
+
 export const seoSchema = z.object({
   seoTitle: optionalText.pipe(z.string().max(70).optional()),
   seoDescription: optionalText.pipe(z.string().max(200).optional()),
@@ -103,25 +130,7 @@ export const seoSchema = z.object({
    * generator are both mechanical and both fixable without guessing at intent:
    * the surrounding <script> tag, and real line breaks inside string values.
    */
-  schemaMarkup: optionalText
-    // Normalise before validating — see normaliseSchema for what and why.
-    .transform((v) => (v ? normaliseSchema(v) : v))
-    .refine(
-      (v) => {
-        if (!v) return true;
-        try {
-          JSON.parse(v);
-          return true;
-        } catch {
-          return false;
-        }
-      },
-      {
-        message:
-          "Must be valid JSON. Check for unescaped quotes — paragraph breaks " +
-          "and <script> tags are handled automatically.",
-      },
-    ),
+  schemaMarkup: jsonLdField,
 });
 
 export const blogSchema = seoSchema.extend({
@@ -196,6 +205,11 @@ export const pageSeoSchema = seoSchema.extend({
     .max(200),
   pageName: trimmed.min(1, "Name is required").max(120),
   faqs: faqsSchema,
+  /**
+   * Optional hand-written FAQ graph. Overrides the block generated from `faqs`
+   * rather than adding to it — see the note in lib/models.ts.
+   */
+  faqSchema: jsonLdField,
 });
 
 export const loginSchema = z.object({

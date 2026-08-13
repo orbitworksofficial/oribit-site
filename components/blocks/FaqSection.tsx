@@ -1,4 +1,4 @@
-import { faqSchema, pageFaqs } from "@/lib/page-seo";
+import { faqSchema, faqSchemaOverride, pageFaqs } from "@/lib/page-seo";
 import type { FaqItem } from "@/lib/models";
 
 /**
@@ -35,6 +35,14 @@ export default async function FaqSection({
   const faqs = (await pageFaqs(path)) ?? fallback;
   if (!faqs.length) return null;
 
+  /**
+   * A hand-written graph from the dashboard REPLACES the generated one — the
+   * page must never declare its FAQs twice, which is what emitting both would
+   * do. Falls back to the block built from the questions rendered below.
+   */
+  const override = await faqSchemaOverride(path);
+  const json = override ?? JSON.stringify(faqSchema(faqs));
+
   return (
     <div
       className="wp-block-kenza-column-constraint column-constraint cols-12 orbit-faqs"
@@ -58,10 +66,7 @@ export default async function FaqSection({
         ))}
       </div>
 
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema(faqs)) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: json }} />
     </div>
   );
 }

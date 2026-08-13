@@ -122,6 +122,15 @@ export type PageSeoDoc = SeoFields & {
    * page, so one editor writing both keeps them from drifting apart.
    */
   faqs?: FaqItem[];
+  /**
+   * Hand-written FAQ JSON-LD, overriding the block generated from `faqs` above.
+   * Kept separate from `schemaMarkup` so the FAQ graph can be replaced without
+   * touching whatever else the page publishes (Service, Product, and so on).
+   *
+   * When set, this is emitted verbatim INSTEAD of the generated FAQPage — the
+   * two must never both ship, or the page declares its FAQs twice.
+   */
+  faqSchema?: string;
   createdAt: Date;
   updatedAt: Date;
 };

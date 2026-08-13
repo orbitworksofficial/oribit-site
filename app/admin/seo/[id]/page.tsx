@@ -43,6 +43,7 @@ export default async function EditPageSeo({ params }: { params: Promise<{ id: st
       <PageSeoForm
         values={values}
         faqs={doc.faqs ?? []}
+        faqSchema={doc.faqSchema ?? ""}
         pageKey={doc.pageKey}
         pageName={doc.pageName}
         isNew={false}

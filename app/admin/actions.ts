@@ -342,6 +342,7 @@ export async function savePageSeoAction(
     pageKey: str(fd, "pageKey"),
     pageName: str(fd, "pageName"),
     faqs: faqsFrom(fd),
+    faqSchema: str(fd, "faqSchema"),
   });
   if (!parsed.success) return { errors: fieldErrors(parsed.error) };
 
