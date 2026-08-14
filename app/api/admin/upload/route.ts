@@ -32,9 +32,25 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: "No file received." }, { status: 400 });
   }
 
-  const result = await saveUpload(file, user.id);
-  if (!result.ok) {
-    return NextResponse.json(result, { status: 400 });
+  /**
+   * saveUpload returns { ok: false } for anything the uploader did wrong (too
+   * big, wrong type, unreadable), but THROWS for a broken server config — no
+   * Cloudinary credentials, or the provider rejecting the request.
+   *
+   * Both have to reach the editor as readable text. Without this catch the
+   * throw surfaced as a bare 500 with an empty body, so the one message that
+   * explains what to fix ("no Cloudinary credentials in this environment")
+   * never left the server and the upload just appeared to fail at random.
+   */
+  try {
+    const result = await saveUpload(file, user.id);
+    if (!result.ok) {
+      return NextResponse.json(result, { status: 400 });
+    }
+    return NextResponse.json(result);
+  } catch (err) {
+    const error = err instanceof Error ? err.message : "Upload failed.";
+    console.error("[upload]", err);
+    return NextResponse.json({ ok: false, error }, { status: 500 });
   }
-  return NextResponse.json(result);
 }
