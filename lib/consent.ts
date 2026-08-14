@@ -4,10 +4,13 @@
  *
  * Two pieces have to agree for GA4 to report accurately:
  *
- *   1. Analytics.tsx sets `analytics_storage: 'denied'` before gtag.js loads,
+ *   1. Analytics.tsx sets `analytics_storage: 'denied'` before the tag loads,
  *      so nothing is stored until the visitor agrees. Pageviews still reach
  *      Google in that state, but without a _ga cookie they are modelled rather
  *      than counted — sessions and returning-visitor numbers are estimates.
+ *      This works identically whether the site is running GTM or the direct
+ *      GA4 tag: both read the same `dataLayer` array, which is what the
+ *      defaults and the update below are pushed to.
  *   2. Accepting the banner calls grantAnalyticsConsent(), which flips that to
  *      'granted'. GA sets its cookie and the numbers become exact.
  *

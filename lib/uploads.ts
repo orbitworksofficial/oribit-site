@@ -163,18 +163,31 @@ async function store(
 
   /**
    * Local disk. Correct for `npm run dev` and for a VPS with a real volume, but
-   * silently wrong on a serverless host: the write succeeds, the URL works
-   * until the next deploy, and then every image 404s with nothing in the logs
-   * to explain it.
+   * silently wrong anywhere the filesystem is ephemeral: the write succeeds, the
+   * URL works until the next deploy, and then every image 404s with nothing in
+   * the logs to explain it.
    *
-   * VERCEL is set on Vercel builds and at runtime, so refuse there rather than
-   * accept an upload we know will be lost.
+   * The failure mode this guards against is specific and easy to miss: .env* is
+   * gitignored, so a deploy that copies the repo does NOT carry .env.local with
+   * it. Cloudinary then looks unconfigured in production while working perfectly
+   * on the developer's machine, and uploads quietly start landing on disk as
+   * /uploads/… paths instead of Cloudinary URLs.
+   *
+   * Refusing in production turns that into an error at upload time — with the
+   * cause named — rather than a broken image discovered weeks later. Hosts with
+   * a genuinely persistent volume can opt back in with ALLOW_LOCAL_UPLOADS=1.
    */
-  if (process.env.VERCEL) {
+  const ephemeralHost = Boolean(process.env.VERCEL || process.env.NETLIFY || process.env.AWS_REGION);
+  const localAllowed = process.env.ALLOW_LOCAL_UPLOADS === "1";
+
+  if (ephemeralHost || (process.env.NODE_ENV === "production" && !localAllowed)) {
     throw new Error(
-      "Image storage is not configured. Set CLOUDINARY_URL in the project's " +
-        "environment variables — this host has no persistent filesystem, so " +
-        "uploads written to disk are discarded on the next deploy.",
+      "Image storage is not configured: no Cloudinary credentials found in this " +
+        "environment. Set CLOUDINARY_URL (or CLOUDINARY_CLOUD_NAME, " +
+        "CLOUDINARY_API_KEY and CLOUDINARY_API_SECRET) on the server — .env.local " +
+        "is gitignored and is not copied by a deploy, so it must be set in the " +
+        "host's own environment settings. If this server has a persistent disk " +
+        "and you intend to store uploads on it, set ALLOW_LOCAL_UPLOADS=1.",
     );
   }
 

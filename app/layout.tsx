@@ -110,7 +110,17 @@ export const viewport = {
 const BOOT = `(function(d){var h=d.documentElement,c=['js','apending'];
 if(h.className!=='')c.push(h.className);
 if(window.chrome)c.push('chrome');h.className=c.join(' ');
-d.addEventListener('DOMContentLoaded',function(){requestAnimationFrame(function(){h.className+=' js-ready'})});})(document);`;
+function ready(){requestAnimationFrame(function(){
+  if(h.className.indexOf('js-ready')<0)h.className+=' js-ready';});}
+/*
+ * readyState is checked BEFORE falling back to the event. next/script injects
+ * this tag rather than inlining it in the source, so on a warm/cached load it
+ * can execute after DOMContentLoaded has already fired — and a listener added
+ * then never runs. That is exactly what broke the homepage hero: theme.css
+ * holds [data-video] video.preview at opacity:0 until html.js-ready, so the
+ * video loaded and played invisibly behind a blank section.
+ */
+if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',ready);else ready();})(document);`;
 
 export default async function RootLayout({
   children,
