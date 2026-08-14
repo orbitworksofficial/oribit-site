@@ -48,26 +48,33 @@ export function grantAnalyticsConsent(): void {
     gtag?: (...args: unknown[]) => void;
   };
 
+  const granted = {
+    ad_storage: "granted",
+    ad_user_data: "granted",
+    ad_personalization: "granted",
+    analytics_storage: "granted",
+  } as const;
+
   if (typeof w.gtag === "function") {
-    w.gtag("consent", "update", {
-      ad_storage: "granted",
-      ad_user_data: "granted",
-      ad_personalization: "granted",
-      analytics_storage: "granted",
-    });
-    return;
+    w.gtag("consent", "update", granted);
+  } else {
+    // gtag.js has not defined window.gtag yet; queue it the way the snippet does.
+    w.dataLayer = w.dataLayer ?? [];
+    w.dataLayer.push(["consent", "update", granted]);
   }
 
-  // gtag.js has not defined window.gtag yet; queue it the way the snippet does.
+  /**
+   * A NAMED event, in addition to the Consent Mode update above.
+   *
+   * Consent Mode is understood by Google's own tags, which throttle themselves
+   * on it automatically. Everything else in GTM — a Meta Pixel added as Custom
+   * HTML, LinkedIn, any third-party tag — cannot read it, and would otherwise
+   * fire the moment the page loads regardless of what the visitor chose.
+   *
+   * Triggering those tags on this event instead is what keeps them behind the
+   * banner. Pushed on both paths above, and replayed by CookieBanner on repeat
+   * visits, so a returning visitor who already accepted still fires it.
+   */
   w.dataLayer = w.dataLayer ?? [];
-  w.dataLayer.push([
-    "consent",
-    "update",
-    {
-      ad_storage: "granted",
-      ad_user_data: "granted",
-      ad_personalization: "granted",
-      analytics_storage: "granted",
-    },
-  ]);
+  w.dataLayer.push({ event: "consent_granted" });
 }
