@@ -27,6 +27,28 @@ const nextConfig: NextConfig = {
   serverExternalPackages: ["sharp"],
 
   /**
+   * Force sharp's native binaries into the upload function's bundle.
+   *
+   * Marking sharp external stops it being bundled, but the file tracer still
+   * has to COPY its files into the serverless function — and it only follows
+   * JS/JSON requires. libvips-cpp.so is dlopen()ed by the .node addon at
+   * runtime, so nothing statically references it and the tracer left it out:
+   * the packages shipped, the .so did not, and every upload failed with
+   * ERR_DLOPEN_FAILED: libvips-cpp.so.8.18.3: cannot open shared object file.
+   *
+   * The docs name outputFileTracingIncludes for exactly this ("cases in which
+   * Next.js might fail to include required files"). Scoped to the upload route
+   * because it is the only thing that touches sharp — no reason to grow every
+   * other function by ~10MB.
+   */
+  outputFileTracingIncludes: {
+    "/api/admin/upload": [
+      "./node_modules/@img/sharp-linux-x64/**/*",
+      "./node_modules/@img/sharp-libvips-linux-x64/**/*",
+    ],
+  },
+
+  /**
    * 301 www -> non-www.
    *
    * The SEO audit flagged "the www and non-www versions of the URL are not
