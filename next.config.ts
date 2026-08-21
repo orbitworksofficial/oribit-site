@@ -10,6 +10,23 @@ const HOST = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://orb-itworks.com")
 
 const nextConfig: NextConfig = {
   /**
+   * sharp must stay an EXTERNAL package, not be bundled into the server chunks.
+   *
+   * It is a native addon: the JS wrapper dlopen()s a platform-specific .node
+   * binary plus libvips-cpp.so alongside it. Bundling rewrites the module into
+   * a chunk whose relative paths no longer point at those files, so the load
+   * fails at runtime with ERR_DLOPEN_FAILED — which is exactly what the blog
+   * uploader hit on Vercel:
+   *
+   *   Could not load the "sharp" module using the linux-x64 runtime
+   *   ERR_DLOPEN_FAILED: libvips-cpp.so.8.18.3: cannot open shared object file
+   *
+   * Marking it external leaves the require() intact so Node resolves it from
+   * node_modules at runtime, where the binary actually lives.
+   */
+  serverExternalPackages: ["sharp"],
+
+  /**
    * 301 www -> non-www.
    *
    * The SEO audit flagged "the www and non-www versions of the URL are not
