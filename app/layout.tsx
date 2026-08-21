@@ -89,6 +89,21 @@ export const metadata: Metadata = {
    */
   twitter: { card: "summary", title: HOME_TITLE, description: HOME_DESC },
   robots: { index: true, follow: true },
+  /**
+   * Meta (Facebook) domain verification. Proves we own orb-itworks.com so the
+   * Business Manager account can claim it — needed before Meta will attribute
+   * conversions from the pixel, and before Aggregated Event Measurement can be
+   * configured for iOS traffic.
+   *
+   * Emitted through Next's `verification.other` rather than a hand-written
+   * <meta> tag: the App Router owns <head>, and a manual tag there caused a
+   * hydration mismatch on this site once already.
+   */
+  verification: {
+    other: {
+      "facebook-domain-verification": "smkixormx3b3r8vu8fvs9w6p9zhwwm",
+    },
+  },
   icons: { icon: "/icon.svg", apple: "/brand/orbitworks-dark.png" },
 };
 
