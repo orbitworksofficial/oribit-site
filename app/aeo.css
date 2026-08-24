@@ -122,3 +122,145 @@
   opacity: 1;
   transform: none;
 }
+
+/* ------------------------------------------------------ hero spacing --
+ * theme.css pads <body> by 20rem to clear its own 10rem fixed nav, via
+ * `body:not(:has(.wp-block-kenza-video-loop-header, …))` — a selector this
+ * page matches and which outranks a plain `.aeo-body`. This route uses its
+ * own 70px header instead, so that gutter was 200px of dead space stacked on
+ * top of the hero's own padding: the headline started ~350px below the nav,
+ * roughly 40% of the viewport.
+ *
+ * The ported CSS also carried three competing `.hero` paddings from the
+ * source's own responsive layers. Both are settled here, last-wins, so there
+ * is one number to change rather than three.
+ */
+body.aeo-body {
+  padding-top: 0;
+}
+
+.aeo-page .hero {
+  min-height: auto;
+  padding: 96px 5vw 72px;
+}
+
+.aeo-page .hero-orb .hero-copy {
+  padding: 0 0 24px;
+}
+
+/* ------------------------------------------------------------- logo --
+ * The mark is an <img> (see LOGO_SRC in page.tsx) rather than the design's
+ * text lockup, so it can be swapped for any file under public/ without
+ * touching markup. The original .logo rules styled text — flex baseline,
+ * letter-spacing, a coloured <span> — none of which apply to an image.
+ */
+.aeo-page .logo {
+  align-items: center;
+  display: inline-flex;
+  gap: 0;
+  letter-spacing: normal;
+}
+
+/*
+ * Sized against the 70px nav rather than by a fixed pixel guess: the mark is
+ * 2:1 and its background is #080c12, near-identical to the page canvas, so it
+ * reads as a floating lockup with no visible box.
+ */
+.aeo-page .logo img {
+  display: block;
+  height: 52px;
+  width: auto;
+}
+
+.aeo-page footer .logo img {
+  height: 46px;
+}
+
+@media (max-width: 800px) {
+  .aeo-page .logo img {
+    height: 40px;
+  }
+}
+
+/* --------------------------------------------------------- final CTA --
+ * The source drew a 700x300 rotated ellipse ("final-orbit") bleeding off the
+ * right edge. Two problems: its rule was never scoped, so it also leaked onto
+ * the rest of the site, and against the ported layout it read as a stray line
+ * rather than the intended orbit.
+ *
+ * Replaced with a soft radial wash — same brand blue, same job of lifting the
+ * flat black, but nothing with an edge to look broken. The heading also gets a
+ * max-width in ch: without one, "decisions happen." stretched the full column
+ * and the line breaks fell in the wrong places.
+ */
+.aeo-page .final-cta {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  padding: 120px 6vw;
+  text-align: center;
+}
+
+.aeo-page .final-glow {
+  background:
+    radial-gradient(ellipse 60% 55% at 50% 45%, #1557ff2e, transparent 70%),
+    radial-gradient(ellipse 40% 40% at 70% 70%, #2687ff1f, transparent 72%);
+  filter: blur(10px);
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+}
+
+.aeo-page .cta-content {
+  margin: 0 auto;
+  max-width: 780px;
+  position: relative;
+  z-index: 1;
+}
+
+.aeo-page .final-cta h2 {
+  font-size: clamp(38px, 5.4vw, 76px);
+  letter-spacing: -0.055em;
+  line-height: 1;
+  margin: 18px auto 22px;
+  max-width: 15ch;
+  text-wrap: balance;
+}
+
+.aeo-page .final-cta > .cta-content > p {
+  color: #a8b4c6;
+  font-size: 16px;
+  line-height: 1.65;
+  margin: 0 auto;
+  max-width: 52ch;
+}
+
+/* The shared .hero-actions row is left-aligned; centre it in this context. */
+.aeo-page .final-cta .hero-actions {
+  justify-content: center;
+  margin-top: 34px;
+}
+
+.aeo-page .final-cta small {
+  color: #6f7d91;
+  display: block;
+  margin-top: 26px;
+}
+
+/* --------------------------------------------------- hero callouts --
+ * The two floating chips are positioned against .hero-visual. With the hero
+ * padding tightened the bottom one landed on top of the answer window's own
+ * footer (the visibility score row), so both are nudged clear of the card.
+ */
+.aeo-page .callout-bottom {
+  /* Clear of the card entirely: the window's own footer row (visibility
+     score) runs the full width, so the chip has to sit below it, not over it. */
+  bottom: -46px;
+  left: auto;
+  right: 6%;
+}
+
+.aeo-page .callout-top {
+  right: -14px;
+  top: -22px;
+}
