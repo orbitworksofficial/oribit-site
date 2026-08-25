@@ -23,7 +23,7 @@ import { HeroSection } from "@/components/aeo/HeroSection"
  * anything under public/ works, e.g. "/brand/orbitworks-light.png".
  * The page sits on a near-black canvas, so use a light/white variant.
  */
-const LOGO_SRC = "/audit-logo.png"
+const LOGO_SRC = "/brand/orbitworks-full-light.png"
 
 const services = [
   ["Free AEO + GEO Audit", "We scan your brand across ChatGPT, Perplexity, Gemini, and Google AI Overviews to show exactly where you appear and where you are missing."],
@@ -60,6 +60,6 @@ export default function AeoGeoPage() {
     <section id="process" className="process section dark-section"><div className="section-intro"><p className="eyebrow blue">06 / HOW IT WORKS</p><h2>Simple process.<br/><span>Serious visibility.</span></h2></div><div className="process-list">{process.map(([num,title,desc]) => <div className="process-row" key={num}><span className="process-num">{num}</span><h3>{title}</h3><p>{desc}</p><ArrowUpRight size={20}/></div>)}</div></section>
     <section className="trust section"><div className="trust-stat"><strong>300<span>%</span></strong><p>average citation increase<br/>for clients in six months</p></div><div className="trust-stat"><strong>92<span>%</span></strong><p>client retention rate<br/>after the first year</p></div><div className="trust-stat"><strong>08<span>/10</span></strong><p>free audits remaining<br/>this month</p></div></section>
     <section id="audit" className="final-cta"><div className="final-glow" aria-hidden="true"/><div className="cta-content"><p className="eyebrow blue">07 / YOUR NEXT MOVE</p><h2>Get seen where<br/><em>decisions</em> happen.</h2><p>No cost. No obligation. A written report showing exactly where your brand appears inside ChatGPT, Perplexity, Gemini, and Google AI Overviews.</p><div className="hero-actions"><a className="button primary" href="https://calendly.com/placeholder" target="_blank" rel="noreferrer">Claim my free audit <ArrowUpRight size={17}/></a><a className="button outline" href="https://wa.me/15551234567" target="_blank" rel="noreferrer"><MessageCircle size={17}/> Talk on WhatsApp</a></div><small>Free 30-minute audit. No card required. No long-term contract.</small></div></section>
-    <footer><a className="logo" href="#top"><img src={LOGO_SRC} alt="Orbit Works" width={220} height={110} /></a><p>AEO + GEO services for the AI-first world.</p><div><a href="#services">Services</a><a href="#results">Results</a><a href="https://orb-itworks.com/" target="_blank" rel="noreferrer">Main site <ExternalLink size={13}/></a></div><small>© 2026 ORB ITWORKS. All rights reserved.</small></footer>
+    <footer><a className="logo" href="#top"><img src={LOGO_SRC} alt="Orbit Works" width={280} height={55} /></a><p>AEO + GEO services for the AI-first world.</p><div><a href="#services">Services</a><a href="#results">Results</a><a href="https://orb-itworks.com/" target="_blank" rel="noreferrer">Main site <ExternalLink size={13}/></a></div><small>© 2026 ORB ITWORKS. All rights reserved.</small></footer>
   </main>
 }
