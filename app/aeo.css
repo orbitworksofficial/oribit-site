@@ -316,3 +316,48 @@ body.aeo-body {
     top: 70px;
   }
 }
+
+/* ------------------------------------------------- hero typewriter --
+ * The rotating half of the headline. Inherits the accent colour the static
+ * <span> had, so the two-tone heading is unchanged — only the words move.
+ *
+ * min-height reserves the tallest line the rotation produces: without it the
+ * whole hero column reflows every time a phrase wraps to a different number of
+ * lines, and the lede and buttons below visibly jump.
+ */
+.aeo-page .hero-type {
+  color: #ff6e90;
+}
+
+/*
+ * The rotation needs a fixed box, or the lede and buttons below shift every
+ * time a phrase wraps to a different number of lines. Holding it on the SPAN
+ * does not work — an inline-block still collapses to its content and the jump
+ * gets worse (measured 90px). Reserved on the h1 instead, sized to the longest
+ * phrase in the set. Measured, not guessed: 339px at the 1440px clamp value.
+ */
+.aeo-page .hero h1 {
+  min-height: 3.05em;
+}
+
+/* Blinking cursor, sized to the cap height of the display type. */
+.aeo-page .hero-caret {
+  animation: aeoCaret 0.75s step-end infinite;
+  background: var(--blue);
+  display: inline-block;
+  height: 0.78em;
+  margin-left: 0.06em;
+  vertical-align: -0.06em;
+  width: 0.055em;
+}
+
+@keyframes aeoCaret {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@media (max-width: 800px) {
+  .aeo-page .hero h1 {
+    min-height: 3.4em;
+  }
+}
