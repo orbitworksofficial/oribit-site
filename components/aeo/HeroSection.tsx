@@ -109,7 +109,7 @@ export function HeroSection() {
             </span>
           </motion.h1>
           <motion.p variants={reveal} custom={2} className="hero-lede">ORB ITWORKS helps businesses appear as direct answers and cited sources inside AI-generated responses. No long term contracts. Transparent reporting.</motion.p>
-          <motion.div variants={reveal} custom={3} className="hero-actions"><a className="button primary" href="#audit">Get Free AEO and GEO Audit <span>↗</span></a><a className="button outline" href="#services">View Our Services</a></motion.div>
+          <motion.div variants={reveal} custom={3} className="hero-actions"><a className="button primary" href="https://scan.orb-itworks.com/" target="_blank" rel="noreferrer">Get Free AEO and GEO Audit <span>↗</span></a><a className="button outline" href="#services">View Our Services</a></motion.div>
           <motion.div variants={reveal} custom={4} className="hero-meta"><span>Free audit</span><span>Cited in ChatGPT, Gemini, Perplexity</span><span>No long term contracts</span><span>US based team</span></motion.div>
         </motion.div>
         <motion.div className="hero-visual" style={{ y }} initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.35, duration: 0.8 }}>
