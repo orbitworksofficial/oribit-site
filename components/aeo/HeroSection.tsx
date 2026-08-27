@@ -53,21 +53,78 @@ const AI_NAMES = [
 
 const ROTATE_MS = 2200
 
-function useRotator(count: number) {
+/** Typed once on first load, then left static while the names rotate. */
+const LEAD_IN = "Be the brand"
+const TRAIL = " cites when buyers ask who to hire."
+
+/**
+ * One-shot typewriter for the fixed halves of the headline.
+ *
+ * Types the lead-in, then the trailing clause, then reports done — at which
+ * point the rotator starts. It never loops: the movement is an entrance, and a
+ * headline that retypes itself every few seconds is hard to read.
+ *
+ * Under prefers-reduced-motion the whole thing is skipped and the text is
+ * present immediately.
+ */
+function useIntroTyping() {
+  const [lead, setLead] = useState("")
+  const [trail, setTrail] = useState("")
+  const [done, setDone] = useState(false)
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setLead(LEAD_IN)
+      setTrail(TRAIL)
+      setDone(true)
+      return
+    }
+
+    const timers: ReturnType<typeof setTimeout>[] = []
+    const later = (fn: () => void, ms: number) => { timers.push(setTimeout(fn, ms)) }
+
+    let i = 0
+    const typeLead = () => {
+      i += 1
+      setLead(LEAD_IN.slice(0, i))
+      if (i < LEAD_IN.length) later(typeLead, 55)
+      // Pause on the gap where the first AI name lands, so it reads as one
+      // sentence being written rather than two fragments.
+      else later(typeTrail, 420)
+    }
+
+    let j = 0
+    const typeTrail = () => {
+      j += 1
+      setTrail(TRAIL.slice(0, j))
+      if (j < TRAIL.length) later(typeTrail, 28)
+      else later(() => setDone(true), 240)
+    }
+
+    later(typeLead, 450)
+    return () => timers.forEach(clearTimeout)
+  }, [])
+
+  return { lead, trail, done }
+}
+
+function useRotator(count: number, start: boolean) {
   const [index, setIndex] = useState(0)
 
   useEffect(() => {
+    if (!start) return
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return
     const id = setInterval(() => setIndex((i) => (i + 1) % count), ROTATE_MS)
     return () => clearInterval(id)
-  }, [count])
+  }, [count, start])
 
   return index
 }
 
 export function HeroSection() {
   const ref = useRef<HTMLElement>(null)
-  const active = useRotator(AI_NAMES.length)
+  const { lead, trail, done: introDone } = useIntroTyping()
+  const active = useRotator(AI_NAMES.length, introDone)
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] })
   const y = useSpring(useTransform(scrollYProgress, [0, 1], [0, 90]), { stiffness: 100, damping: 30 })
 
@@ -79,20 +136,31 @@ export function HeroSection() {
         <motion.div className="hero-copy" initial="hidden" animate="visible">
           <motion.div variants={reveal} custom={0} className="eyebrow"><span className="live-dot" /> AEO + GEO AGENCY</motion.div>
           <motion.h1 variants={reveal} custom={1}>
-            Be the brand{" "}
-            <span className="hero-rotator" aria-label={AI_NAMES[active].name}>
-              {AI_NAMES.map(({ name, Mark }, i) => (
-                <span
-                  key={name}
-                  className={`rot-item${i === active ? " is-active" : ""}`}
-                  aria-hidden="true"
-                >
-                  <span className="rot-logo"><Mark /></span>
-                  {name}
+            {lead}
+            {/*
+              The rotator is only mounted once the lead-in has finished typing,
+              so the first AI name appears where the caret leaves off rather
+              than sitting there while the words are still being written.
+            */}
+            {lead === LEAD_IN && (
+              <>
+                {" "}
+                <span className="hero-rotator" aria-label={AI_NAMES[active].name}>
+                  {AI_NAMES.map(({ name, Mark }, i) => (
+                    <span
+                      key={name}
+                      className={`rot-item${i === active ? " is-active" : ""}`}
+                      aria-hidden="true"
+                    >
+                      <span className="rot-logo"><Mark /></span>
+                      {name}
+                    </span>
+                  ))}
                 </span>
-              ))}
-            </span>{" "}
-            cites when buyers ask who to hire.
+              </>
+            )}
+            {trail}
+            {!introDone && <i className="hero-caret" aria-hidden="true" />}
           </motion.h1>
           <motion.p variants={reveal} custom={2} className="hero-lede">ORB ITWORKS helps businesses appear as direct answers and cited sources inside AI-generated responses. No long term contracts. Transparent reporting.</motion.p>
           <motion.div variants={reveal} custom={3} className="hero-actions"><a className="button primary" href="https://scan.orb-itworks.com/" target="_blank" rel="noreferrer">Get Free AEO and GEO Audit <span>↗</span></a><a className="button outline" href="#services">View Our Services</a></motion.div>

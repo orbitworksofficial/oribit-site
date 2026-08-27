@@ -403,3 +403,37 @@ body.aeo-body {
     transition: none;
   }
 }
+
+/* ----------------------------------------------- hero intro caret --
+ * Shown only while the headline types itself in on first load, then removed.
+ */
+.aeo-page .hero-caret {
+  animation: aeoCaret 0.75s step-end infinite;
+  background: var(--blue);
+  display: inline-block;
+  height: 0.72em;
+  margin-left: 0.05em;
+  vertical-align: -0.04em;
+  width: 0.05em;
+}
+
+@keyframes aeoCaret {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/*
+ * The headline reserves its finished height while it types, so the lede and
+ * buttons below do not climb up the page as lines are added. The rotator
+ * itself cannot cause reflow (see .hero-rotator), but the one-shot intro grows
+ * from empty to four lines and would otherwise drag everything with it.
+ */
+.aeo-page .hero h1 {
+  min-height: 3.95em;
+}
+
+@media (max-width: 800px) {
+  .aeo-page .hero h1 {
+    min-height: 5.1em;
+  }
+}
