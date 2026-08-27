@@ -77,3 +77,18 @@ export const AI_TEXT_COLOR: Record<string, string> = {
   Perplexity: "#3FD0E3",
   Claude: "#E08A6B",
 };
+
+/**
+ * WhatsApp glyph, in its own brand green.
+ *
+ * Sized in `em` by the button rule so it tracks the label rather than being
+ * pinned to a pixel size.
+ */
+export function WhatsAppMark({ className }: MarkProps) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden="true">
+      <path d="M17.5 14.4c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.1-.2.3-.7 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5c.1-.2.2-.3.3-.5v-.5c-.1-.1-.7-1.6-.9-2.2-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2-1.5.3-.7.3-1.4.2-1.5-.1-.1-.3-.2-.6-.3Z" />
+      <path d="M12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 4.9L2 22l5.2-1.4c1.4.8 3 1.2 4.7 1.2h.1c5.5 0 10-4.5 10-10S17.5 2 12 2Zm0 18.3c-1.5 0-3-.4-4.3-1.2l-.3-.2-3.2.8.9-3.1-.2-.3A8.3 8.3 0 0 1 3.7 12 8.3 8.3 0 0 1 12 3.7 8.3 8.3 0 0 1 20.3 12 8.3 8.3 0 0 1 12 20.3Z" />
+    </svg>
+  );
+}
