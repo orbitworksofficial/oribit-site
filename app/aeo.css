@@ -114,10 +114,10 @@
  * first paint on every page.
  */
 .apending .aeo-page > section,
-.apending .aeo-page > div,
+.apending .aeo-page > div:not(.shot-zoom),
 .apending .aeo-page > footer,
 .aeo-page > section,
-.aeo-page > div,
+.aeo-page > div:not(.shot-zoom),
 .aeo-page > footer {
   opacity: 1;
   transform: none;
@@ -574,4 +574,99 @@ body.aeo-body {
 
 .aeo-page .platforms .section-intro {
   margin-bottom: 8px;
+}
+
+/* ------------------------------------------------- screenshot zoom --
+ * Hovering a shot lifts a full-size copy into a fixed overlay.
+ *
+ * A copy rather than scaling the original in place: .shot-rail is
+ * overflow:hidden to clip the marquee, so anything growing past its edge would
+ * simply be cropped. The overlay sits outside that clip.
+ *
+ * The motion is deliberately asymmetric — 420ms opening on a soft
+ * overshoot-free curve, 260ms closing. Opening slower reads as considered;
+ * closing fast keeps the rail feeling responsive when you sweep across it.
+ * pointer-events stay off throughout so the cursor never lands on the overlay
+ * and re-triggers the shot underneath.
+ */
+.aeo-page .shot-zoom {
+  align-items: center;
+  backdrop-filter: blur(0px);
+  background: rgba(5, 9, 18, 0);
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  opacity: 0;
+  padding: 5vh 5vw;
+  pointer-events: none;
+  position: fixed;
+  transition: opacity 0.26s cubic-bezier(0.4, 0, 1, 1),
+    background 0.26s ease, backdrop-filter 0.26s ease;
+  z-index: 90;
+}
+
+.aeo-page .shot-zoom.is-open {
+  backdrop-filter: blur(7px);
+  background: rgba(5, 9, 18, 0.72);
+  opacity: 1;
+  transition: opacity 0.42s cubic-bezier(0.16, 1, 0.3, 1),
+    background 0.42s ease, backdrop-filter 0.42s ease;
+}
+
+.aeo-page .shot-zoom .shot {
+  background: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 40px 120px rgba(0, 0, 0, 0.65);
+  max-height: 90vh;
+  opacity: 0;
+  transform: scale(0.94) translateY(14px);
+  transition: transform 0.26s cubic-bezier(0.4, 0, 1, 1),
+    opacity 0.26s cubic-bezier(0.4, 0, 1, 1);
+  width: min(1120px, 92vw);
+}
+
+.aeo-page .shot-zoom.is-open .shot {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  transition: transform 0.42s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.42s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.aeo-page .shot-zoom .shot img {
+  max-height: calc(90vh - 40px);
+  object-fit: contain;
+}
+
+/* The rail dims and slows while a preview is up, so focus sits on the
+   enlarged shot rather than on motion continuing behind it. */
+.aeo-page .shot-rail[data-zoomed="1"] .shot-track {
+  animation-play-state: paused;
+}
+
+.aeo-page .shot-rail[data-zoomed="1"] .shot {
+  opacity: 0.35;
+  transition: opacity 0.42s var(--ease);
+}
+
+.aeo-page .shot {
+  cursor: zoom-in;
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aeo-page .shot-zoom,
+  .aeo-page .shot-zoom .shot {
+    transition: none;
+  }
+}
+
+/* Touch has no hover; the overlay would need a tap to dismiss it, so it is
+   simply not offered and the rail scrolls instead. */
+@media (max-width: 800px), (hover: none) {
+  .aeo-page .shot-zoom {
+    display: none;
+  }
+  .aeo-page .shot {
+    cursor: default;
+  }
 }

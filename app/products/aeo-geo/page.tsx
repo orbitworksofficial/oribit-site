@@ -54,9 +54,24 @@ const PLATFORMS = [
   { id: "claude", name: "Claude", dot: "#D97757" },
 ] as const
 
-function PlatformShot({ id, name, dot }: { id: string; name: string; dot: string }) {
+function PlatformShot({
+  id,
+  name,
+  dot,
+  onOpen,
+}: {
+  id: string
+  name: string
+  dot: string
+  onOpen?: (p: { id: string; name: string; dot: string }) => void
+}) {
   return (
-    <figure className="shot">
+    <figure
+      className="shot"
+      onMouseEnter={() => onOpen?.({ id, name, dot })}
+      onFocus={() => onOpen?.({ id, name, dot })}
+      tabIndex={0}
+    >
       <figcaption className="shot-top">
         <span className="window-dots"><i /><i /><i /></span>
         <span>{name}</span>
@@ -76,11 +91,12 @@ function PlatformShot({ id, name, dot }: { id: string; name: string; dot: string
 
 export default function AeoGeoPage() {
   const [menu, setMenu] = useState(false)
+  const [zoom, setZoom] = useState<{ id: string; name: string; dot: string } | null>(null)
   const { scrollYProgress } = useScroll()
   const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30 })
   return <main className="aeo-page">
     <motion.div className="progress" style={{ scaleX }} />
-    <nav className="nav"><a className="logo" href="#top"><img src={LOGO_SRC} alt="Orbit Works" width={280} height={55} /></a><div className={`nav-links ${menu ? "open" : ""}`}><a href="#services">Services</a><a href="#results">Results</a><a href="#process">Process</a><a href="#learn">Learn</a><a className="nav-cta" href="https://calendly.com/orbitworksofficial01/30min" target="_blank" rel="noreferrer">Schedule a 30-Minute Strategy Session <ArrowUpRight size={15}/></a></div><button className="menu-btn" onClick={() => setMenu(!menu)} aria-label="Toggle navigation">{menu ? <X/> : <Menu/>}</button></nav>
+    <nav className="nav"><a className="logo" href="#top"><img src={LOGO_SRC} alt="Orbit Works" width={280} height={55} /></a><div className={`nav-links ${menu ? "open" : ""}`}><a href="#services">Services</a><a href="#results">Results</a><a href="#process">Process</a><a href="#learn">Learn</a><a className="nav-cta" href="https://calendly.com/orbitworksofficial01/30min" target="_blank" rel="noreferrer">Book a Strategy Call <ArrowUpRight size={15}/></a></div><button className="menu-btn" onClick={() => setMenu(!menu)} aria-label="Toggle navigation">{menu ? <X/> : <Menu/>}</button></nav>
     <HeroSection />
     <div className="ticker"><div>{[...platforms, ...platforms].map((p, i) => <span key={i}>{p} <b>✦</b></span>)}</div></div>
     <section className="problem section"><div className="section-intro"><p className="eyebrow">01 / THE SHIFT</p><h2>Your customers are asking AI.<br/><span>Is your brand in the answer?</span></h2></div><div className="problem-copy"><p className="big-copy">Your website can rank on Google and still be invisible where decisions are being made.</p><p>AI platforms synthesize information from multiple sources, cite authoritative entities, and generate direct answers. If your content is not structured for AI extraction, you simply do not exist in AI search.</p><a className="text-link" href="https://scan.orb-itworks.com/scan" target="_blank" rel="noreferrer">See where you stand <ArrowUpRight size={16}/></a></div></section>
@@ -92,11 +108,11 @@ export default function AeoGeoPage() {
       them — the rail keeps each one large and moving, and the duplicated track
       is what makes the loop seamless.
     */}
-    <div className="shot-rail" aria-label="Real AI answers across ChatGPT, Gemini, Perplexity, Google and Claude">
+    <div className="shot-rail" data-zoomed={zoom ? "1" : "0"} onMouseLeave={() => setZoom(null)} aria-label="Real AI answers across ChatGPT, Gemini, Perplexity, Google and Claude">
       <div className="shot-track">
         {[0, 1].map((copy) => (
           <div className="shot-row" key={copy} aria-hidden={copy === 1}>
-            {PLATFORMS.map((p) => <PlatformShot key={p.id + copy} {...p}/>)}
+            {PLATFORMS.map((p) => <PlatformShot key={p.id + copy} {...p} onOpen={setZoom}/>)}
           </div>
         ))}
       </div>
@@ -105,6 +121,25 @@ export default function AeoGeoPage() {
     <section id="process" className="process section dark-section"><div className="section-intro"><p className="eyebrow blue">06 / HOW IT WORKS</p><h2>Simple process.<br/><span>Serious visibility.</span></h2></div><div className="process-list">{process.map(([num,title,desc]) => <div className="process-row" key={num}><span className="process-num">{num}</span><h3>{title}</h3><p>{desc}</p><ArrowUpRight size={20}/></div>)}</div></section>
     <section className="trust section"><div className="trust-stat"><strong>300<span>%</span></strong><p>average citation increase<br/>for clients in six months</p></div><div className="trust-stat"><strong>92<span>%</span></strong><p>client retention rate<br/>after the first year</p></div><div className="trust-stat"><strong>08<span>/10</span></strong><p>free audits remaining<br/>this month</p></div></section>
     <section id="audit" className="final-cta"><div className="final-glow" aria-hidden="true"/><div className="cta-content"><p className="eyebrow blue">07 / YOUR NEXT MOVE</p><h2>Get seen where<br/><em>decisions</em> happen.</h2><p>No cost. No obligation. A written report showing exactly where your brand appears inside ChatGPT, Perplexity, Gemini, and Google AI Overviews.</p><div className="hero-actions"><a className="button primary" href="https://scan.orb-itworks.com/scan" target="_blank" rel="noreferrer">Claim my free audit <ArrowUpRight size={17}/></a><a className="button whatsapp" href="https://wa.me/15551234567?text=Hi%20Orbit%20Works!%20I%20visited%20your%20AEO%20and%20GEO%20page%20and%20I%20would%20like%20to%20know%20more%20about%20your%20services." target="_blank" rel="noreferrer"><WhatsAppMark /> Talk on WhatsApp</a></div><small>Free 30-minute audit. No card required. No long-term contract.</small></div></section>
+    {/*
+      Hover preview. The shot is re-rendered into a fixed overlay rather than
+      scaled in place: the rail is overflow:hidden to clip the marquee, which
+      would crop any element growing past its edge. Pointer events stay off so
+      moving the cursor away still registers as leaving the rail beneath.
+    */}
+    <div className={`shot-zoom${zoom ? " is-open" : ""}`} aria-hidden="true">
+      {zoom && (
+        <figure className="shot">
+          <figcaption className="shot-top">
+            <span className="window-dots"><i /><i /><i /></span>
+            <span>{zoom.name}</span>
+            <span className="shot-live" style={{ color: zoom.dot }}>●</span>
+          </figcaption>
+          <img src={`/ai/${zoom.id}.jpeg`} alt="" width={1200} height={630} decoding="async" />
+        </figure>
+      )}
+    </div>
+
     <footer><a className="logo" href="#top"><img src={LOGO_SRC} alt="Orbit Works" width={280} height={55} /></a><p>AEO + GEO services for the AI-first world.</p><div><a href="#services">Services</a><a href="#results">Results</a><a href="https://orb-itworks.com/" target="_blank" rel="noreferrer">Main site <ExternalLink size={13}/></a></div><small>© 2026 ORB ITWORKS. All rights reserved.</small></footer>
   </main>
 }
