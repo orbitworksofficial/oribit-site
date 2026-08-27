@@ -2,7 +2,7 @@
 
 import { motion, useScroll, useSpring, useTransform } from "framer-motion"
 import { useEffect, useRef, useState } from "react"
-import { ChatGptMark, ClaudeMark, GeminiMark, PerplexityMark } from "./AiMarks"
+import { AI_TEXT_COLOR, ChatGptMark, ClaudeMark, GeminiMark, PerplexityMark } from "./AiMarks"
 
 const reveal = {
   hidden: { opacity: 0, y: 28 },
@@ -150,6 +150,7 @@ export function HeroSection() {
                     <span
                       key={name}
                       className={`rot-item${i === active ? " is-active" : ""}`}
+                      style={{ color: AI_TEXT_COLOR[name] }}
                       aria-hidden="true"
                     >
                       <span className="rot-logo"><Mark /></span>

@@ -61,3 +61,19 @@ export function ClaudeMark({ className }: MarkProps) {
     </svg>
   );
 }
+
+/**
+ * Wordmark colour per brand, for the name shown beside each mark.
+ *
+ * These are the brands' own colours, lightened only where the official value
+ * would fail against the near-black hero. ChatGPT's wordmark is effectively
+ * black/near-white rather than its green logo colour, so it takes a light
+ * grey here; Gemini has no single colour (its mark is a gradient), so the name
+ * uses the blue its gradient starts from.
+ */
+export const AI_TEXT_COLOR: Record<string, string> = {
+  ChatGPT: "#E3E7EA",
+  Gemini: "#7FA6FF",
+  Perplexity: "#3FD0E3",
+  Claude: "#E08A6B",
+};

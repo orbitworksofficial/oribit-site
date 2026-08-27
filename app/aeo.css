@@ -354,10 +354,11 @@ body.aeo-body {
  */
 .aeo-page .hero-rotator {
   display: inline-grid;
-  /* Items are centred in the reserved cell rather than left-aligned, so the
-     slack left by the longest name ("Perplexity") splits either side of a
-     shorter one instead of pooling into one wide gap before the next word. */
-  justify-items: center;
+  /* Left-aligned in the reserved cell so every name starts on the same
+     vertical as the rest of the headline. Centring balanced the trailing gap
+     but pushed short names inward, so the line began at a different x on
+     every rotation. Alignment with the copy matters more than the gap. */
+  justify-items: start;
   position: relative;
   vertical-align: baseline;
 }
@@ -379,10 +380,7 @@ body.aeo-body {
   transform: translateY(0);
 }
 
-/* The name itself keeps the accent colour the static span had. */
-.aeo-page .hero-rotator .rot-item {
-  color: #ff6e90;
-}
+/* Each name carries its own brand colour, set inline from AI_TEXT_COLOR. */
 
 .aeo-page .rot-logo {
   align-items: center;
