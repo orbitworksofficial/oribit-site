@@ -325,9 +325,6 @@ body.aeo-body {
  * whole hero column reflows every time a phrase wraps to a different number of
  * lines, and the lede and buttons below visibly jump.
  */
-.aeo-page .hero-type {
-  color: #ff6e90;
-}
 
 /*
  * The rotation needs a fixed box, or the lede and buttons below shift every
@@ -341,23 +338,68 @@ body.aeo-body {
 }
 
 /* Blinking cursor, sized to the cap height of the display type. */
-.aeo-page .hero-caret {
-  animation: aeoCaret 0.75s step-end infinite;
-  background: var(--blue);
-  display: inline-block;
-  height: 0.78em;
-  margin-left: 0.06em;
-  vertical-align: -0.06em;
-  width: 0.055em;
-}
 
-@keyframes aeoCaret {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
 
 @media (max-width: 800px) {
-  .aeo-page .hero h1 {
-    min-height: 3.4em;
+}
+
+/* ---------------------------------------------------- hero rotator --
+ * The AI name that swaps in the headline, with its brand mark.
+ *
+ * inline-grid with every item in the SAME cell (grid-area: 1/1) is the whole
+ * trick: the container sizes itself to the longest name, so the words can be
+ * any length and nothing below ever reflows. The typewriter this replaced
+ * needed a hand-measured min-height on the h1 and phrases trimmed to matching
+ * lengths to get the same stability.
+ */
+.aeo-page .hero-rotator {
+  display: inline-grid;
+  /* Items are centred in the reserved cell rather than left-aligned, so the
+     slack left by the longest name ("Perplexity") splits either side of a
+     shorter one instead of pooling into one wide gap before the next word. */
+  justify-items: center;
+  position: relative;
+  vertical-align: baseline;
+}
+
+.aeo-page .rot-item {
+  align-items: center;
+  display: flex;
+  gap: 0.24em;
+  grid-area: 1 / 1;
+  opacity: 0;
+  transform: translateY(0.16em);
+  transition: opacity 0.46s cubic-bezier(0.32, 0, 0.18, 1),
+    transform 0.46s cubic-bezier(0.32, 0, 0.18, 1);
+  white-space: nowrap;
+}
+
+.aeo-page .rot-item.is-active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* The name itself keeps the accent colour the static span had. */
+.aeo-page .hero-rotator .rot-item {
+  color: #ff6e90;
+}
+
+.aeo-page .rot-logo {
+  align-items: center;
+  display: inline-flex;
+  flex: 0 0 auto;
+  height: 0.78em;
+  justify-content: center;
+  width: 0.78em;
+}
+
+.aeo-page .rot-logo svg {
+  height: 100%;
+  width: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aeo-page .rot-item {
+    transition: none;
   }
 }
