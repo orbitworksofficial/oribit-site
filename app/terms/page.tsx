@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import LegalDoc from "@/components/blocks/LegalDoc";
 import { metadataFromDb } from "@/lib/page-seo";
+import { ogImageFor } from "@/lib/seo";
 import { TERMS } from "@/lib/legal-data";
 import { SITE_URL } from "@/lib/site";
 
@@ -14,6 +15,8 @@ export async function generateMetadata(): Promise<Metadata> {
     description: TERMS.subtitle,
     alternates: { canonical: `${SITE_URL}/terms` },
     robots: { index: false, follow: true },
+    openGraph: { images: [ogImageFor("/terms").image] },
+    twitter: { card: "summary_large_image", images: [ogImageFor("/terms").image.url] },
   });
 }
 

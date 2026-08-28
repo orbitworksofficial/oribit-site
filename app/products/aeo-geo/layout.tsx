@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 
 import { metadataFromDb } from "@/lib/page-seo";
+import { ogImageFor } from "@/lib/seo";
 import { SITE_URL } from "@/lib/site";
 import { LenisProvider } from "@/components/aeo/LenisProvider";
 import "../../aeo.css";
@@ -39,6 +40,19 @@ export async function generateMetadata(): Promise<Metadata> {
       title: "AEO and GEO Services | Get Cited Inside AI Answers",
       description:
         "Get your brand cited inside ChatGPT, Gemini and Perplexity. Free AEO + GEO audit from Orbit Works.",
+      /**
+       * Set here rather than inherited: this route builds its metadata from
+       * its own base object instead of pageMetadata, so the ROUTE_OG map in
+       * lib/seo.ts never runs for it.
+       */
+      images: [ogImageFor("/products/aeo-geo").image],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "AEO and GEO Services | Get Cited Inside AI Answers",
+      description:
+        "Get your brand cited inside ChatGPT, Gemini and Perplexity. Free AEO + GEO audit from Orbit Works.",
+      images: [ogImageFor("/products/aeo-geo").image.url],
     },
   });
 }

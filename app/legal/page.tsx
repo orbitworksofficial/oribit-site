@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { metadataFromDb } from "@/lib/page-seo";
+import { ogImageFor } from "@/lib/seo";
 
 import PageHeader from "@/components/blocks/PageHeader";
 import { BRAND, OFFICES } from "@/lib/content";
@@ -14,6 +15,8 @@ export async function generateMetadata(): Promise<Metadata> {
     title: "Legal | OrbitWorks",
     description: "Privacy, cookies and company details for OrbitWorks.",
     robots: { index: false, follow: true },
+    openGraph: { images: [ogImageFor("/legal").image] },
+    twitter: { card: "summary_large_image", images: [ogImageFor("/legal").image.url] },
   });
 }
 

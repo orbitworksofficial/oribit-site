@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { metadataFromDb } from "@/lib/page-seo";
+import { ogImageFor } from "@/lib/seo";
 import VideoLoopHeader from "@/components/blocks/VideoLoopHeader";
 import FrontPageImageCluster from "@/components/blocks/FrontPageImageCluster";
 import ClientMarquee from "@/components/blocks/ClientMarquee";
@@ -26,7 +27,16 @@ import { HOME_CASE_CARDS } from "@/lib/home-content";
  * layout's metadata shows through untouched otherwise.
  */
 export async function generateMetadata(): Promise<Metadata> {
-  return metadataFromDb("/", {});
+  /**
+   * The base is otherwise {} so the root layout's metadata shows through; the
+   * share card has to be named explicitly, since this route does not call
+   * pageMetadata and so never consults the ROUTE_OG map.
+   */
+  const { image } = ogImageFor("/");
+  return metadataFromDb("/", {
+    openGraph: { images: [image] },
+    twitter: { card: "summary_large_image", images: [image.url] },
+  });
 }
 
 /**

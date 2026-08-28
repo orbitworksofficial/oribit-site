@@ -118,6 +118,9 @@ export async function pageMetadataFromDb(path: string): Promise<Metadata> {
 
   const baseOg = base.openGraph ?? {};
   const baseTw = base.twitter ?? {};
+  // `Twitter` is a union and only some members carry `card`, so read it off a
+  // narrowed shape rather than the union itself.
+  const baseCard = (baseTw as { card?: string }).card;
   const ogImage = absolute(row.ogImage);
   const twImage = absolute(row.twitterImage);
 
@@ -139,7 +142,17 @@ export async function pageMetadataFromDb(path: string): Promise<Metadata> {
       ...baseTw,
       title: row.twitterTitle ?? title,
       description: row.twitterDescription ?? description,
-      ...(row.twitterCard ? { card: row.twitterCard as "summary" } : {}),
+      /**
+       * "summary" is the dashboard's own default and sits on every row, so
+       * honouring it verbatim would force the small square card onto pages
+       * whose base metadata supplies landscape artwork. It therefore only
+       * overrides when the base has not asked for the large card — any other
+       * stored value is a deliberate editorial choice and always wins.
+       */
+      ...(row.twitterCard &&
+      !(row.twitterCard === "summary" && baseCard === "summary_large_image")
+        ? { card: row.twitterCard as "summary" }
+        : {}),
       ...(twImage ? { images: [twImage] } : {}),
     },
   };
