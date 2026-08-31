@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 
+import { trackLead } from "@/lib/track";
+
 /**
  * Enquiry form.
  *
@@ -36,6 +38,10 @@ export default function ContactForm({ services }: { services: string[] }) {
       const data = await res.json();
 
       if (data.success) {
+        // Inside the success branch on purpose: a submit-button handler would
+        // also fire on validation failures and dropped requests, reporting
+        // leads that never arrived and training ad delivery on noise.
+        trackLead("contact_page");
         setStatus("success");
         setMessage("Thank you, we’ll be in touch shortly.");
         form.reset();
