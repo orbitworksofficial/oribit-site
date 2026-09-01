@@ -18,6 +18,7 @@ export const COLLECTIONS = {
   tags: "tags",
   pageSeo: "page_seo",
   media: "media",
+  contacts: "contacts",
 } as const;
 
 export type Role = "admin" | "author";
@@ -168,4 +169,34 @@ export type BlogListItem = {
   authorName: string;
   categoryName?: string;
   tagNames: string[];
+};
+
+/**
+ * A contact-form enquiry.
+ *
+ * Stored before the notification email is attempted, so an SMTP failure can
+ * never lose a lead: the row is the record of truth and the email is only a
+ * convenience. `emailed` records whether the notification actually went out,
+ * which is what makes a failed send visible in the dashboard rather than
+ * silent.
+ *
+ * `service` is optional because the form's select offers "Not sure yet", and
+ * `company` because the field is explicitly optional.
+ */
+export type ContactDoc = {
+  _id?: ObjectId;
+  name: string;
+  email: string;
+  company?: string;
+  service?: string;
+  message: string;
+  /** Whether the notification email was sent successfully. */
+  emailed: boolean;
+  /** Set when the notification failed, for diagnosing delivery problems. */
+  emailError?: string;
+  /** Marked from the dashboard once someone has dealt with the enquiry. */
+  handled: boolean;
+  /** Request metadata, for spam triage. Never shown as identity. */
+  userAgent?: string;
+  createdAt: Date;
 };

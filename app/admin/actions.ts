@@ -538,3 +538,34 @@ export async function updateProfileAction(
   revalidatePath("/admin/profile");
   return { ok: true };
 }
+
+// ------------------------------------------------------------ contacts --
+
+/**
+ * Mark an enquiry handled, or put it back.
+ *
+ * Deliberately a toggle rather than a delete: an enquiry is a business record,
+ * and "dealt with" is not the same as "should no longer exist". Deletion is a
+ * separate, explicit action below.
+ */
+export async function setContactHandledAction(fd: FormData): Promise<void> {
+  await requireUser();
+  const id = str(fd, "id");
+  if (!ObjectId.isValid(id)) return;
+  const handled = str(fd, "handled") === "1";
+  const db = await getDb();
+  await db
+    .collection(COLLECTIONS.contacts)
+    .updateOne({ _id: new ObjectId(id) }, { $set: { handled } });
+  revalidatePath("/admin/contacts");
+}
+
+/** Permanently remove an enquiry. */
+export async function deleteContactAction(fd: FormData): Promise<void> {
+  await requireUser();
+  const id = str(fd, "id");
+  if (!ObjectId.isValid(id)) return;
+  const db = await getDb();
+  await db.collection(COLLECTIONS.contacts).deleteOne({ _id: new ObjectId(id) });
+  revalidatePath("/admin/contacts");
+}

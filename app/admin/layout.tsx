@@ -71,6 +71,11 @@ const NAV: { label: string; items: NavItem[] }[] = [
         icon: I("M3 6h18M3 12h18M3 18h12"),
       },
       { href: "/admin/tags", text: "Tags", icon: I("M3 3h8l10 10-8 8L3 11zM7.5 7.5h.01") },
+      {
+        href: "/admin/contacts",
+        text: "Enquiries",
+        icon: I("M4 4h16v16H4zM4 7l8 6 8-6"),
+      },
     ],
   },
   {
