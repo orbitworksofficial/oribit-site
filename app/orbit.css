@@ -4882,3 +4882,29 @@ nav .orbit-nav-sub a:focus-visible,
     display: none;
   }
 }
+
+/* ------------------------------------------------- chat widget layering --
+ * The support chat widget (#orbitworks-chat-widget) floats bottom-right at a
+ * very high z-index from inside its own Shadow DOM. That put it over the
+ * cookie banner's Accept button: on mobile elementFromPoint at the button's
+ * centre returned the widget, so the banner could not be dismissed and consent
+ * could not be granted at all.
+ *
+ * The banner wins because consent is a legal control and must stay reachable;
+ * the chat is optional and only briefly displaced. The widget's own styles are
+ * untouched — they are unreachable inside the shadow root, and the tag is
+ * required to stay exactly as supplied.
+ */
+.cookie-warning {
+  z-index: 2147483647;
+}
+
+/* Nudge the widget clear of the banner while it is showing, so neither control
+   is covered. `html.cookie` is set by CookieBanner while the banner is on
+   screen and removed on accept, so the widget returns to its own position. */
+html.cookie #orbitworks-chat-widget,
+html.cookie-animate #orbitworks-chat-widget {
+  bottom: 92px;
+  position: relative;
+  transition: bottom 0.35s ease;
+}

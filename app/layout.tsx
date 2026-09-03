@@ -42,6 +42,7 @@ import ChromeSync from "@/components/layout/ChromeSync";
 import StructuredData from "@/components/layout/StructuredData";
 import PageSchema from "@/components/layout/PageSchema";
 import Analytics from "@/components/layout/Analytics";
+import ChatWidget from "@/components/layout/ChatWidget";
 import NavDrawer from "@/components/layout/NavDrawer";
 import SiteLoader from "@/components/layout/SiteLoader";
 import ParticleBackground from "@/components/layout/ParticleBackground";
@@ -227,6 +228,9 @@ export default async function RootLayout({
             <Analytics />
           </>
         )}
+        {/* Every public page, including the bare-chrome landing route. The
+            admin dashboard is excluded, as it is for every other body script. */}
+        {!isAdmin && <ChatWidget />}
       </body>
     </html>
   );
