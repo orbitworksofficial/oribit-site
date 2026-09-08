@@ -18,6 +18,7 @@ import { ArrowUpRight, ExternalLink, Menu, Sparkles, X } from "lucide-react"
 import { useState } from "react"
 import { HeroSection } from "@/components/aeo/HeroSection"
 import { WhatsAppMark } from "@/components/aeo/AiMarks"
+import { BRAND } from "@/lib/content"
 
 /**
  * Logo shown in the header and footer. Change this one path to swap the mark —
@@ -25,6 +26,17 @@ import { WhatsAppMark } from "@/components/aeo/AiMarks"
  * The page sits on a near-black canvas, so use a light/white variant.
  */
 const LOGO_SRC = "/brand/orbitworks-full-light.png"
+
+/**
+ * WhatsApp CTA, derived from BRAND.phone so the landing page can never drift
+ * from the number the footer, contact page and JSON-LD all show.
+ *
+ * wa.me takes digits only — no "+", spaces or punctuation — so the display
+ * format is stripped down to the bare international number.
+ */
+const WHATSAPP_LINK = `https://wa.me/${BRAND.phone.replace(/\D/g, "")}?text=${encodeURIComponent(
+  "Hi Orbit Works! I visited your AEO and GEO page and I would like to know more about your services.",
+)}`
 
 const services = [
   ["Free AEO + GEO Audit", "We scan your brand across ChatGPT, Perplexity, Gemini, and Google AI Overviews to show exactly where you appear and where you are missing."],
@@ -120,7 +132,7 @@ export default function AeoGeoPage() {
     <section id="learn" className="education section light-blue"><div className="section-intro"><p className="eyebrow">05 / THE NEW SEARCH</p><h2>AEO and GEO.<br/><span>Decoded.</span></h2></div><div className="edu-grid"><article><div className="edu-letter">AEO</div><h3>Answer Engine Optimization</h3><p>Structure your content so AI-driven platforms can directly extract and present it as the answer. AEO makes your brand the direct response in AI summaries, snippets, and voice search.</p></article><article><div className="edu-letter">GEO</div><h3>Generative Engine Optimization</h3><p>Get your brand recommended, cited, and accurately represented inside AI-generated answers. GEO is how you earn the references that build trust at the moment of decision.</p></article><div className="compare"><span>SEO</span><b>→</b><span>AEO</span><b>→</b><span>GEO</span><small>ranked → selected → referenced</small></div></div></section>
     <section id="process" className="process section dark-section"><div className="section-intro"><p className="eyebrow blue">06 / HOW IT WORKS</p><h2>Simple process.<br/><span>Serious visibility.</span></h2></div><div className="process-list">{process.map(([num,title,desc]) => <div className="process-row" key={num}><span className="process-num">{num}</span><h3>{title}</h3><p>{desc}</p><ArrowUpRight size={20}/></div>)}</div></section>
     <section className="trust section"><div className="trust-stat"><strong>300<span>%</span></strong><p>average citation increase<br/>for clients in six months</p></div><div className="trust-stat"><strong>92<span>%</span></strong><p>client retention rate<br/>after the first year</p></div><div className="trust-stat"><strong>08<span>/10</span></strong><p>free audits remaining<br/>this month</p></div></section>
-    <section id="audit" className="final-cta"><div className="final-glow" aria-hidden="true"/><div className="cta-content"><p className="eyebrow blue">07 / YOUR NEXT MOVE</p><h2>Get seen where<br/><em>decisions</em> happen.</h2><p>No cost. No obligation. A written report showing exactly where your brand appears inside ChatGPT, Perplexity, Gemini, and Google AI Overviews.</p><div className="hero-actions"><a className="button primary" href="https://scan.orb-itworks.com/scan" target="_blank" rel="noreferrer">Claim my free audit <ArrowUpRight size={17}/></a><a className="button whatsapp" href="https://wa.me/15551234567?text=Hi%20Orbit%20Works!%20I%20visited%20your%20AEO%20and%20GEO%20page%20and%20I%20would%20like%20to%20know%20more%20about%20your%20services." target="_blank" rel="noreferrer"><WhatsAppMark /> Talk on WhatsApp</a></div><small>Free 30-minute audit. No card required. No long-term contract.</small></div></section>
+    <section id="audit" className="final-cta"><div className="final-glow" aria-hidden="true"/><div className="cta-content"><p className="eyebrow blue">07 / YOUR NEXT MOVE</p><h2>Get seen where<br/><em>decisions</em> happen.</h2><p>No cost. No obligation. A written report showing exactly where your brand appears inside ChatGPT, Perplexity, Gemini, and Google AI Overviews.</p><div className="hero-actions"><a className="button primary" href="https://scan.orb-itworks.com/scan" target="_blank" rel="noreferrer">Claim my free audit <ArrowUpRight size={17}/></a><a className="button whatsapp" href={WHATSAPP_LINK} target="_blank" rel="noreferrer"><WhatsAppMark /> Talk on WhatsApp</a></div><small>Free 30-minute audit. No card required. No long-term contract.</small></div></section>
     {/*
       Hover preview. The shot is re-rendered into a fixed overlay rather than
       scaled in place: the rail is overflow:hidden to clip the marquee, which
