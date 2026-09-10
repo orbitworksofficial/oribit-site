@@ -3,6 +3,7 @@
 import { motion, useScroll, useSpring, useTransform } from "framer-motion"
 import { useEffect, useRef, useState } from "react"
 import { AI_TEXT_COLOR, ChatGptMark, ClaudeMark, GeminiMark, PerplexityMark } from "./AiMarks"
+import { BRAND } from "@/lib/content"
 
 const reveal = {
   hidden: { opacity: 0, y: 28 },
@@ -164,7 +165,7 @@ export function HeroSection() {
             {!introDone && <i className="hero-caret" aria-hidden="true" />}
           </motion.h1>
           <motion.p variants={reveal} custom={2} className="hero-lede">ORB ITWORKS helps businesses appear as direct answers and cited sources inside AI-generated responses. No long term contracts. Transparent reporting.</motion.p>
-          <motion.div variants={reveal} custom={3} className="hero-actions"><a className="button primary" href="https://scan.orb-itworks.com/scan" target="_blank" rel="noreferrer">Get Free AEO and GEO Audit <span>↗</span></a><a className="button outline" href="https://calendly.com/orbitworksofficial01/30min" target="_blank" rel="noreferrer">Book a Strategy Call</a></motion.div>
+          <motion.div variants={reveal} custom={3} className="hero-actions"><a className="button primary" href="https://scan.orb-itworks.com/scan" target="_blank" rel="noreferrer">Get Free AEO and GEO Audit <span>↗</span></a><a className="button outline" href={BRAND.calendly} target="_blank" rel="noreferrer">Book a Strategy Call</a></motion.div>
           <motion.div variants={reveal} custom={4} className="hero-meta"><span>Free audit</span><span>Cited in ChatGPT, Gemini, Perplexity</span><span>No long term contracts</span><span>US based team</span></motion.div>
         </motion.div>
         <motion.div className="hero-visual" style={{ y }} initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.35, duration: 0.8 }}>

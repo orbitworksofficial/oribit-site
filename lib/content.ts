@@ -17,6 +17,8 @@ export const BRAND = {
     "From strategy to execution, we're the IT solutions company that turns complexity into competitive advantage.",
   email: "sales@orb-itworks.com",
   phone: "+1 443 260 9169",
+  /** Discovery-call booking link. Change here — every CTA reads this. */
+  calendly: "https://calendly.com/hello-orb-itworks/30min",
   footerAbout:
     "OrbitWorks is a premier AI automation and IT services company in USA, delivering innovative solutions in software development, cloud infrastructure, artificial intelligence, and digital marketing. We partner with businesses of all sizes to build scalable technology strategies that drive measurable growth.",
 } as const;
