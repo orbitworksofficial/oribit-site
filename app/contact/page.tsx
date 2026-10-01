@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import PageHero from "@/components/blocks/PageHero";
 import { BRAND, OFFICES } from "@/lib/content";
+import { OfficeFlag } from "@/components/layout/FlagMarks";
 import { SERVICE_TITLES } from "@/lib/services-data";
 import { pageMetadataFromDb } from "@/lib/page-seo";
 import ContactForm from "@/components/layout/ContactForm";
@@ -65,10 +66,13 @@ export default function Contact() {
         data-transition-include="through"
       >
         <h2 className="wp-block-heading deco-l mobile">Offices</h2>
-        <ul className="orbit-list">
+        <ul className="orbit-list orbit-list--offices">
           {OFFICES.map((o) => (
             <li key={o.country}>
               <strong>
+                {/* The flag is decorative — the country is named right beside
+                    it, so a screen reader announcing "flag" twice adds noise. */}
+                <OfficeFlag code={o.countryCode} className="orbit-flag" />
                 {o.city}, {o.country}
               </strong>
               <span>{o.address}</span>

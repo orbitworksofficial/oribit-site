@@ -5,6 +5,7 @@ import PageHero from "@/components/blocks/PageHero";
 import Stats from "@/components/blocks/Stats";
 import TeamGrid from "@/components/blocks/TeamGrid";
 import { OFFICES } from "@/lib/content";
+import { OfficeFlag } from "@/components/layout/FlagMarks";
 import { pageMetadataFromDb } from "@/lib/page-seo";
 
 /**
@@ -187,10 +188,12 @@ export default function About() {
       >
         <span className="orbit-eyebrow">Where we are</span>
         <h2 className="orbit-section-head">Offices</h2>
-        <ul className="orbit-list">
+        <ul className="orbit-list orbit-list--offices">
           {OFFICES.map((o) => (
             <li key={o.country}>
               <strong>
+                {/* Decorative: the country name follows it. */}
+                <OfficeFlag code={o.countryCode} className="orbit-flag" />
                 {o.city}, {o.country}
               </strong>
               <span>{o.address}</span>

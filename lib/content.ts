@@ -663,10 +663,10 @@ export const OFFICES: Office[] = [
     country: "Canada",
     countryCode: "CA",
     city: "Beechville",
-    region: "ON",
-    postalCode: "M5X 1A9",
-    street: "213 States Ln,  Beechville, NS B3T 2J3, Canada",
-    address: "213 States Ln,  Beechville, NS B3T 2J3, Canada",
+    region: "NS",
+    postalCode: "B3T 2J3",
+    street: "213 States Ln",
+    address: "213 States Ln, Beechville, NS B3T 2J3, Canada",
   },
 ];
 

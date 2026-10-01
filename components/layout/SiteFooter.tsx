@@ -2,6 +2,7 @@ import Link from "next/link";
 import NewsletterForm from "./NewsletterForm";
 import SocialIcon from "./SocialIcon";
 import { SOCIAL, BRAND, OFFICES } from "@/lib/content";
+import { OfficeFlag } from "./FlagMarks";
 import { SERVICE_BUCKETS } from "@/lib/services-data";
 import { LEGAL_DOCS } from "@/lib/legal-data";
 
@@ -112,6 +113,9 @@ export default function SiteFooter() {
               itemScope
               itemType="https://schema.org/PostalAddress"
             >
+              {/* Decorative — the country name is spelled out below, and the
+                  microdata carries it for crawlers either way. */}
+              <OfficeFlag code={o.countryCode} className="orbit-flag" />
               {o.street && (
                 <>
                   <span itemProp="streetAddress">{o.street}</span>

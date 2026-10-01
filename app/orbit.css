@@ -4908,3 +4908,33 @@ html.cookie-animate #orbitworks-chat-widget {
   position: relative;
   transition: bottom 0.35s ease;
 }
+
+/* ------------------------------------------------------ office flags --
+ * Country flag beside each office, instead of an "Office 1 / Office 2"
+ * label — the flag and city name identify the location on sight.
+ *
+ * Sized in `em` so it tracks whatever text it sits next to: the 2.2rem
+ * heading on the contact and about pages, and the 1.45rem footer line.
+ */
+.orbit-flag {
+  /* Sized in `em` so one rule serves the 2.2rem headings on the contact and
+     about pages and the 1.45rem footer line. */
+  border-radius: 0.2rem;
+  /* A white flag on a white page needs an edge to read as an object. */
+  box-shadow: 0 0 0 0.1rem rgba(0, 0, 0, 0.12);
+  display: inline-block;
+  height: 0.78em;
+  margin-right: 0.7rem;
+  vertical-align: baseline;
+  width: 1.17em;
+}
+
+/* Clear separation between the two offices, so they read as two places
+   rather than one run-on block. */
+.orbit-list--offices li {
+  padding: 3.4rem 0;
+}
+
+.orbit-list--offices li:first-child {
+  border-top: 0;
+}

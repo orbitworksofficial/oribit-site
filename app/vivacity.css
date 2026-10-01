@@ -152,6 +152,12 @@ footer.invert > .inner > .col {
   margin: 1.6rem 0 0;
 }
 
+/* Extra breathing room between the two offices in the footer, so the second
+   address does not read as a continuation of the first. */
+.orbit-footer__addr + .orbit-footer__addr {
+  margin-top: 2.6rem;
+}
+
 /* Slim bottom bar: copyright (left) · legal + back to top (right), one row. */
 footer.invert .footer {
   background-color: var(--navy);
