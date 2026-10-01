@@ -59,7 +59,9 @@ export default function Legal() {
         <p className="wp-block-paragraph">
           {BRAND.name}
           <br />
-          {OFFICES[0].address}, {OFFICES[0].city}
+          {/* `address` is the full one-line form and already ends with the
+              city, region and country — appending `city` repeated it. */}
+          {OFFICES[0].address}
           <br />
           {BRAND.phone}
         </p>

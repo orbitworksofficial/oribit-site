@@ -633,10 +633,9 @@ export const TEAM: TeamMember[] = [
  * `region`, `postalCode` and `street` exist so StructuredData can emit a real
  * PostalAddress instead of dumping the display string into `streetAddress`.
  *
- * TODO (business input, not a code change): the Baltimore entry has no street
- * address. Google's local pack and most directory validators want a full
- * street line for the primary location — add it here and it flows into the
- * footer, the contact page and the LocalBusiness schema automatically.
+ * Keep `city` as the actual locality of the street line, not the nearest big
+ * city — it becomes `addressLocality` in the schema, where Gambrills/Baltimore
+ * is the difference between an address Google can verify and one it cannot.
  */
 export type Office = {
   country: string;
@@ -654,8 +653,10 @@ export const OFFICES: Office[] = [
   {
     country: "United States",
     countryCode: "US",
-    city: "Baltimore",
+    city: "Gambrills",
     region: "MD",
+    postalCode: "21054",
+    street: "2100 Autumn Haze Ct",
     address: "2100 Autumn Haze Ct, Gambrills, MD 21054, USA",
   },
   {

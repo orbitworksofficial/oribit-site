@@ -18,7 +18,7 @@ export default function Contact() {
   return (
     <main>
       <PageHero
-        chip="Baltimore & Toronto · one inbox"
+        chip="Gambrills & Toronto · one inbox"
         icon="contact"
         title="Tell us what isn't moving"
         lead="A short note about the problem beats a long one about the brief. Send it over and the person who reads it is the person who can help."
