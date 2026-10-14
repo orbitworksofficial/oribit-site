@@ -3,6 +3,11 @@ import { NextResponse } from "next/server";
 import { getDb, isDbConfigured } from "@/lib/db";
 import { sendEnquiryNotification } from "@/lib/mail";
 import { COLLECTIONS, type ContactDoc } from "@/lib/models";
+import {
+  forwardEnquiryToCrm,
+  isCrmConfigured,
+  type CrmForwardResult,
+} from "@/lib/crm";
 
 /**
  * Enquiry endpoint for the contact form.
@@ -77,23 +82,47 @@ export async function POST(request: Request) {
    * Awaited rather than fired and forgotten: a serverless container is frozen
    * the moment the response is returned, so a floating promise would be killed
    * mid-handshake and the mail silently never sent.
+   *
+   * The CRM forward runs alongside it, and in parallel because neither depends
+   * on the other — the visitor should not wait for two round trips in sequence.
    */
-  const error = await sendEnquiryNotification({ name, email, company, service, message });
+  const [error, crm] = await Promise.all([
+    sendEnquiryNotification({ name, email, company, service, message }),
+    isCrmConfigured()
+      ? forwardEnquiryToCrm({ name, email, company, service, message })
+      : Promise.resolve<CrmForwardResult>({
+          ok: false,
+          error: "CRM forwarding is not configured",
+        }),
+  ]);
 
   if (error) {
     console.error("[contact] stored, but notification failed:", error);
   }
 
+  // A CRM failure is logged and recorded, never surfaced: the enquiry is
+  // already safe in Mongo, and the visitor has no stake in where else it goes.
+  if (!crm.ok) {
+    console.error("[contact] stored, but CRM forwarding failed:", crm.error);
+  }
+
   try {
     const db = await getDb();
-    await db
-      .collection<ContactDoc>(COLLECTIONS.contacts)
-      .updateOne(
-        { _id: id },
-        { $set: { emailed: !error, ...(error ? { emailError: error } : {}) } },
-      );
+    await db.collection<ContactDoc>(COLLECTIONS.contacts).updateOne(
+      { _id: id },
+      {
+        $set: {
+          emailed: !error,
+          ...(error ? { emailError: error } : {}),
+          // Recorded on the row for the same reason as the email flags: a
+          // failure that lives only in a log line is one nobody discovers.
+          crmSynced: crm.ok,
+          ...(crm.ok ? { crmContactId: crm.contactId } : { crmError: crm.error }),
+        },
+      },
+    );
   } catch {
-    // The enquiry is safe; only the delivery flag is stale. Not worth failing.
+    // The enquiry is safe; only the delivery flags are stale. Not worth failing.
   }
 
   // The enquiry is stored, so this is a success from the visitor's side even

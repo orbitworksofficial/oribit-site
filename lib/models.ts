@@ -194,6 +194,13 @@ export type ContactDoc = {
   emailed: boolean;
   /** Set when the notification failed, for diagnosing delivery problems. */
   emailError?: string;
+  /** Whether the enquiry reached the CRM. Optional rather than defaulted,
+   *  because rows stored before forwarding existed have no opinion either way. */
+  crmSynced?: boolean;
+  /** The CRM's own contact id, for cross-referencing the two records. */
+  crmContactId?: string;
+  /** Set when forwarding failed, so a gap is visible rather than only logged. */
+  crmError?: string;
   /** Marked from the dashboard once someone has dealt with the enquiry. */
   handled: boolean;
   /** Request metadata, for spam triage. Never shown as identity. */
