@@ -193,7 +193,7 @@ export default async function RootLayout({
           layout.js or page.js"). Google reads ld+json from either <head> or
           <body>, so nothing is lost by not forcing it upward.
         */}
-        {!isAdmin && <StructuredData />}
+        {!isAdmin && <StructuredData isHome={pathname === "/"} />}
         {/*
           Per-page JSON-LD authored in the dashboard (Page SEO -> Schema
           markup). Emitted here rather than in each of the thirteen pages

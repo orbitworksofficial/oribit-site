@@ -1,4 +1,4 @@
-import { BRAND, OFFICES, SERVICES_JSONLD_AREA, SOCIAL } from "@/lib/content";
+import { APPROACH, BRAND, OFFICES, SERVICES_JSONLD_AREA, SOCIAL } from "@/lib/content";
 import { SITE_URL } from "@/lib/site";
 import { SERVICE_BUCKETS } from "@/lib/services-data";
 
@@ -13,11 +13,11 @@ import { SERVICE_BUCKETS } from "@/lib/services-data";
  * cross-reference by @id rather than repeating themselves. Rendered from the
  * real content constants, so it cannot drift from what the page actually says.
  */
-export default function StructuredData() {
+export default function StructuredData({ isHome = false }: { isHome?: boolean }) {
   const orgId = `${SITE_URL}/#organization`;
   const siteId = `${SITE_URL}/#website`;
 
-  const graph = [
+  const graph: Record<string, unknown>[] = [
     {
       "@type": "Organization",
       "@id": orgId,
@@ -105,6 +105,33 @@ export default function StructuredData() {
       },
     },
   ];
+
+  /**
+   * The delivery process, as a HowTo.
+   *
+   * Homepage only: the four steps are rendered there as a numbered list (the
+   * "Our Approach" section), and schema.org markup must describe content the
+   * visitor can actually see — marking up steps that are not on the page is
+   * what earns a manual action rather than a rich result.
+   *
+   * Built from the same APPROACH constant the section renders, so the two
+   * cannot drift apart.
+   */
+  if (isHome) {
+    graph.push({
+      "@type": "HowTo",
+      "@id": `${SITE_URL}/#howto-approach`,
+      name: "How OrbitWorks delivers a project",
+      description:
+        "The four stages OrbitWorks works through on an engagement, from first conversation to ongoing growth.",
+      step: APPROACH.map((a, i) => ({
+        "@type": "HowToStep",
+        position: i + 1,
+        name: a.step,
+        text: a.body,
+      })),
+    });
+  }
 
   return (
     <script
