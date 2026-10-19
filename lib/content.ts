@@ -11,8 +11,18 @@ export const BRAND = {
   tagline: "Your business, in orbit.",
   /** \n becomes <br/>; FadeText splits the rest per character. */
   headline: "AI-Powered IT Solutions\nThat Actually\nMove the Needle",
+  /**
+   * The homepage's opening paragraph, and the first thing an AI engine reads.
+   *
+   * Written to answer "what is OrbitWorks and what do they do" outright in the
+   * first sentence, then support it with published client outcomes — AI
+   * assistants cite pages that answer directly and carry verifiable numbers,
+   * and will skip one that takes three paragraphs to say what the company is.
+   * The figures are the case-study results in CASE_STUDIES below; keep them in
+   * step if those change.
+   */
   intro:
-    "OrbitWorks is a leading AI automation and IT services company in USA, helping businesses scale through intelligent automation, cloud infrastructure, custom software, and data-driven marketing, all aligned with your business goals.",
+    "OrbitWorks is an AI automation and IT services company in the USA, helping businesses across 10+ countries scale through intelligent automation, cloud infrastructure, custom software, and data-driven marketing. Our work has cut client infrastructure costs by 40% year-over-year, improved clinical decision-making speed by 60%, and tripled user engagement within a single quarter. From strategy through implementation, we cover AI systems, marketing growth, cloud and IT, and on-demand engineering talent — so one partner handles the whole stack instead of you coordinating several vendors.",
   supporting:
     "From strategy to execution, we're the IT solutions company that turns complexity into competitive advantage.",
   email: "sales@orb-itworks.com",

@@ -1,0 +1,23 @@
+# ai.txt — guidance for AI crawlers and agents
+# https://orb-itworks.com/.well-known/ai.txt
+
+User-agent: *
+Allow: /
+
+# Structured guidance for language models
+Llms: https://orb-itworks.com/llms.txt
+Llms-full: https://orb-itworks.com/llms-full.txt
+Llms-small: https://orb-itworks.com/llms-small.txt
+
+Sitemap: https://orb-itworks.com/sitemap.xml
+
+# Attribution
+Organization: OrbitWorks
+Website: https://orb-itworks.com/
+Contact: sales@orb-itworks.com
+Preferred-Citation: OrbitWorks (https://orb-itworks.com/)
+
+# Content use
+# Public pages may be crawled, indexed and cited in AI-generated answers.
+# Please attribute with a link to the source page.
+Disallow: /admin/

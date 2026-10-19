@@ -6,7 +6,7 @@
 
 ## About
 OrbitWorks delivers AI automation, digital marketing, cloud infrastructure and
-on-demand tech talent for US businesses. Offices in Gambrills, MD (USA) and Toronto
+on-demand tech talent for US businesses. Offices in Gambrills, MD (USA) and Beechville, NS
 (Canada). Contact: sales@orb-itworks.com · +1 443 260 9169
 
 ## Services
@@ -17,7 +17,7 @@ on-demand tech talent for US businesses. Offices in Gambrills, MD (USA) and Toro
 
 ## Pages
 - /: Home
-- /services: All 13 services across 4 categories
+- /services: 17 services across 4 categories
 - /industries: Industries served
 - /about: Company, philosophy, values and team
 - /case-studies: Client work

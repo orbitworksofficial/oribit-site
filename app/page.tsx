@@ -10,6 +10,8 @@ import TechMarquee from "@/components/blocks/TechMarquee";
 import CaseSlider from "@/components/blocks/CaseSlider";
 import PreviewVideo from "@/components/blocks/PreviewVideo";
 import BucketShowcase from "@/components/blocks/BucketShowcase";
+import FaqSection from "@/components/blocks/FaqSection";
+import { HOME_FAQS } from "@/lib/home-faqs";
 import Stats from "@/components/blocks/Stats";
 import TestimonialCarousel from "@/components/blocks/TestimonialCarousel";
 import { MIRROR_PORTRAIT } from "@/lib/video";
@@ -257,6 +259,18 @@ export default function Home() {
           ))}
         </ol>
       </div>
+
+      {/*
+        Editable from the dashboard (Page SEO -> / -> FAQs), falling back to
+        HOME_FAQS. Emits its own FAQPage JSON-LD, which the homepage previously
+        had none of — the single largest gap in its AI-readiness score.
+      */}
+      <FaqSection
+        path="/"
+        fallback={HOME_FAQS}
+        heading="What people ask before getting in touch."
+        lead="Straight answers on what we do, what it costs, and how to start."
+      />
 
       {/* 8. Closing CTA */}
       <div
