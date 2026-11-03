@@ -23,32 +23,35 @@ const MESSAGE_MAX = 5000;
 /**
  * Maps a service picked on this site to the CRM's catalogue slug.
  *
- * The two vocabularies grew separately: the site sells "AI automation" while
- * the CRM tracks "AI Chatbot Development". An unmapped slug is not an error —
- * the CRM ignores one it does not recognise and still records the lead — but
- * the service tag is what makes "which services do enquiries ask for" answer
- * anything, so it is worth keeping aligned.
+ * Keyed on the exact dropdown TITLE, because that is what the form posts —
+ * SERVICE_TITLES is a flat list of `title` strings, not slugs. An earlier
+ * version keyed on slugs and silently matched nothing, so every enquiry
+ * reached the CRM with no service tag at all.
  *
- * Anything absent here is sent through as-is, on the chance the CRM has since
- * gained a matching slug.
+ * The two vocabularies grew separately: the site sells "AI Automation and
+ * GenAI" while the CRM tracks "AI Chatbot Development". Several site services
+ * have no distinct CRM equivalent and share one, which is honest — the CRM
+ * catalogue is coarser.
+ *
+ * An unmapped title is not an error: the CRM ignores a slug it does not
+ * recognise and still records the lead, just without the tag.
  */
 const SERVICE_SLUG_MAP: Record<string, string> = {
-  // "Digital marketing" on the site covers several CRM services (SEO, social,
-  // paid). Tagging it as any one of them would be a guess, so it maps to
-  // marketing-automation as the closest umbrella and whoever picks the lead up
-  // narrows it from the message.
-  "digital-marketing": "marketing-automation",
-  "ai-automation": "ai-chatbot-development",
-  "software-development": "custom-software",
-  "product-development": "custom-software",
-  "web-development": "web-development",
-  "mobile-development": "custom-software",
-  "cloud-infrastructure": "custom-software",
-  "cloud-modernisation": "custom-software",
-  "data-ai": "ai-chatbot-development",
-  "it-consulting": "custom-software",
-  "website-maintenance": "web-development",
-  crm: "custom-software",
+  "AI Automation and GenAI": "ai-chatbot-development",
+  "Unified Revenue Dashboard and Analytics": "custom-software",
+  "CRM Setup and Sales Pipeline Automation": "marketing-automation",
+  "Paid Advertising Management": "meta-ads-management",
+  // Spans SEO, content, email and WhatsApp. SEO is the closest single CRM
+  // service; the message says which of them they actually want.
+  "SEO, Content, Email and WhatsApp Marketing": "seo",
+  "Cloud Migrations and Modernization": "custom-software",
+  "Custom Website Development": "web-development",
+  "Custom Mobile App Development": "custom-software",
+  "Software and Product Development": "custom-software",
+  "Power Platform and Dynamics 365": "custom-software",
+  "IT Consulting and Strategy": "custom-software",
+  "Website Maintenance and Support": "web-development",
+  "Staff Augmentation and On-Demand IT Talent": "custom-software",
 };
 
 export interface CrmForwardInput {
@@ -75,16 +78,26 @@ export async function forwardEnquiryToCrm(
     return { ok: false, error: "CRM_LEADS_URL or CRM_LEAD_INTAKE_SECRET is not set" };
   }
 
-  const serviceSlug = input.service
-    ? (SERVICE_SLUG_MAP[input.service] ?? input.service)
-    : null;
+  const serviceSlug = input.service ? (SERVICE_SLUG_MAP[input.service] ?? null) : null;
+
+  /**
+   * The chosen service is repeated in the message as well as tagged.
+   *
+   * The tag is structured and reportable but coarse — several site services
+   * map to one CRM slug — and an unrecognised one is dropped entirely. The
+   * line of text always survives, so whoever picks the lead up can see what
+   * they actually asked for rather than inferring it from a broad tag.
+   */
+  const message = input.service
+    ? `Interested in: ${input.service}\n\n${input.message}`
+    : input.message;
 
   const payload = {
     full_name: input.name,
     email: input.email,
     // The CRM drops empty strings, but sending null is clearer about intent.
     company_name: input.company || null,
-    message: input.message.slice(0, MESSAGE_MAX),
+    message: message.slice(0, MESSAGE_MAX),
     // The slug is the contract: the CRM resolves the source by it, so renaming
     // the display label in its settings cannot break this.
     source: "website_form",
