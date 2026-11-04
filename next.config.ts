@@ -10,6 +10,23 @@ const HOST = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://orb-itworks.com")
 
 const nextConfig: NextConfig = {
   /**
+   * Stop Next from stripping trailing slashes, because the host adds them.
+   *
+   * Hostinger fronts the Node app with LiteSpeed, which treats /admin as a
+   * directory and 301s it to /admin/ — standard Apache DirectorySlash
+   * behaviour. Next's default is trailingSlash:false, so it redirected /admin/
+   * straight back to /admin, and the two bounced off each other until the
+   * browser gave up at 50 hops. The dashboard was unreachable; every nested
+   * route (/admin/blogs, /admin/contacts) was fine, because only a path that
+   * looks like a bare directory triggers LiteSpeed's rewrite.
+   *
+   * This disables only Next's half of that argument, so /admin/ is served as
+   * /admin instead of being bounced. Preferred over trailingSlash:true, which
+   * would rewrite every canonical URL on the site to fix one page.
+   */
+  skipTrailingSlashRedirect: true,
+
+  /**
    * sharp must stay an EXTERNAL package, not be bundled into the server chunks.
    *
    * It is a native addon: the JS wrapper dlopen()s a platform-specific .node
